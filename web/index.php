@@ -8,7 +8,7 @@ $app = new Slim\App(array(
 $container = $app->getContainer();
 $container['view'] = function($c) {
     $view = new \Slim\Views\Twig('../views');
-    $basePath = rtrim(str_ireplace('index.php', '', $c['request']->getUri()->getBasePath(), '/'));
+    $basePath = rtrim(str_ireplace('index.php', '', $c['request']->getUri()->getBasePath()), '/');
     $view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
 
     return $view;
