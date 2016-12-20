@@ -1,0 +1,13 @@
+{
+    "name": "robwittman/shopify-product-importer",
+    "description": ".zip Importer for Shopify",
+    "authors": [
+        {
+            "name": "Rob Wittman",
+            "email": "rob@ihsdigital.com"
+        }
+    ],
+    "require": {
+        "robby-bugatti/shopify-php-sdk": "^1.0"
+    }
+}
