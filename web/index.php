@@ -1,6 +1,6 @@
 <?php
 
-require_once('vendor/autoload.php');
+require_once('../vendor/autoload.php');
 
 $app = new Slim\App(array(
     'settings' => $settings
