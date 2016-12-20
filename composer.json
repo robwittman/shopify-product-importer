@@ -8,6 +8,12 @@
         }
     ],
     "require": {
-        "robby-bugatti/shopify-php-sdk": "^1.0"
+        "robby-bugatti/shopify-php-sdk": "^1.0",
+        "plasticbrain/php-flash-messages": "^1.0",
+        "slim/slim": "^3.7",
+        "slim/twig-view": "^2.1"
+    },
+    "autoload" : {
+        "App\\" : "src"
     }
 }

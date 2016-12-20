@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Hello from Heroku</title>
-    </head>
-    <body>
-        <h1>Hello, from Heroku</h1>
-    </body>
-</html>
+<?php
+
+require_once('vendor/autoload.php');
+
+$app = new Slim\App(array(
+    'settings' => $settings
+));
+
+$app->get('/', function ($request, $response) {
+    return $response->withJson(array('success' => true));
+});
+
+$app->run();
