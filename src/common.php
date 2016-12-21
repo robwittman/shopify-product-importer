@@ -16,7 +16,6 @@ if (!function_exists("callShopify")) {
         ));
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         $res = curl_exec($c);
-        var_dump($res);
         return json_decode($res);
     }
 }

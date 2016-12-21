@@ -8,55 +8,64 @@
             </div>
         {% endif %}
     </div>
-    <div class="col-lg-6 col-lg-offset-3 col-sm-12">
-        <div class="panel panel-default">
-            <form action="/products" method="post" enctype='multipart/form-data'>
-                <div class="panel-heading">
-                    Create New Product
-                </div>
-                <div class="panel-body">
-                    <div class='form-group col-lg-6 col-sm-12'>
-                        <label class='control-label'>Product Title</label>
-                        <input type="text" name="product_title" value="" class='form-control'>
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-sm-12">
+            <div class="panel panel-default">
+                <form action="/products" method="post" enctype='multipart/form-data'>
+                    <div class="panel-heading">
+                        Create New Product
                     </div>
-                    <div class='form-group col-lg-6 col-sm-12'>
-                        <label class='control-label'>Handle</label>
-                        <input type="text" name="product_handle" value="" class='form-control' placeholder='Leave blank to auto-generate'>
-                    </div>
-                    <div class='form-group col-lg-6 col-sm-12'>
-                        <label class='control-label'>Product Type</label>
-                        <input type="text" name="product_type" value="" class='form-control' placeholder='We can have default product type'>
-                    </div>
-                    <div class='form-group col-lg-6 col-sm-12'>
-                        <label class='control-label'>Vendor</label>
-                        <input type="text" name="vendor" value="" class='form-control' placeholder='We can default to your vendor'>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class='control-label'>Tags</label>
-                        <textarea name="tags" rows="2" cols="40" placeholder='We can default this to whatever you want as well' class='form-control'></textarea>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class='control-label'>BodyHtml</label>
-                        <textarea name="body_html" rows="2" cols="40" placeholder='Comma-separated string of tags for the product' class='form-control'></textarea>
-                    </div>
-                    <hr>
-                    <div class='form-group col-sm-12'>
-                        <label class='control-label'>ZIP File</label>
-                        <input type="file" name="zip_file" value="">
-                    </div>
-                    <a id='advanced'>Advanced Settings</a>
-                    <div class="advanced-wrapper" id='advanced-wrapper' style='display:none'>
+                    <div class="panel-body">
+                        <div class='form-group col-lg-6 col-sm-12'>
+                            <label class='control-label'>Product Title</label>
+                            <input type="text" name="product_title" value="" class='form-control'>
+                        </div>
+                        <div class='form-group col-lg-6 col-sm-12'>
+                            <label class='control-label'>Handle</label>
+                            <input type="text" name="product_handle" value="" class='form-control' placeholder='Leave blank to auto-generate'>
+                        </div>
+                        <div class='form-group col-lg-6 col-sm-12'>
+                            <label class='control-label'>Product Type</label>
+                            <input type="text" name="product_type" value="" class='form-control' placeholder='We can have default product type'>
+                        </div>
+                        <div class='form-group col-lg-6 col-sm-12'>
+                            <label class='control-label'>Vendor</label>
+                            <input type="text" name="vendor" value="" class='form-control' placeholder='We can default to your vendor'>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class='control-label'>Tags</label>
+                            <textarea name="tags" rows="2" cols="40" placeholder='We can default this to whatever you want as well' class='form-control'></textarea>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class='control-label'>BodyHtml</label>
+                            <textarea name="body_html" rows="2" cols="40" placeholder='Comma-separated string of tags for the product' class='form-control'></textarea>
+                        </div>
+                        <hr>
+                        <div class='form-group col-sm-12'>
+                            <label class='control-label'>ZIP File</label>
+                            <input type="file" name="zip_file" value="">
+                        </div>
+                        <a id='advanced'>Advanced Settings</a>
+                        <div class="advanced-wrapper" id='advanced-wrapper' style='display:none'>
 
+                        </div>
                     </div>
-                </div>
-                <div class="panel-footer">
-                    <input type="submit" name="name" value="Submit" class='btn btn-primary pull-right'>
-                    <div class='clearfix'></div>
-                </div>
-            </form>
+                    <div class="panel-footer">
+                        <input type="submit" name="name" value="Submit" class='btn btn-primary pull-right'>
+                        <div class='clearfix'></div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
+    {% if res %}
+        <div class="row">
+            <pre>
+                {{ res }}
+            </pre>
+        </div>
+    {% endif %}
     <style media="screen">
         #advanced {
             cursor: pointer;

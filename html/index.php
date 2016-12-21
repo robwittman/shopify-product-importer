@@ -120,7 +120,8 @@ $app->post('/products', function ($request, $response) {
         $res = callShopify($url."/admin/products.json", "POST", array('product' => $product));
         if($res) {
             return $this->view->render($response, 'product.html', array(
-                'result' => $res->product->id
+                'result' => $res->product->id,
+                'res' => json_encode($res)
             ));
         }
     } else {
