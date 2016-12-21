@@ -224,6 +224,7 @@ $app->post('/products', function ($request, $response) {
             $res = callShopify("/admin/products/{$res->product->id}.json", "PUT", $pass_data);
 
             if (!$res) {
+                error_log(json_encode($res));
                 return $this->view->render($response, 'product.html', array(
                     'error' => "An error occured updating product images"
                 ));
