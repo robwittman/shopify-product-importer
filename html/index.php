@@ -19,7 +19,7 @@ $container['view'] = function ($c) {
     $view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
 
     $view->getEnvironment()->addGlobal('flash', $c['flash']);
-    $view->getEnvironment()->addGlobal('store', $_SESSION['myshopify_domain']);
+    $view->getEnvironment()->addGlobal('store', getenv("MYSHOPIFY_DOMAIN"));
     return $view;
 };
 
@@ -32,41 +32,9 @@ $app->get('/', function ($request, $response) {
 });
 
 /*========================================
-    Authentication
-========================================*/
-$app->get('/auth', function ($request, $response) {
-    return $this->view->render($response, 'auth.html', array(
-        'session' => $_SESSION
-    ));
-});
-
-$app->post('/auth', function ($request, $response) {
-    $params = $request->getParsedBody();
-    $_SESSION['shopify_api_key'] =  $params['shopify_api_key'];
-    $_SESSION['shopify_password'] = $params['shopify_password'];
-    $_SESSION['shopify_shared_secret'] = $params['shopify_shared_secret'];
-    $_SESSION['myshopify_domain'] = $params['myshopify_domain'];
-    $this->flash->addMessage('message', Messages::AUTHENTICATION_SET);
-    return $response->withRedirect('/products');
-});
-
-$app->any('/clear', function ($request, $response) {
-    session_destroy();
-    $this->flash->addMessage('message', "Session successfully cleared");
-    return $this->view->render($response, 'auth.html');
-});
-
-/*========================================
     Product Upload and Review
 ========================================*/
 $app->get('/products', function ($request, $response) {
-    if (!$_SESSION['shopify_api_key'] ||
-       !$_SESSION['shopify_password'] ||
-       !$_SESSION['shopify_shared_secret'] ||
-       !$_SESSION['myshopify_domain']) {
-           $this->flash->addMessage('error', Errors::NO_AUTHENTICATION_PROVIDED);
-           return $response->withRedirect('/auth');
-    }
     return $this->view->render($response, 'product.html');
 });
 
@@ -117,8 +85,7 @@ $app->post('/products', function ($request, $response) {
             'variants'      => array(),
             'images'        => array()
         );
-        $url = generateUrl($_SESSION);
-        $res = callShopify($url."/admin/products.json", "POST", array('product' => $product));
+        $res = callShopify("/admin/products.json", "POST", array('product' => $product));
         if($res) {
             return $this->view->render($response, 'product.html', array(
                 'result' => $res->product->id,

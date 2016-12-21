@@ -3,6 +3,7 @@
 if (!function_exists("callShopify")) {
     function callShopify($url, $method = 'GET', $params = array())
     {
+        $base = generateUrl();
         $c = curl_init();
         if ($method == "GET") {
             $url = $url . "?" . http_build_query($params);
@@ -10,8 +11,8 @@ if (!function_exists("callShopify")) {
             curl_setopt($c, CURLOPT_POST, 1);
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($params));
         }
-        error_log($url);
-        curl_setopt($c, CURLOPT_URL, $url);
+        curl_setopt($c, CURLOPT_URL, $base.$url);
+        error_log($base.$url);
         curl_setopt($c, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json"
         ));
@@ -23,8 +24,11 @@ if (!function_exists("callShopify")) {
 }
 
 if (!function_exists("generateUrl")) {
-    function generateUrl($session)
+    function generateUrl()
     {
-        return sprintf("https://%s:%s@%s", $session['shopify_api_key'], $session['shopify_password'], $session['myshopify_domain']);
+        $key = getenv("SHOPIFY_API_KEY");
+        $pass = getenv("SHOPIFY_PASSWORD");
+        $domain = getenv("MYSHOPIFY_DOMAIN");
+        return sprintf("https://%s:%s@%s", $key, $pass, $domain);
     }
 }
