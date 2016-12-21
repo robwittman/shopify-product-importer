@@ -38,6 +38,11 @@ $app->get('/products', function ($request, $response) {
     return $this->view->render($response, 'product.html');
 });
 
+$app->get('/debug', function($request, $response) {
+    return $this->view->render($response, 'debug.html', array(
+        'info' => phpinfo()
+    ));
+});
 $app->post('/products', function ($request, $response) {
     $results = array();
     $files = $request->getUploadedFiles();
