@@ -38,74 +38,150 @@ $app->get('/products', function ($request, $response) {
     return $this->view->render($response, 'product.html');
 });
 
-$app->get('/debug', function($request, $response) {
+$app->get('/debug', function ($request, $response) {
     return $this->view->render($response, 'debug.html', array(
         'info' => phpinfo()
     ));
 });
+
+$app->get('/matrix', function ($request, $response) {
+    $matrix = file_get_contents('../src/matrix.json');
+    if (!$matrix) {
+        $this->flash->addMessage('error', "Failed loading product matrix!");
+        return $this->view->render($response, 'product.html');
+    }
+    return $this->view->render($response, 'matrix.html', array(
+        'matrix' => $matrix
+    ));
+});
+
 $app->post('/products', function ($request, $response) {
-    $results = array();
+    $matrix = json_decode(file_get_contents('../src/matrix.json'), true);
+    if (!$matrix) {
+        return $this->view->render($response, 'product.html', array(
+            'error' => "Failed loading product matrix!"
+        ));
+    }
+    $images = array();
     $files = $request->getUploadedFiles();
     $hash = hash('sha256', uniqid());
     $path = "/tmp/{$hash}";
     if (empty($_FILES['zip_file'])) {
-        $this->flash->addMessage('error', "You have to upload a .zip file");
-        return $this->view->render($response, 'product.html');
+        return $this->view->render($response, 'product.html', array(
+            'error' => "You have to upload a .zip file"
+        ));
     }
-    $images = array();
 
     $file = $_FILES['zip_file'];
-    error_log("FILE ERROR :: ".$file['error']);
-    if ($file['error'] === UPLOAD_ERR_OK) {
-        $tmpName = $file['tmp_name'];
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        return $this->view->render($response, 'product.html', array(
+            'error' => "There was an error uploading your .zip file. Code {$file['error']}"
+        ));
+    }
+    $tmpName = $file['tmp_name'];
 
-        $zip = new ZipArchive();
-        $zip->open($tmpName);
-        $zip->extractTo($path);
-        $zip->close();
+    $zip = new ZipArchive();
+    $zip->open($tmpName);
+    $zip->extractTo($path);
+    $zip->close();
 
-        // We now have files in "/tmp/{$hash}, so let's get a flat list of each image"
-        $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
+    // We now have files in "/tmp/{$hash}, so let's get a flat list of each image"
+    $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 
-        foreach ($objects as $name => $object) {
-            if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
-                continue;
-            }
-            $chunks = explode('/', $name);
-            $garment = $chunks[4];
-            $color = explode("-", basename($name, ".jpg"))[1];
-            $results[$garment][$color] = $name;
+    foreach ($objects as $name => $object) {
+        if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
+            continue;
         }
+        $chunks = explode('/', $name);
+        $garment = $chunks[4];
+        $color = explode("-", basename($name, ".jpg"))[1];
+        $images[$garment][$color] = $name;
+    }
 
-        // We have a multidimensional array of products with images. So now, we
-        // have to create the product, add its images, and then update the product with the map of
-        // images -> variants, so that Shopify is correct.
+    $created_products = array();
+    foreach ($matrix as $type => $data) {
+        $sizes = $data['sizes'];
+        $colors = $data['colors'];
         $product = array(
-            'title'         => $_POST['product_title'],
-            'handle'        => $_POST['product_handle'],
-            'body_html'     => $_POST['body_html'],
+            'title'         => $_POST['product_title'].' '.$type,
+            'body_html'     => $data['body_html'],
             'tags'          => $_POST['tags'],
             'vendor'        => $_POST['vendor'],
             'product_type'  => $_POST['product_type'],
+            'options'       => array(
+                array(
+                    'name' => "Size",
+                ),
+                array(
+                    'name' => "Color"
+                )
+            ),
             'variants'      => array(),
             'images'        => array()
         );
-        $res = callShopify("/admin/products.json", "POST", array('product' => $product));
-        if($res) {
-            return $this->view->render($response, 'product.html', array(
-                'result' => $res->product->id,
-                'res' => json_encode($res)
-            ));
-        } else {
-            $this->flash->addMessage('error', 'There was an error communicating with Shopify');
-            return $this->view->render($response, 'product.html');
+        // Add the image for each color
+        foreach ($sizes as $size => $data) {
+            foreach ($colors as $color) {
+                $product['variants'][] = array(
+                    'title' => "{$size} \/ {$color}",
+                    'price' => $data['price'],
+                    'grams' => $data['grams'],
+                    'option1' => $size,
+                    'option2' => $color,
+                    'weight' => $data['weight'],
+                    'weight_unit' => $data['weight_unit'],
+                    'requires_shipping' => true,
+                    'inventory_management' => null,
+                    'inventory_policy' => "deny"
+                );
+            }
         }
-    } else {
-        $this->flash->addMessage('error', "There was an error uploading your .zip file");
-        return $this->view->render($response, 'product.html');
-    }
 
-    // var_dump($files['zip_file']);
+
+        // Format garment and color for the image file
+        $garment = $type;
+        $c = $color;
+        if (isset($data['color_map'][$c])) {
+            $c = $data['color_map'][$c];
+        }
+        if ($garment == "Long Sleeve") {
+            $garment = 'LS';
+        } elseif ($garment == "Tee") {
+            $garment = "Tees";
+        } elseif ($garment == "Tank") {
+            $garment = "Tanks";
+        }
+        foreach ($images[$garment] as $image) {
+            array_push($product['images'], array(
+                'attachment' => base64_encode(file_get_contents($image)),
+                'filename' => $image,
+                "metafields" => array(
+                        array(
+                        'key' => 'color',
+                        'value' => $color,
+                        'value_type' => 'string',
+                        'namespace' => 'mapping'
+                    )
+                )
+            ));
+        }
+        // Let's create our product
+        $res = callShopify("/admin/products.json", "POST", array('product' => $product));
+        if ($res) {
+            $created_products[] = $res;
+            // Now we need to update to map images to variants
+        } else {
+            foreach ($created_products as $created) {
+                // DELETE successful products, and return result
+            }
+            return $this->view->render($response, 'product.html', array(
+                'error' => "An error occured creating your products"
+            ));
+        }
+    }
+    return $this->view->render($response, 'result.html', array(
+        'products' => json_encode($created_products)
+    ));
 });
 
 

@@ -1,0 +1,30 @@
+{
+   "Tanks":{
+      "Royal":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Tanks\\/BellaFront-Royal.jpg",
+      "Charcoal":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Tanks\\/BellaFront-Charcoal.jpg",
+      "Navy":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Tanks\\/BellaFront-Navy.jpg",
+      "Black":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Tanks\\/BellaFront-Black.jpg",
+      "":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Tanks\\/BellaFrontPink.jpg"
+   },
+   "Hoodie":{
+      "Charcoal":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Hoodie\\/Hoodie-Charcoal.jpg",
+      "Royal":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Hoodie\\/Hoodie-Royal.jpg",
+      "Pink":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Hoodie\\/Hoodie-Pink.jpg",
+      "Navy":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Hoodie\\/Hoodie-Navy.jpg",
+      "Black":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Hoodie\\/Hoodie-Black.jpg"
+   },
+   "LS":{
+      "Navy":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/LS\\/LS-Navy.jpg",
+      "Black":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/LS\\/LS-Black.jpg",
+      "Royal":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/LS\\/LS-Royal.jpg",
+      "Charcoal":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/LS\\/LS-Charcoal.jpg",
+      "Purple":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/LS\\/LS-Purple.jpg"
+   },
+   "Tees":{
+      "Black":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Tees\\/Tee-Black.jpg",
+      "Navy":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Tees\\/Tee-Navy.jpg",
+      "Charcoal":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Tees\\/Tee-Charcoal.jpg",
+      "Royal":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Tees\\/Tee-Royal.jpg",
+      "Purple":"\\/tmp\\/c72d7abfef908cc2b3bd13c06b3aac5ef19243456716a17febaf8dfa6abaa0dc\\/Buck Off\\/Tees\\/Tee-Purple.jpg"
+   }
+}

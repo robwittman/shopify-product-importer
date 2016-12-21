@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-lg-6 col-lg-offset-3 col-sm-12">
             <div class="panel panel-default">
-                <form action="/products" method="post" enctype='multipart/form-data'>
+                <form action="/products" method="post" enctype='multipart/form-data' id='productForm'>
                     <div class="panel-heading">
                         Create New Product
                     </div>
@@ -26,20 +26,20 @@
                         </div>
                         <div class='form-group col-lg-6 col-sm-12'>
                             <label class='control-label'>Product Type</label>
-                            <input type="text" name="product_type" value="" class='form-control' placeholder='We can have default product type'>
+                            <input type="text" name="product_type" valueproducts="Shirts" class='form-control'>
                         </div>
                         <div class='form-group col-lg-6 col-sm-12'>
                             <label class='control-label'>Vendor</label>
-                            <input type="text" name="vendor" value="" class='form-control' placeholder='We can default to your vendor'>
+                            <input type="text" name="vendor" value="BPP" class='form-control'>
                         </div>
                         <div class="form-group col-sm-12">
                             <label class='control-label'>Tags</label>
                             <textarea name="tags" rows="2" cols="40" placeholder='We can default this to whatever you want as well' class='form-control'></textarea>
                         </div>
-                        <div class="form-group col-sm-12">
+                        <!-- <div class="form-group col-sm-12">
                             <label class='control-label'>BodyHtml</label>
-                            <textarea name="body_html" rows="2" cols="40" placeholder='Comma-separated string of tags for the product' class='form-control'></textarea>
-                        </div>
+                            <textarea name="body_html" rows="3" cols="40" placeholder='Comma-separated string of tags for the product' class='form-control'>&lt;img src=&quot;//cdn.shopify.com/s/files/1/1335/7705/files/13403334_10154065892745733_4480761494036514837_o_large.jpg?10673323962259018597&quot; alt=&quot;&quot; /&gt;</textarea>
+                        </div> -->
                         <hr>
                         <div class='form-group col-sm-12'>
                             <label class='control-label'>ZIP File</label>
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <input type="submit" name="name" value="Submit" class='btn btn-primary pull-right'>
+                        <input type="submit" name="name" value="Submit" class='btn btn-primary pull-right' id='submit'>
                         <div class='clearfix'></div>
                     </div>
                 </form>
@@ -76,6 +76,13 @@
         $(document).ready(function() {
             $('#advanced').click(function(ev) {
                 $('#advanced-wrapper').toggle();
+            })
+            $('#productForm').submit(function(ev) {
+                $('#submit').attr('disabled', 'disabled').prop('value', 'Submitting');
+                $(this).submit(function() {
+                    return false;
+                });
+                return true;
             })
         })
     </script>
