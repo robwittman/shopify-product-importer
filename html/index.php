@@ -82,6 +82,7 @@ $app->post('/products', function ($request, $response) {
     $images = array();
 
     $file = $_FILES['zip_file'];
+    error_log("FILE ERROR :: ".$file['error']);
     if ($file['error'] === UPLOAD_ERR_OK) {
         $tmpName = $file['tmp_name'];
 
