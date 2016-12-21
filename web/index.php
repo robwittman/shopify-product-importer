@@ -1,6 +1,8 @@
 <?php
+session_start();
 
 require_once('../vendor/autoload.php');
+
 
 $app = new Slim\App(array(
     'settings' => $settings
@@ -15,9 +17,12 @@ $container['view'] = function($c) {
 };
 
 $app->get('/', function ($request, $response) {
-    return $this->view->render($response, 'profile.html', [
-        'name' => 'Rob Wittman'
-    ]);
+
 });
+
+// Check we have access to current store
+$app->add(new App\Middleware\ShopifyInstallation());
+// Check the store is allowed to use the app
+$app->add(new App\Middleware\ValidateShopifyDomain());
 
 $app->run();
