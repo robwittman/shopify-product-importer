@@ -31,6 +31,8 @@
                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{store}} <span class="caret"></span></a>
                          <ul class="dropdown-menu">
                            <li><a href="/matrix">View Product Matrix</a></li>
+                           <li><a href="/debug">Debug Environment</a></li>
+                           <li><a href="/logout">Logout</a></li>
                          </ul>
                        </li>
                      </ul>
@@ -40,19 +42,19 @@
         <div class="container-fluid">
             <div class="row">
                 {% if flash.getMessage('error') %}
-                    <div class="col-sm-10 col-sm-offset-1 alert alert-danger">
+                    <div class="col-sm-6 col-sm-offset-3 alert alert-danger">
                         {{ flash.getMessage('error')[0] }}
                     </div>
                 {% elseif flash.getMessage('message') %}
-                    <div class="col-sm-10 col-sm-offset-1 alert alert-success">
+                    <div class="col-sm-6 col-sm-offset-3 alert alert-success">
                         {{ flash.getMessage('message')[0] }}
                     </div>
                 {% elseif error %}
-                    <div class="col-sm-10 col-sm-offset-1 alert alert-danger">
+                    <div class="col-sm-6 col-sm-offset-3 alert alert-danger">
                         {{ error }}
                     </div>
                 {% elseif message %}
-                    <div class="col-sm-10 col-sm-offset-1 alert alert-success">
+                    <div class="col-sm-6 col-sm-offset-3 alert alert-success">
                         {{ message }}
                     </div>
                 {% endif %}

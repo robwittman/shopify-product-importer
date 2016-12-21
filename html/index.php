@@ -31,18 +31,40 @@ $app->get('/', function ($request, $response) {
     return $this->view->render($response, 'product.html');
 });
 
+$app->get('/login', function ($request, $response) {
+    $this->view->render($response, 'auth.html');
+});
+
+$app->any('/logout', function ($request, $response) {
+    session_destroy();
+    $this->view->render($response, 'auth.html');
+});
+
+$app->post('/login', function ($request, $response) {
+    $password = $_POST['password'];
+    if ($password == getenv("PASSWORD")) {
+        $_SESSION['logged_in'] = 1;
+        $_SESSION['expiration'] = strtotime('+6 hours');
+        $this->flash->addMessage('message', "Login successful");
+        return $response->withRedirect('/products');
+    } else {
+        $this->view->render($response, 'auth.html', array(
+            'error' => "Unauthorized"
+        ));
+    }
+});
 /*========================================
     Product Upload and Review
 ========================================*/
 $app->get('/products', function ($request, $response) {
     return $this->view->render($response, 'product.html');
-});
+})->add('checkLogin');
 
 $app->get('/debug', function ($request, $response) {
     return $this->view->render($response, 'debug.html', array(
         'info' => phpinfo()
     ));
-});
+})->add('checkLogin');
 
 $app->get('/matrix', function ($request, $response) {
     $matrix = file_get_contents('../src/matrix.json');
@@ -53,7 +75,7 @@ $app->get('/matrix', function ($request, $response) {
     return $this->view->render($response, 'matrix.html', array(
         'matrix' => $matrix
     ));
-});
+})->add('checkLogin');
 
 $app->post('/products', function ($request, $response) {
     $matrix = json_decode(file_get_contents('../src/matrix.json'), true);
@@ -87,17 +109,19 @@ $app->post('/products', function ($request, $response) {
 
     // We now have files in "/tmp/{$hash}, so let's get a flat list of each image"
     $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
-
     foreach ($objects as $name => $object) {
         if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
             continue;
         }
         $chunks = explode('/', $name);
-        $garment = $chunks[4];
-        $color = explode("-", basename($name, ".jpg"))[1];
-        $images[$garment][$color] = $name;
+        if (substr(basename($name, ".jpg"), -4)== "Pink") {
+            $images[$garment]["Pink"] = $name;
+        } else {
+            $garment = $chunks[4];
+            $color = explode("-", basename($name, ".jpg"))[1];
+            $images[$garment][$color] = $name;
+        }
     }
-
     $created_products = array();
     foreach ($matrix as $type => $data) {
         $sizes = $data['sizes'];
@@ -138,38 +162,73 @@ $app->post('/products', function ($request, $response) {
         }
 
 
-        // Format garment and color for the image file
-        $garment = $type;
-        $c = $color;
-        if (isset($data['color_map'][$c])) {
-            $c = $data['color_map'][$c];
-        }
-        if ($garment == "Long Sleeve") {
-            $garment = 'LS';
-        } elseif ($garment == "Tee") {
-            $garment = "Tees";
-        } elseif ($garment == "Tank") {
-            $garment = "Tanks";
-        }
-        foreach ($images[$garment] as $image) {
-            array_push($product['images'], array(
-                'attachment' => base64_encode(file_get_contents($image)),
-                'filename' => $image,
-                "metafields" => array(
-                        array(
-                        'key' => 'color',
-                        'value' => $color,
-                        'value_type' => 'string',
-                        'namespace' => 'mapping'
-                    )
-                )
-            ));
-        }
         // Let's create our product
         $res = callShopify("/admin/products.json", "POST", array('product' => $product));
         if ($res) {
-            $created_products[] = $res;
-            // Now we need to update to map images to variants
+            $update = array();
+            // Format garment and color for the image file
+            $garment = $type;
+
+            if ($garment == "Long Sleeve") {
+                $garment = 'LS';
+            } elseif ($garment == "Tee") {
+                $garment = "Tees";
+            } elseif ($garment == "Tank") {
+                $garment = "Tanks";
+            }
+            // Map of variant_ids for each color (matrix color!)
+            $variant_map = array();
+            foreach ($res->product->variants as $variant) {
+                if (!isset($variant_map[$variant->option2])) {
+                    $variant_map[$variant->option2] = array($variant->id);
+                } else {
+                    array_push($variant_map[$variant->option2], $variant->id);
+                }
+            }
+
+            foreach ($images[$garment] as $col => $image) {
+                $variant_ids = array();
+                switch ($col) {
+                    case "Royal":
+                        $variant_ids = $variant_map["Royal Blue"];
+                        break;
+                    case "Charcoal":
+                        $variant_ids = $variant_map["Grey"];
+                        break;
+                    case "Navy":
+                        $variant_ids = $variant_map["Navy"];
+                        break;
+                    case "Black":
+                        $variant_ids = $variant_map["Black"];
+                        break;
+                    case "Pink":
+                        $variant_ids = $variant_map["Pink"];
+                        break;
+                    case "Purple":
+                        $variant_ids = $variant_map["Purple"];
+                        break;
+                }
+                $data = array(
+                    'attachment' => base64_encode(file_get_contents($image)),
+                    'variant_ids' => $variant_ids
+                );
+                array_push($update, $data);
+            }
+
+            $pass_data = array(
+                "product" => array(
+                    "id" => $res->product->id,
+                    "images" => $update
+                )
+            );
+            $res = callShopify("/admin/products/{$res->product->id}.json", "PUT", $pass_data);
+
+            if (!$res) {
+                return $this->view->render($response, 'product.html', array(
+                    'error' => "An error occured updating product images"
+                ));
+            }
+            $created_products[] = $res->product;
         } else {
             foreach ($created_products as $created) {
                 // DELETE successful products, and return result
@@ -180,9 +239,16 @@ $app->post('/products', function ($request, $response) {
         }
     }
     return $this->view->render($response, 'result.html', array(
-        'products' => json_encode($created_products)
+        'products' => $created_products
     ));
-});
+})->add('checkLogin');
 
-
+function checkLogin($request, $response, $next)
+{
+    if (isset($_SESSION['logged_in']) && $_SESSION['expiration'] > time()) {
+        return $next($request, $response);
+    }
+    session_destroy();
+    return $response->withRedirect('/login');
+}
 $app->run();

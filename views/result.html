@@ -1,7 +1,45 @@
 {% extends "templates/navbar.html" %}
 
 {% block content %}
-<pre>
-    {{ products }}
-</pre>
+<div class="col-sm-8 col-sm-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Creation Results
+            </div>
+            <div class="panel-body">
+                <table class='table table-bordered table-striped'>
+                    <tr>
+                        <th>
+                            Product ID
+                        </th>
+                        <th>
+                            Product Title
+                        </th>
+                        <th>
+                            Review Link
+                        </th>
+                    </tr>
+                    {% for product in products %}
+                        <tr>
+                            <td>
+                                <a href="https://{{store}}/admin/products/{{product.id}}" target="_blank">{{product.id}}</a>
+                            </td>
+                            <td>
+                                {{product.title}}
+                            </td>
+                            <td>
+                                <a href="https://{{store}}/admin/products/{{product.id}}" class='btn btn-primary' target="_blank">Review</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="panel-footer">
+                <a href="/products" class='btn btn-primary pull-right'>Upload Another</a>
+                <div class="clearfix">
+
+                </div>
+            </div>
+        </div>
+</div>
 {% endblock %}
