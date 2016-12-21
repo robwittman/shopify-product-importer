@@ -118,9 +118,11 @@ $app->post('/products', function ($request, $response) {
         );
         $url = generateUrl($_SESSION);
         $res = callShopify($url."/admin/products.json", "POST", array('product' => $product));
-        return $response->withJson(array(
-            'res' => $res
-        ));
+        if($res) {
+            return $this->view->render($response, 'product.html', array(
+                'result' => $res->product->id
+            ));
+        }
     } else {
         $this->flash->addMessage('error', "There was an error uploading your .zip file");
         return $this->view->render($response, 'product.html');

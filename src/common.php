@@ -3,7 +3,6 @@
 if (!function_exists("callShopify")) {
     function callShopify($url, $method = 'GET', $params = array())
     {
-        var_dump($params);
         $c = curl_init();
         if ($method == "GET") {
             $url = $url . "?" . http_build_query($params);
@@ -15,9 +14,9 @@ if (!function_exists("callShopify")) {
         curl_setopt($c, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json"
         ));
-        curl_setopt($c, CURLOPT_VERBOSE, 1);
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         $res = curl_exec($c);
+        var_dump($res);
         return json_decode($res);
     }
 }
