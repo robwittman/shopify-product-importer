@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY . /var/www
 
-COPY php.ini /usr/local/etc/php/php.ini
+COPY .user.ini /usr/local/etc/php/php.ini
 
 RUN a2enmod rewrite
 

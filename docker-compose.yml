@@ -8,7 +8,9 @@ services:
             - redis
         volumes:
             - ./:/var/www/
-            - ./php.ini:/usr/local/etc/php/php.ini
+            - ./.user.ini:/usr/local/etc/php/php.ini
+        environment:
+            REDISCLOUD_URL: tcp://redis:6379
     redis:
         image: redis
         volumes:
