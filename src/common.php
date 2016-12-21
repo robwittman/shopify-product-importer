@@ -8,14 +8,13 @@ if (!function_exists("callShopify")) {
         $c = curl_init();
         if ($method == "GET") {
             $url = $url . "?" . http_build_query($params);
-        } else if($method == "POST") {
+        } elseif ($method == "POST") {
             curl_setopt($c, CURLOPT_POST, 1);
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($params));
         } else {
             curl_setopt($c, CURLOPT_CUSTOMREQUEST, $method);
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($params));
         }
-        curl_setopt($c, CURLOPT_VERBOSE, 1);
         curl_setopt($c, CURLOPT_URL, $base.$url);
         curl_setopt($c, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json"
