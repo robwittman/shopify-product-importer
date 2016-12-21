@@ -10,12 +10,14 @@ if (!function_exists("callShopify")) {
             curl_setopt($c, CURLOPT_POST, 1);
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($params));
         }
+        error_log($url);
         curl_setopt($c, CURLOPT_URL, $url);
         curl_setopt($c, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json"
         ));
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         $res = curl_exec($c);
+        error_log($res);
         return json_decode($res);
     }
 }
