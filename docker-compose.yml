@@ -1,0 +1,17 @@
+version: "2"
+services:
+    web:
+        build: .
+        ports:
+            - 80:80
+        links:
+            - redis
+        volumes:
+            - ./:/var/www/
+            - ./php.ini:/usr/local/etc/php/php.ini
+    redis:
+        image: redis
+        volumes:
+            - ./data/redis:/data
+        ports:
+            - 6379:6379
