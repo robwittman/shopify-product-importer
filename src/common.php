@@ -15,6 +15,7 @@ if (!function_exists("callShopify")) {
             curl_setopt($c, CURLOPT_CUSTOMREQUEST, $method);
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($params));
         }
+        curl_setopt($c, CURLOPT_VERBOSE, 1);
         curl_setopt($c, CURLOPT_URL, $base.$url);
         curl_setopt($c, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json"
