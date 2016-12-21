@@ -123,6 +123,9 @@ $app->post('/products', function ($request, $response) {
                 'result' => $res->product->id,
                 'res' => json_encode($res)
             ));
+        } else {
+            $this->flash->addMessage('error', 'There was an error communicating with Shopify');
+            return $this->view->render($response, 'product.html');
         }
     } else {
         $this->flash->addMessage('error', "There was an error uploading your .zip file");
