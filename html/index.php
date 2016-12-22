@@ -12,6 +12,8 @@ $app = new Slim\App(array(
         'determineRouteBeforeAppMiddleware' => true
     )
 ));
+
+
 $container = $app->getContainer();
 $container['view'] = function ($c) {
     $view = new \Slim\Views\Twig('../views');
@@ -114,7 +116,7 @@ $app->post('/products', function ($request, $response) {
             continue;
         }
         $chunks = explode('/', $name);
-        if (substr(basename($name, ".jpg"), -4)== "Pink") {
+        if (strtolower(substr(basename($name, ".jpg"), -4)) == "pink") {
             $images[$garment]["Pink"] = $name;
         } else {
             $garment = $chunks[4];
@@ -122,6 +124,7 @@ $app->post('/products', function ($request, $response) {
             $images[$garment][$color] = $name;
         }
     }
+    writeLog(json_encode($images));
     $created_products = array();
     foreach ($matrix as $type => $data) {
         $sizes = $data['sizes'];
@@ -176,6 +179,8 @@ $app->post('/products', function ($request, $response) {
             } elseif ($garment == "Tank") {
                 $garment = "Tanks";
             }
+            writeLog($garment);
+
             // Map of variant_ids for each color (matrix color!)
             $variant_map = array();
             foreach ($res->product->variants as $variant) {
@@ -188,6 +193,7 @@ $app->post('/products', function ($request, $response) {
 
             foreach ($images[$garment] as $col => $image) {
                 $variant_ids = array();
+                $position = 0;
                 switch ($col) {
                     case "Royal":
                         $variant_ids = $variant_map["Royal Blue"];
@@ -197,6 +203,8 @@ $app->post('/products', function ($request, $response) {
                         break;
                     case "Navy":
                         $variant_ids = $variant_map["Navy"];
+                        $position = 1;
+                        // We also want to set this image as the default
                         break;
                     case "Black":
                         $variant_ids = $variant_map["Black"];
@@ -212,6 +220,9 @@ $app->post('/products', function ($request, $response) {
                     'attachment' => base64_encode(file_get_contents($image)),
                     'variant_ids' => $variant_ids
                 );
+                if ($position) {
+                    $data['position'] = 1;
+                }
                 array_push($update, $data);
             }
 
@@ -221,10 +232,11 @@ $app->post('/products', function ($request, $response) {
                     "images" => $update
                 )
             );
+            writeLog(json_encode($pass_data));
             $res = callShopify("/admin/products/{$res->product->id}.json", "PUT", $pass_data);
 
             if (!$res) {
-                error_log(json_encode($res));
+                writeLog(json_encode($res));
                 return $this->view->render($response, 'product.html', array(
                     'error' => "An error occured updating product images"
                 ));
@@ -251,5 +263,14 @@ function checkLogin($request, $response, $next)
     }
     session_destroy();
     return $response->withRedirect('/login');
+}
+
+function writeLog($message)
+{
+    return true;
+    // error_log($message);
+    // if (getenv("ENV") == "dev") {
+    //     error_log($message);
+    // }
 }
 $app->run();

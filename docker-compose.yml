@@ -9,12 +9,14 @@ services:
         volumes:
             - ./:/var/www/
             - ./html/.user.ini:/usr/local/etc/php/php.ini
+            - ./logs/output.log:/output.log
         environment:
             REDISCLOUD_URL: tcp://redis:6379
             SHOPIFY_API_KEY: deadd5cf0ff236a44901b70e60fbceb2
             SHOPIFY_PASSWORD: 16b875a75aaeedb782ad4dccfe8e847d
             MYSHOPIFY_DOMAIN: school-bus-drivers-unite.myshopify.com
             PASSWORD: davol350
+            ENV: dev
     redis:
         image: redis
         volumes:
