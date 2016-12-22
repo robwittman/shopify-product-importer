@@ -62,12 +62,6 @@ $app->get('/products', function ($request, $response) {
     return $this->view->render($response, 'product.html');
 })->add('checkLogin');
 
-$app->get('/debug', function ($request, $response) {
-    return $this->view->render($response, 'debug.html', array(
-        'info' => phpinfo()
-    ));
-})->add('checkLogin');
-
 $app->get('/changelog', function ($request, $response) {
     $changelog = json_decode(file_get_contents('../src/changelog.json'), true);
     return $this->view->render($response, 'changelog.html', array(
