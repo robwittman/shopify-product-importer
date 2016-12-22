@@ -1,0 +1,27 @@
+{% extends "templates/navbar.html" %}
+
+{% block content %}
+
+<div class="col-sm-4 col-sm-offset-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Changelog
+        </div>
+        <div class="panel-body">
+            {% for change in changelog %}
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3>{{ change.version }} <span class='pull-right'><small>{{ change.date }}</small></span></h3>
+                        <ul>
+                            {% for update in change.updates %}
+                                <li>{{ update }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

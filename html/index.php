@@ -68,6 +68,13 @@ $app->get('/debug', function ($request, $response) {
     ));
 })->add('checkLogin');
 
+$app->get('/changelog', function ($request, $response) {
+    $changelog = json_decode(file_get_contents('../src/changelog.json'), true);
+    return $this->view->render($response, 'changelog.html', array(
+        'changelog' => $changelog['changelog']
+    ));
+})->add('checkLogin');
+
 $app->get('/matrix', function ($request, $response) {
     $matrix = file_get_contents('../src/matrix.json');
     if (!$matrix) {
