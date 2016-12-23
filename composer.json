@@ -10,6 +10,7 @@
     "require": {
         "ext-zip" : "*",
         "ext-curl" : "*",
+        "ext-gd" : "*",
         "robby-bugatti/shopify-php-sdk": "^1.0",
         "plasticbrain/php-flash-messages": "^1.0",
         "slim/slim": "^3.7",

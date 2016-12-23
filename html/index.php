@@ -194,6 +194,7 @@ $app->post('/products', function ($request, $response) {
 
             foreach ($images[$garment] as $col => $image) {
                 $variant_ids = array();
+                $crop = false;
                 $position = 0;
                 switch ($col) {
                     case "Royal":
@@ -204,7 +205,19 @@ $app->post('/products', function ($request, $response) {
                         break;
                     case "Navy":
                         $variant_ids = $variant_map["Navy"];
+                        error_log("Navy product found. Cropping now....");
                         $position = 1;
+                        if ($position && !$crop) {
+                            $crop = true;
+                            // Also create our cropped image
+                            $tmpFile = '/tmp/cropped.jpg';
+                            $crop = cropImage($image, $tmpFile);
+                            $cropData = array(
+                                'attachment' => base64_encode(file_get_contents($tmpFile)),
+                                'position' => 1
+                            );
+                            array_push($update, $cropData);
+                        }
                         // We also want to set this image as the default
                         break;
                     case "Black":
@@ -221,9 +234,6 @@ $app->post('/products', function ($request, $response) {
                     'attachment' => base64_encode(file_get_contents($image)),
                     'variant_ids' => $variant_ids
                 );
-                if ($position) {
-                    $data['position'] = 1;
-                }
                 array_push($update, $data);
             }
 
@@ -233,7 +243,6 @@ $app->post('/products', function ($request, $response) {
                     "images" => $update
                 )
             );
-            writeLog(json_encode($pass_data));
             $res = callShopify("/admin/products/{$res->product->id}.json", "PUT", $pass_data);
 
             if (!$res) {
@@ -257,21 +266,5 @@ $app->post('/products', function ($request, $response) {
     ));
 })->add('checkLogin');
 
-function checkLogin($request, $response, $next)
-{
-    if (isset($_SESSION['logged_in']) && $_SESSION['expiration'] > time()) {
-        return $next($request, $response);
-    }
-    session_destroy();
-    return $response->withRedirect('/login');
-}
 
-function writeLog($message)
-{
-    return true;
-    // error_log($message);
-    // if (getenv("ENV") == "dev") {
-    //     error_log($message);
-    // }
-}
 $app->run();
