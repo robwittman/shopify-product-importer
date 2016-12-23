@@ -4,7 +4,6 @@ if (!function_exists("callShopify")) {
     function callShopify($url, $method = 'GET', $params = array())
     {
         $base = generateUrl();
-        error_log($base);
         $c = curl_init();
         if ($method == "GET") {
             $url = $url . "?" . http_build_query($params);

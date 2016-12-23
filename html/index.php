@@ -81,7 +81,6 @@ $app->get('/matrix', function ($request, $response) {
 })->add('checkLogin');
 
 $app->post('/products', function ($request, $response) {
-    error_log("Defaulting to {$_POST['default']}");
     $matrix = json_decode(file_get_contents('../src/matrix.json'), true);
     if (!$matrix) {
         return $this->view->render($response, 'product.html', array(
@@ -126,7 +125,7 @@ $app->post('/products', function ($request, $response) {
             $images[$garment][$color] = $name;
         }
     }
-    writeLog(json_encode($images));
+    error_log(json_encode($images));
     $created_products = array();
     foreach ($matrix as $type => $data) {
         $sizes = $data['sizes'];
@@ -181,7 +180,6 @@ $app->post('/products', function ($request, $response) {
             } elseif ($garment == "Tank") {
                 $garment = "Tanks";
             }
-            writeLog($garment);
 
             // Map of variant_ids for each color (matrix color!)
             $variant_map = array();
@@ -258,7 +256,6 @@ $app->post('/products', function ($request, $response) {
             $res = callShopify("/admin/products/{$res->product->id}.json", "PUT", $pass_data);
 
             if (!$res) {
-                writeLog(json_encode($res));
                 return $this->view->render($response, 'product.html', array(
                     'error' => "An error occured updating product images"
                 ));
