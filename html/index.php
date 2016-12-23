@@ -81,6 +81,7 @@ $app->get('/matrix', function ($request, $response) {
 })->add('checkLogin');
 
 $app->post('/products', function ($request, $response) {
+    error_log("Defaulting to {$_POST['default']}");
     $matrix = json_decode(file_get_contents('../src/matrix.json'), true);
     if (!$matrix) {
         return $this->view->render($response, 'product.html', array(
@@ -205,9 +206,8 @@ $app->post('/products', function ($request, $response) {
                         break;
                     case "Navy":
                         $variant_ids = $variant_map["Navy"];
-                        error_log("Navy product found. Cropping now....");
                         $position = 1;
-                        if ($position && !$crop) {
+                        if ($position && !$crop && $_POST['default'] == "navy") {
                             $crop = true;
                             // Also create our cropped image
                             $tmpFile = '/tmp/cropped.jpg';
@@ -222,6 +222,18 @@ $app->post('/products', function ($request, $response) {
                         break;
                     case "Black":
                         $variant_ids = $variant_map["Black"];
+                        $position = 1;
+                        if ($position && !$crop && $_POST['default'] == "black") {
+                            $crop = true;
+                            // Also create our cropped image
+                            $tmpFile = '/tmp/cropped.jpg';
+                            $crop = cropImage($image, $tmpFile);
+                            $cropData = array(
+                                'attachment' => base64_encode(file_get_contents($tmpFile)),
+                                'position' => 1
+                            );
+                            array_push($update, $cropData);
+                        }
                         break;
                     case "Pink":
                         $variant_ids = $variant_map["Pink"];
