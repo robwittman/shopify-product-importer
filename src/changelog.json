@@ -1,11 +1,18 @@
 {
     "changelog" : [
         {
+            "version" : "1.0.2",
+            "date" : "12-27-2016",
+            "updates" : [
+                "Removed Pink Hoodie from object creation"
+            ]
+        },
+        {
             "version" : "1.0.1",
             "date" : "12-23-2016",
             "updates" : [
                 "Added cropping of default image",
-                "Added select dropdown for selecting default color. CNavy and black supported",
+                "Added select dropdown for selecting default color. Navy and black supported",
                 "Installed our sweet favicon!"
             ]
         },
