@@ -1,0 +1,26 @@
+{% extends "templates/navbar.html" %}
+
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="panel panel-default">
+        <form action="/users/{{ user.id }}/access" method="post">
+            <div class="panel-heading">
+                Access for {{ user.email }}
+            </div>
+            <div class="panel-body">
+                <div class='form-group'>
+                    {% for shop in shops %}
+                        <label class='checkbox-inline'><input type='checkbox' name="shop_{{ shop.id }}" {% if shop.userHasAccess %} checked {% endif %}>{{ shop.myshopify_domain }}</label><br>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type='submit' class='btn btn-primary pull-right'>Update Access</button>
+                <div class="clearfix">
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

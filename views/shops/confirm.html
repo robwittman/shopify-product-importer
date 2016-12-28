@@ -1,0 +1,24 @@
+{% extends "templates/navbar.html" %}
+
+{% block content %}
+
+    <div class="col-sm-4 col-sm-offset-4">
+        <div class="panel panel-default">
+            <form action="/shops/{{ shop.id }}/delete" method="post">
+                <div class="panel-heading">
+                    Delete {{ shop.myshopify_domain }}?
+                </div>
+                <div class="panel-body">
+                    Are you sure you would like to delete {{ shop.myshopify_domain }}?
+                    This action cannot be undone.
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" name="button" class='btn btn-danger pull-right'>Delete</button>
+                    <div class="clearfix">
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,9 +1,9 @@
 <?php
 
 if (!function_exists("callShopify")) {
-    function callShopify($url, $method = 'GET', $params = array())
+    function callShopify($auth, $url, $method = 'GET', $params = array())
     {
-        $base = generateUrl();
+        $base = generateUrl($auth);
         $c = curl_init();
         if ($method == "GET") {
             $url = $url . "?" . http_build_query($params);
@@ -25,11 +25,11 @@ if (!function_exists("callShopify")) {
 }
 
 if (!function_exists("generateUrl")) {
-    function generateUrl()
+    function generateUrl($auth)
     {
-        $key = getenv("SHOPIFY_API_KEY");
-        $pass = getenv("SHOPIFY_PASSWORD");
-        $domain = getenv("MYSHOPIFY_DOMAIN");
+        $key = $auth->api_key;
+        $pass = $auth->password;
+        $domain = $auth->myshopify_domain;
         return sprintf("https://%s:%s@%s", $key, $pass, $domain);
     }
 }

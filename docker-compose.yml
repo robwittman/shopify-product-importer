@@ -5,6 +5,7 @@ services:
         ports:
             - 80:80
         links:
+            - postgres
             - redis
         volumes:
             - ./:/var/www/
@@ -12,14 +13,24 @@ services:
             - ./logs/output.log:/output.log
         environment:
             REDISCLOUD_URL: tcp://redis:6379
-            SHOPIFY_API_KEY: deadd5cf0ff236a44901b70e60fbceb2
-            SHOPIFY_PASSWORD: 16b875a75aaeedb782ad4dccfe8e847d
-            MYSHOPIFY_DOMAIN: school-bus-drivers-unite.myshopify.com
+            # SHOPIFY_API_KEY: deadd5cf0ff236a44901b70e60fbceb2
+            # SHOPIFY_PASSWORD: 16b875a75aaeedb782ad4dccfe8e847d
+            # MYSHOPIFY_DOMAIN: school-bus-drivers-unite.myshopify.com
             PASSWORD: davol350
             ENV: dev
     redis:
         image: redis
-        volumes:
-            - ./data/redis:/data
+        # volumes:
+            # - ./data/redis:/data # While on free plan, redis does not persist
         ports:
             - 6379:6379
+    postgres:
+        image: postgres
+        volumes:
+            - ./data/postgres:/var/lib/postgres
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_PASSWORD: password
+            POSTGRES_USER: postgres
+            POSTGRES_DB: shopify

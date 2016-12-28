@@ -1,0 +1,42 @@
+{% extends "templates/navbar.html" %}
+
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+        <div class="panel panel-default">
+            <form action="/users/{{ user.id }}" method="post">
+                <div class="panel-heading">
+                    Edit User
+                    <span class='pull-right'><a href="/users/{{ user.id }}/access">Access Settings</a></span>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class='control-label'>Email</label>
+                        <input type="text" name="email" value="{{ user.email }}" class='form-control'>
+                    </div>
+                    <div class="form-group">
+                        <label class='control-label'>Role</label>
+                        <select class="form-control" name="role">
+                            <option value='admin' {% if user.role == 'admin' %} selected="selected" {% endif %}>Admin</option>
+                            <option value='publisher' {% if user.role == 'publisher' %} selected="selected" {% endif %}>Publisher</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class='control-label'>New Password</label>
+                        <input type="password" name="new_pass" value="" class='form-control'>
+                    </div>
+                    <div class="form-group">
+                        <label class='control-label'>Confirm</label>
+                        <input type="password" name="confirm" value="" class='form-control'>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a class='btn btn-danger pull-left' href="/users/{{ user.id }}/delete">Delete</a>
+                    <button type='submit' class='btn btn-primary pull-right'>Update User</button>
+                    <div class="clearfix">
+
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+{% endblock %}

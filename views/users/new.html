@@ -1,0 +1,40 @@
+{% extends "templates/navbar.html" %}
+
+{% block content %}
+<div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
+        <div class="panel panel-default">
+            <form action="/users" method="post">
+                <div class="panel-heading">
+                    Create New User
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class='control-label'>Email</label>
+                        <input type="text" name="email" value="" class='form-control'>
+                    </div>
+                    <div class="form-group">
+                        <label class='control-label'>Role</label>
+                        <select class="form-control" name="role">
+                            <option value='admin'>Admin</option>
+                            <option value='publisher' selected>Publisher</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class='control-label'>Password</label>
+                        <input type="password" name="password" value="" class='form-control'>
+                    </div>
+                    <div class="form-group">
+                        <label class='control-label'>Confirm</label>
+                        <input type="password" name="confirm" value="" class='form-control'>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button type='submit' class='btn btn-primary pull-right'>Create User</button>
+                    <div class="clearfix">
+
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+{% endblock %}

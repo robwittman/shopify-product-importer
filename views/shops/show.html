@@ -1,0 +1,38 @@
+{% extends "templates/navbar.html" %}
+
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+        <div class="panel panel-default">
+            <form action="/shops/{{ shop.id }}" method="post">
+                <div class="panel-heading">
+                    Edit Shop
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class='control-label'>Domain</label>
+                        <input type="text" name="myshopify_domain" value="{{ shop.myshopify_domain }}" class='form-control'>
+                    </div>
+                    <div class="form-group">
+                        <label class='control-label'>API Key</label>
+                        <input type="text" name="api_key" value="{{ shop.api_key }}" class='form-control'>
+                    </div>
+                    <div class="form-group">
+                        <label class='control-label'>Password</label>
+                        <input type="password" name="password" value="{{ shop.password }}" class='form-control'>
+                    </div>
+                    <div class="form-group">
+                        <label class='control-label'>Shared Secret</label>
+                        <input type="password" name="shared_secret" value="{{ shop.shared_secret }}" class='form-control'>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="/shops/{{shop.id}}/delete" class='btn btn-danger pull-left'>Delete</a>
+                    <button type='submit' class='btn btn-primary pull-right'>Update Shop</button>
+                    <div class="clearfix">
+
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+{% endblock %}
