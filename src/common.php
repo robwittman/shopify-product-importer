@@ -116,7 +116,7 @@ if (!function_exists('resizeImage')) {
 }
 
 if (!function_exists('cropImage')) {
-    function cropImage($source, $destination, $maxWidth = 375, $maxHeight = 700, $quality = 100)
+    function cropImage($source, $destination, $maxWidth = 400, $maxHeight = 725, $quality = 100)
     {
         $image = @imagecreatefromjpeg($source);
         if (!$image) {
