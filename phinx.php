@@ -14,5 +14,8 @@ return array(
             'pass' => $dbConfig['pass'],
             'port' => $dbConfig['port']
         )
-    )
+    ),
+    "paths" => array(
+        "migrations" => "db/migrations"
+    ),
 );
