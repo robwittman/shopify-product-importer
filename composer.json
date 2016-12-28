@@ -11,6 +11,7 @@
         "ext-zip" : "*",
         "ext-curl" : "*",
         "ext-gd" : "*",
+        "ext-redis": "*",
         "robby-bugatti/shopify-php-sdk": "^1.0",
         "plasticbrain/php-flash-messages": "^1.0",
         "slim/slim": "^3.7",
