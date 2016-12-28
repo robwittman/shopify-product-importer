@@ -15,6 +15,11 @@ $capsule->addConnection($container['settings']['db']);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
+$capsule->getContainer()->singleton(
+    \Illuminate\Contracts\Debug\ExceptionHandler::class,
+    \App\CustomException::class
+);
+
 $container['db'] = function ($c) {
     return $capsule;
 };

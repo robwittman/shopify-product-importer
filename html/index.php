@@ -8,6 +8,8 @@ require_once '../src/common.php';
 use App\Model\Errors;
 use App\Model\Messages;
 
+$dbUrl = getenv("DATABASE_URL");
+$dbConfig = parse_url($dbUrl);
 // Load our App and container
 $app = new Slim\App(array(
     'settings' => array(
@@ -15,10 +17,10 @@ $app = new Slim\App(array(
         'displayErrorDetails' => false,
         'db' => array(
             'driver' => 'pgsql',
-            'host' => 'postgres',
-            'database' => 'shopify',
-            'username' => 'postgres',
-            'password' => 'password',
+            'host' => $dbConfig['host'],
+            'database' => ltrim($dbConfig['path'], '/'),
+            'username' => $dbConfig['user'],
+            'password' => $dbConfig['pass'],
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => ''
@@ -27,6 +29,7 @@ $app = new Slim\App(array(
 ));
 
 $app->add(new App\Middleware\Session());
+
 require_once '../src/container.php';
 require_once '../src/routes.php';
 
