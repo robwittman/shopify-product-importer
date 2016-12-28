@@ -22,13 +22,13 @@
                     {% for product in products %}
                         <tr>
                             <td>
-                                <a href="https://{{store}}/admin/products/{{product.id}}" target="_blank">{{product.id}}</a>
+                                <a href="https://{{shop.myshopify_domain}}/admin/products/{{product.id}}" target="_blank">{{product.id}}</a>
                             </td>
                             <td>
                                 {{product.title}}
                             </td>
                             <td>
-                                <a href="https://{{store}}/admin/products/{{product.id}}" class='btn btn-primary' target="_blank">Review</a>
+                                <a href="https://{{shop.myshopify_domain}}/admin/products/{{product.id}}" class='btn btn-primary' target="_blank">Review</a>
                             </td>
                         </tr>
                     {% endfor %}

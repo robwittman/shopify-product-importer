@@ -266,7 +266,8 @@ $app->post('/products', function ($request, $response) {
         }
     }
     return $this->view->render($response, 'result.html', array(
-        'products' => $created_products
+        'products' => $created_products,
+        'shop' => $shop
     ));
 })->add(new \App\Middleware\Authorization());
 
