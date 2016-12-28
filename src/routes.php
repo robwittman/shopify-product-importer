@@ -197,9 +197,16 @@ $app->post('/products', function ($request, $response) {
                         $variant_ids = $variant_map["Navy"];
                         if (!$crop && $_POST['default'] == "navy") {
                             $crop = true;
-                            // if ($garment == 'Tanks') {
-                            //     // $position = 1;
-                            // } else {
+                            if ($garment == 'Tanks') {
+                                $tmpFile = '/tmp/cropped.jpg';
+                                $crop = cropImage($image, $tmpFile, 425, 850);
+                                $cropData = array(
+                                    'attachment' => base64_encode(file_get_contents($tmpFile)),
+                                    'position' => 1
+                                );
+                                array_push($update, $cropData);
+                                // $position = 1;
+                            } else {
                                 $tmpFile = '/tmp/cropped.jpg';
                                 $crop = cropImage($image, $tmpFile);
                                 $cropData = array(
@@ -207,7 +214,7 @@ $app->post('/products', function ($request, $response) {
                                     'position' => 1
                                 );
                                 array_push($update, $cropData);
-                            // }
+                            }
                             // Also create our cropped image
                         }
                         // We also want to set this image as the default
@@ -216,9 +223,16 @@ $app->post('/products', function ($request, $response) {
                         $variant_ids = $variant_map["Black"];
                         if (!$crop && $_POST['default'] == "black") {
                             $crop = true;
-                            // if ($garment == 'Tanks') {
-                            //     // $position = 1;
-                            // } else {
+                            if ($garment == 'Tanks') {
+                                // $position = 1;
+                                $tmpFile = '/tmp/cropped.jpg';
+                                $crop = cropImage($image, $tmpFile, 425, 850);
+                                $cropData = array(
+                                    'attachment' => base64_encode(file_get_contents($tmpFile)),
+                                    'position' => 1
+                                );
+                                array_push($update, $cropData);
+                            } else {
                                 $tmpFile = '/tmp/cropped.jpg';
                                 $crop = cropImage($image, $tmpFile);
                                 $cropData = array(
@@ -226,7 +240,7 @@ $app->post('/products', function ($request, $response) {
                                     'position' => 1
                                 );
                                 array_push($update, $cropData);
-                            // }
+                            }
                             // Also create our cropped image
                         }
                         break;
