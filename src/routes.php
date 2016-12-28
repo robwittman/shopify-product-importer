@@ -226,7 +226,7 @@ $app->post('/products', function ($request, $response) {
                             if ($garment == 'Tanks') {
                                 // $position = 1;
                                 $tmpFile = '/tmp/cropped.jpg';
-                                $crop = cropImage($image, $tmpFile, 425, 750);
+                                $crop = cropImage($image, $tmpFile, 450, 800);
                                 $cropData = array(
                                     'attachment' => base64_encode(file_get_contents($tmpFile)),
                                     'position' => 1
