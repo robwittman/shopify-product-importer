@@ -197,7 +197,7 @@ $app->post('/products', function ($request, $response) {
                         $variant_ids = $variant_map["Navy"];
                         if (!$crop && $_POST['default'] == "navy") {
                             $crop = true;
-                            if ($garment == 'Tank') {
+                            if ($garment == 'Tanks') {
                                 $position = 1;
                             } else {
                                 $tmpFile = '/tmp/cropped.jpg';
@@ -216,7 +216,7 @@ $app->post('/products', function ($request, $response) {
                         $variant_ids = $variant_map["Black"];
                         if (!$crop && $_POST['default'] == "black") {
                             $crop = true;
-                            if ($garment == 'Tank') {
+                            if ($garment == 'Tanks') {
                                 $position = 1;
                             } else {
                                 $tmpFile = '/tmp/cropped.jpg';
