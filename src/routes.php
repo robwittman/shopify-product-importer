@@ -10,14 +10,14 @@ $app->get('/', function ($request, $response) {
 #
 #   Uncomment to tu admin user in database
 #
-$app->get('/init', function ($request, $response) {
-    $user = new \App\Model\User();
-    $user->email = 'admin@admin.com';
-    $user->password = 'password';
-    $user->role = 'admin';
-    $user->save();
-    var_dump($user);
-});
+// $app->get('/init', function ($request, $response) {
+//     $user = new \App\Model\User();
+//     $user->email = 'admin@admin.com';
+//     $user->password = 'password';
+//     $user->role = 'admin';
+//     $user->save();
+//     var_dump($user);
+// });
 /*========================================
     User Routes
  =======================================*/
@@ -206,9 +206,9 @@ $app->post('/products', function ($request, $response) {
                                     'attachment' => base64_encode(file_get_contents($tmpFile)),
                                     'position' => 1
                                 );
+                                array_push($update, $cropData);
                             }
                             // Also create our cropped image
-                            array_push($update, $cropData);
                         }
                         // We also want to set this image as the default
                         break;
