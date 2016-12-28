@@ -195,10 +195,10 @@ $app->post('/products', function ($request, $response) {
                         break;
                     case "Navy":
                         $variant_ids = $variant_map["Navy"];
-                        $position = 1;
-                        if ($position && !$crop && $_POST['default'] == "navy") {
+                        if (!$crop && $_POST['default'] == "navy") {
                             $crop = true;
                             if ($garment == 'Tank') {
+                                $position = 1;
                             } else {
                                 $tmpFile = '/tmp/cropped.jpg';
                                 $crop = cropImage($image, $tmpFile);
@@ -214,10 +214,10 @@ $app->post('/products', function ($request, $response) {
                         break;
                     case "Black":
                         $variant_ids = $variant_map["Black"];
-                        $position = 1;
-                        if ($position && !$crop && $_POST['default'] == "black") {
+                        if (!$crop && $_POST['default'] == "black") {
                             $crop = true;
                             if ($garment == 'Tank') {
+                                $position = 1;
                             } else {
                                 $tmpFile = '/tmp/cropped.jpg';
                                 $crop = cropImage($image, $tmpFile);
@@ -241,6 +241,9 @@ $app->post('/products', function ($request, $response) {
                     'attachment' => base64_encode(file_get_contents($image)),
                     'variant_ids' => $variant_ids
                 );
+                if ($position) {
+                    $data['position'] = 1;
+                }
                 array_push($update, $data);
             }
 
