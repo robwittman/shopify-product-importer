@@ -118,8 +118,10 @@ $app->post('/products', function ($request, $response) {
     }
     $created_products = array();
     foreach ($matrix as $type => $data) {
+        // $positioned = false;
         $sizes = $data['sizes'];
         $colors = $data['colors'];
+        $variants = array();
         $product = array(
             'title'         => $_POST['product_title'].' '.$type,
             'body_html'     => $data['body_html'],
@@ -140,7 +142,7 @@ $app->post('/products', function ($request, $response) {
         // Add the image for each color
         foreach ($sizes as $size => $data) {
             foreach ($colors as $color) {
-                $product['variants'][] = array(
+                $variant = array(
                     'title' => "{$size} \/ {$color}",
                     'price' => $data['price'],
                     'grams' => $data['grams'],
@@ -152,14 +154,41 @@ $app->post('/products', function ($request, $response) {
                     'inventory_management' => null,
                     'inventory_policy' => "deny"
                 );
+                $variants[] = $variant;
             }
         }
 
-
+        switch ($_POST['default']) {
+            case 'black':
+                foreach ($variants as $key => $variant) {
+                    if ($variant['option2'] == 'Black') {
+                        $product['variants'][] = $variant;
+                        unset($variants[$key]);
+                    }
+                }
+                foreach($variants as $variant) {
+                    $product['variants'][] = $variant;
+                }
+                break;
+            case 'navy':
+                foreach ($variants as $key => $variant) {
+                    if ($variant['option2'] == 'Navy') {
+                        $product['variants'][] = $variant;
+                        unset($variants[$key]);
+                    }
+                }
+                foreach($variants as $variant) {
+                    $product['variants'][] = $variant;
+                }
+                break;
+            default:
+                $product['variants'] = $variants;
+        }
         // Let's create our product
         $res = callShopify($shop, "/admin/products.json", "POST", array('product' => $product));
 
         if ($res) {
+            $positioned = false;
             $update = array();
             // Format garment and color for the image file
             $garment = $type;
