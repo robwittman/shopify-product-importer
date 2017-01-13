@@ -38,8 +38,7 @@ $container['rabbit'] = function($c) {
         $pieces['host'],
         $pieces['port'],
         $pieces['user'],
-        $pieces['host'],
-        $pieces['path']
+        $pieces['host']
     );
     $channel = $connection->channel();
     $channel->queue_declare('task_queue', false, false, false, false);
