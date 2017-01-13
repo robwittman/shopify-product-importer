@@ -15,6 +15,7 @@ $connection = new AMQPConnection(
     $pieces['host'],
     $pieces['path']
 );
+error_log("Connected");
 $channel = $connection->channel();
 
 $channel->queue_declare('task_queue', false, true, false, false);
