@@ -1,7 +1,16 @@
 <?php
-// TODO: Get rabbitmq connection
 
-$connection = null;
+use PhpAmqpLib\Connection\AMQPConnection;
+use PhpAmqpLib\Message\AMQPMessage
+
+$url = getenv("RABBITMQ_BIGWIG_URL");
+$pieces = parse_url($url);
+$connection = new AMQPConnection(
+    $pieces['host'],
+    $pieces['port'],
+    $pieces['user'],
+    $pieces['host']
+);
 $channel = $connection->channel();
 
 $channel->queue_declare('task_queue', false, true, false, false);
