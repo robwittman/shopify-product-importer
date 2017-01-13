@@ -1,5 +1,8 @@
 <?php
 
+use PhpAmqpLib\Connection\AMQPConnection;
+use PhpAmqpLib\Message\AMQPMessage;
+
 $container = $app->getContainer();
 $container['view'] = function ($c) {
     $view = new \Slim\Views\Twig('../views');
@@ -28,6 +31,21 @@ $container['flash'] = function ($c) {
     return new Slim\Flash\Messages();
 };
 
+$container['rabbit'] = function($c) {
+    $url = getenv("RABBITMQ_BIGWIG_URL");
+    $pieces = parse_url($url);
+    $connection = new AMQPConnection(
+        'rabbitmq',
+        '5672',
+        'guest',
+        'guest'
+    );
+    $channel = $connection->channel();
+    $channel->queue_declare('task_queue', false, false, false, false);
+
+    return $channel;
+};
+
 $container['AuthController'] = function ($c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
@@ -44,4 +62,11 @@ $container['ShopController'] = function ($c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
     return new \App\Controller\Shops($view, $flash);
+};
+
+$container['ProductController'] = function($c) {
+    $view = $c->get('view');
+    $flash = $c->get('flash');
+    $rabbit = $c->get('rabbit');
+    return new \App\Controller\Products($view, $flash, $rabbit);
 };

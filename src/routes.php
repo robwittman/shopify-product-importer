@@ -59,16 +59,10 @@ $app->group('/shops', function () use ($app) {
 /*========================================
     Product Upload and Review
 ========================================*/
-$app->get('/products', function ($request, $response) {
-    $user = User::find($request->getAttribute('user')->id);
-    $shops = $user->shops;
-    return $this->view->render($response, 'product.html', array(
-        'shops' => $shops
-    ));
-})->add(new \App\Middleware\Authorization());
+$app->get('/products', 'ProductController:show_form')->add(new \App\Middleware\Authorization());
+$app->post('/products', 'ProductController:create')->add(new \App\Middleware\Authorization());
 
-
-$app->post('/products', function ($request, $response) {
+$app->post('/productsasd', function ($request, $response) {
     $matrix = json_decode(file_get_contents('../src/matrix.json'), true);
     if (!$matrix) {
         $this->flash->addMessage('error', 'Failed loading product matrix');
@@ -184,138 +178,138 @@ $app->post('/products', function ($request, $response) {
             default:
                 $product['variants'] = $variants;
         }
+        $data = json_encode($product);
+        error_log($data);
         // Let's create our product
-        $res = callShopify($shop, "/admin/products.json", "POST", array('product' => $product));
-
-        if ($res) {
-            $positioned = false;
-            $update = array();
-            // Format garment and color for the image file
-            $garment = $type;
-
-            if ($garment == "Long Sleeve") {
-                $garment = 'LS';
-            } elseif ($garment == "Tee") {
-                $garment = "Tees";
-            } elseif ($garment == "Tank") {
-                $garment = "Tanks";
-            }
-
-            // Map of variant_ids for each color (matrix color!)
-            $variant_map = array();
-            foreach ($res->product->variants as $variant) {
-                if (!isset($variant_map[$variant->option2])) {
-                    $variant_map[$variant->option2] = array($variant->id);
-                } else {
-                    array_push($variant_map[$variant->option2], $variant->id);
-                }
-            }
-
-            foreach ($images[$garment] as $col => $image) {
-                $variant_ids = array();
-                $crop = false;
-                $position = 0;
-                switch ($col) {
-                    case "Royal":
-                        $variant_ids = $variant_map["Royal Blue"];
-                        break;
-                    case "Charcoal":
-                        $variant_ids = $variant_map["Grey"];
-                        break;
-                    case "Navy":
-                        $variant_ids = $variant_map["Navy"];
-                        if (!$crop && $_POST['default'] == "navy") {
-                            $crop = true;
-                            if ($garment == 'Tanks') {
-                                $tmpFile = '/tmp/cropped.jpg';
-                                $crop = cropImage($image, $tmpFile, 425, 850);
-                                $cropData = array(
-                                    'attachment' => base64_encode(file_get_contents($tmpFile)),
-                                    'position' => 1
-                                );
-                                array_push($update, $cropData);
-                                // $position = 1;
-                            } else {
-                                $tmpFile = '/tmp/cropped.jpg';
-                                $crop = cropImage($image, $tmpFile);
-                                $cropData = array(
-                                    'attachment' => base64_encode(file_get_contents($tmpFile)),
-                                    'position' => 1
-                                );
-                                array_push($update, $cropData);
-                            }
-                            // Also create our cropped image
-                        }
-                        // We also want to set this image as the default
-                        break;
-                    case "Black":
-                        $variant_ids = $variant_map["Black"];
-                        if (!$crop && $_POST['default'] == "black") {
-                            $crop = true;
-                            if ($garment == 'Tanks') {
-                                // $position = 1;
-                                $tmpFile = '/tmp/cropped.jpg';
-                                $crop = cropImage($image, $tmpFile, 425, 750);
-                                $cropData = array(
-                                    'attachment' => base64_encode(file_get_contents($tmpFile)),
-                                    'position' => 1
-                                );
-                                array_push($update, $cropData);
-                            } else {
-                                $tmpFile = '/tmp/cropped.jpg';
-                                $crop = cropImage($image, $tmpFile);
-                                $cropData = array(
-                                    'attachment' => base64_encode(file_get_contents($tmpFile)),
-                                    'position' => 1
-                                );
-                                array_push($update, $cropData);
-                            }
-                            // Also create our cropped image
-                        }
-                        break;
-                    case "Pink":
-                        $variant_ids = $variant_map["Pink"];
-                        break;
-                    case "Purple":
-                        $variant_ids = $variant_map["Purple"];
-                        break;
-                }
-                $data = array(
-                    'attachment' => base64_encode(file_get_contents($image)),
-                    'variant_ids' => $variant_ids
-                );
-                // if ($position) {
-                //     $data['position'] = 1;
-                // }
-                array_push($update, $data);
-            }
-
-            $pass_data = array(
-                "product" => array(
-                    "id" => $res->product->id,
-                    "images" => $update
-                )
-            );
-
-            $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", $pass_data);
-
-            if (!$res) {
-                $this->flash->addMessage('error', 'An error occured updateing product images');
-                return $response->withRedirect('/products');
-            }
-            $created_products[] = $res->product;
-        } else {
-            foreach ($created_products as $created) {
-                // DELETE successful products, and return result
-            }
-            $this->flash->addMessage('error', "An error occured creating your products");
-            return $response->withRedirect('/products');
-        }
+        // $res = callShopify($shop, "/admin/products.json", "POST", array('product' => $product));
+        //
+        // if ($res) {
+        //     $positioned = false;
+        //     $update = array();
+        //     // Format garment and color for the image file
+        //     $garment = $type;
+        //
+        //     if ($garment == "Long Sleeve") {
+        //         $garment = 'LS';
+        //     } elseif ($garment == "Tee") {
+        //         $garment = "Tees";
+        //     } elseif ($garment == "Tank") {
+        //         $garment = "Tanks";
+        //     }
+        //
+        //     // Map of variant_ids for each color (matrix color!)
+        //     $variant_map = array();
+        //     foreach ($res->product->variants as $variant) {
+        //         if (!isset($variant_map[$variant->option2])) {
+        //             $variant_map[$variant->option2] = array($variant->id);
+        //         } else {
+        //             array_push($variant_map[$variant->option2], $variant->id);
+        //         }
+        //     }
+        //
+        //     foreach ($images[$garment] as $col => $image) {
+        //         $variant_ids = array();
+        //         $crop = false;
+        //         $position = 0;
+        //         switch ($col) {
+        //             case "Royal":
+        //                 $variant_ids = $variant_map["Royal Blue"];
+        //                 break;
+        //             case "Charcoal":
+        //                 $variant_ids = $variant_map["Grey"];
+        //                 break;
+        //             case "Navy":
+        //                 $variant_ids = $variant_map["Navy"];
+        //                 if (!$crop && $_POST['default'] == "navy") {
+        //                     $crop = true;
+        //                     if ($garment == 'Tanks') {
+        //                         $tmpFile = '/tmp/cropped.jpg';
+        //                         $crop = cropImage($image, $tmpFile, 425, 850);
+        //                         $cropData = array(
+        //                             'attachment' => base64_encode(file_get_contents($tmpFile)),
+        //                             'position' => 1
+        //                         );
+        //                         array_push($update, $cropData);
+        //                         // $position = 1;
+        //                     } else {
+        //                         $tmpFile = '/tmp/cropped.jpg';
+        //                         $crop = cropImage($image, $tmpFile);
+        //                         $cropData = array(
+        //                             'attachment' => base64_encode(file_get_contents($tmpFile)),
+        //                             'position' => 1
+        //                         );
+        //                         array_push($update, $cropData);
+        //                     }
+        //                     // Also create our cropped image
+        //                 }
+        //                 // We also want to set this image as the default
+        //                 break;
+        //             case "Black":
+        //                 $variant_ids = $variant_map["Black"];
+        //                 if (!$crop && $_POST['default'] == "black") {
+        //                     $crop = true;
+        //                     if ($garment == 'Tanks') {
+        //                         // $position = 1;
+        //                         $tmpFile = '/tmp/cropped.jpg';
+        //                         $crop = cropImage($image, $tmpFile, 425, 750);
+        //                         $cropData = array(
+        //                             'attachment' => base64_encode(file_get_contents($tmpFile)),
+        //                             'position' => 1
+        //                         );
+        //                         array_push($update, $cropData);
+        //                     } else {
+        //                         $tmpFile = '/tmp/cropped.jpg';
+        //                         $crop = cropImage($image, $tmpFile);
+        //                         $cropData = array(
+        //                             'attachment' => base64_encode(file_get_contents($tmpFile)),
+        //                             'position' => 1
+        //                         );
+        //                         array_push($update, $cropData);
+        //                     }
+        //                     // Also create our cropped image
+        //                 }
+        //                 break;
+        //             case "Pink":
+        //                 $variant_ids = $variant_map["Pink"];
+        //                 break;
+        //             case "Purple":
+        //                 $variant_ids = $variant_map["Purple"];
+        //                 break;
+        //         }
+        //         $data = array(
+        //             'attachment' => base64_encode(file_get_contents($image)),
+        //             'variant_ids' => $variant_ids
+        //         );
+        //         // if ($position) {
+        //         //     $data['position'] = 1;
+        //         // }
+        //         array_push($update, $data);
+        //     }
+        //
+        //     $pass_data = array(
+        //         "product" => array(
+        //             "id" => $res->product->id,
+        //             "images" => $update
+        //         )
+        //     );
+        //
+        //     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", $pass_data);
+        //
+        //     if (!$res) {
+        //         $this->flash->addMessage('error', 'An error occured updateing product images');
+        //         return $response->withRedirect('/products');
+        //     }
+        //     $created_products[] = $res->product;
+        // } else {
+        //     foreach ($created_products as $created) {
+        //         // DELETE successful products, and return result
+        //     }
+        //     $this->flash->addMessage('error', "An error occured creating your products");
+        //     return $response->withRedirect('/products');
+        // }
     }
-    return $this->view->render($response, 'result.html', array(
-        'products' => $created_products,
-        'shop' => $shop
-    ));
+    $this->flash->addMessage('message', "Product successfully queued");
+    return $response->withRedirect('/products');
 })->add(new \App\Middleware\Authorization());
 
 /*=========================================

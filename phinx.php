@@ -16,6 +16,7 @@ return array(
         )
     ),
     "paths" => array(
-        "migrations" => "db/migrations"
+        "migrations" => "db/migrations",
+        "seeds" => "db/seeds"
     ),
 );

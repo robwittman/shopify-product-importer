@@ -20,7 +20,8 @@
         "slim/twig-view": "^2.1",
         "slim/flash": "^0.2.0",
         "illuminate/database": "^5.3",
-        "robmorgan/phinx": "^0.6.5"
+        "robmorgan/phinx": "^0.6.5",
+        "php-amqplib/php-amqplib": "^2.6"
     },
     "autoload" : {
         "psr-4" : {

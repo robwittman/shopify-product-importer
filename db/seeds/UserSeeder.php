@@ -14,6 +14,14 @@ class UserSeeder extends AbstractSeed
      */
     public function run()
     {
+        $data = array(
+            array(
+                'email' => 'rob@ihsdigital.com',
+                'role' => 'admin',
+                'password' => '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36'
+            )
+        );
 
+        $this->table('users')->insert($data);
     }
 }
