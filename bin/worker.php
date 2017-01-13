@@ -10,7 +10,7 @@ error_log("Worker ready for messages");
 
 $callback = function($msg) {
     error_log($msg);
-}
+};
 
 $channel->basic_qos(null, 1 null);
 $channel->basic_consume('task_queue','',false,false,false,false,$callback)
