@@ -1,7 +1,7 @@
 <?php
 
 use PhpAmqpLib\Connection\AMQPConnection;
-use PhpAmqpLib\Message\AMQPMessage
+use PhpAmqpLib\Message\AMQPMessage;
 
 $url = getenv("RABBITMQ_BIGWIG_URL");
 $pieces = parse_url($url);
