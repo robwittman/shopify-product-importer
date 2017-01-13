@@ -13,11 +13,11 @@ $callback = function($msg) {
 };
 
 $channel->basic_qos(null, 1, null);
-$channel->basic_consume('task_queue','',false,false,false,false,$callback)
+$channel->basic_consume('task_queue','',false,false,false,false,$callback);
 
 while(count($channel->callbacks)) {
     $channel->wait();
-}
+};
 
 $channel->close();
 $connection->close();
