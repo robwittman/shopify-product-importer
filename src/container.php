@@ -35,10 +35,11 @@ $container['rabbit'] = function($c) {
     $url = getenv("RABBITMQ_BIGWIG_URL");
     $pieces = parse_url($url);
     $connection = new AMQPConnection(
-        'rabbitmq',
-        '5672',
-        'guest',
-        'guest'
+        $pieces['host'],
+        $pieces['port'],
+        $pieces['user'],
+        $pieces['host'],
+        $pieces['path']
     );
     $channel = $connection->channel();
     $channel->queue_declare('task_queue', false, false, false, false);
