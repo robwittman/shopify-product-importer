@@ -16,9 +16,9 @@ services:
             REDISCLOUD_URL: tcp://redis:6379
             DATABASE_URL: postgres://postgres:password@postgres/shopify
             ENV: dev
-            RABBITMQ_BIGWIG_RX_URL: amqp://guest:guest@localhost:5672/shopify
-            RABBITMQ_BIGWIG_TX_URL: amqp://guest:guest@localhost:5672/shopify
-            RABBITMQ_BIGWIG_URL: amqp://guest:guest@localhost:5672/shopify
+            RABBITMQ_BIGWIG_RX_URL: amqp://guest:guest@rabbitmq:5672/shopify
+            RABBITMQ_BIGWIG_TX_URL: amqp://guest:guest@rabbitmq:5672/shopify
+            RABBITMQ_BIGWIG_URL: amqp://guest:guest@rabbitmq:5672/shopify
     redis:
         image: redis
         # volumes:
