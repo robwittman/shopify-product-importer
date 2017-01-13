@@ -11,7 +11,8 @@ $connection = new AMQPConnection(
     $pieces['host'],
     $pieces['port'],
     $pieces['user'],
-    $pieces['host']
+    $pieces['host'],
+    $pieces['path']
 );
 $channel = $connection->channel();
 
