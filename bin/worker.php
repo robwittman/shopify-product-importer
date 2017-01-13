@@ -7,6 +7,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 $url = getenv("RABBITMQ_BIGWIG_URL");
 $pieces = parse_url($url);
+error_log($pieces);
 $connection = new AMQPConnection(
     $pieces['host'],
     $pieces['port'],
