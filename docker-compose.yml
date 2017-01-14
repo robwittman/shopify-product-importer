@@ -19,6 +19,8 @@ services:
             RABBITMQ_BIGWIG_RX_URL: amqp://guest:guest@rabbitmq:5672/shopify
             RABBITMQ_BIGWIG_TX_URL: amqp://guest:guest@rabbitmq:5672/shopify
             RABBITMQ_BIGWIG_URL: amqp://guest:guest@rabbitmq:5672/shopify
+            AWS_ACCESS_KEY: AKIAIT7ME2OFCM23SECA
+            AWS_ACCESS_SECRET: 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
     redis:
         image: redis
         # volumes:

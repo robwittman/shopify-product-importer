@@ -61,6 +61,7 @@ $app->group('/shops', function () use ($app) {
 ========================================*/
 $app->get('/products', 'ProductController:show_form')->add(new \App\Middleware\Authorization());
 $app->post('/products', 'ProductController:create')->add(new \App\Middleware\Authorization());
+$app->get('/queue', 'ProductController:queue')->add(new \App\Middleware\Authorization());
 
 $app->post('/productsasd', function ($request, $response) {
     $matrix = json_decode(file_get_contents('../src/matrix.json'), true);
@@ -90,13 +91,13 @@ $app->post('/productsasd', function ($request, $response) {
         $this->flash->addMessage('error', "We couldnt find that shop");
         return $response->withRedirect('/products');
     }
+
     $zip = new ZipArchive();
     $zip->open($tmpName);
     $zip->extractTo($path);
     $zip->close();
 
     // We now have files in "/tmp/{$hash}, so let's get a flat list of each image"
-    $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
     foreach ($objects as $name => $object) {
         if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
             continue;
@@ -179,7 +180,6 @@ $app->post('/productsasd', function ($request, $response) {
                 $product['variants'] = $variants;
         }
         $data = json_encode($product);
-        error_log($data);
         // Let's create our product
         // $res = callShopify($shop, "/admin/products.json", "POST", array('product' => $product));
         //

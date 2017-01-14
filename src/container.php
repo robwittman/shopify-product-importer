@@ -31,22 +31,6 @@ $container['flash'] = function ($c) {
     return new Slim\Flash\Messages();
 };
 
-$container['rabbit'] = function($c) {
-    $url = getenv("RABBITMQ_BIGWIG_URL");
-    $pieces = parse_url($url);
-    $connection = new AMQPConnection(
-        $pieces['host'],
-        $pieces['port'],
-        $pieces['user'],
-        $pieces['host'],
-        $pieces['path']
-    );
-    $channel = $connection->channel();
-    $channel->queue_declare('task_queue', false, false, false, false);
-
-    return $channel;
-};
-
 $container['AuthController'] = function ($c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
@@ -68,6 +52,6 @@ $container['ShopController'] = function ($c) {
 $container['ProductController'] = function($c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
-    $rabbit = $c->get('rabbit');
+    // $rabbit = $c->get('rabbit');
     return new \App\Controller\Products($view, $flash, $rabbit);
 };

@@ -20,6 +20,8 @@ if (!function_exists("callShopify")) {
         ));
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         $res = curl_exec($c);
+        $code = curl_getinfo($c, CURLINFO_HTTP_CODE);
+        error_log($code);
         return json_decode($res);
     }
 }
@@ -118,7 +120,11 @@ if (!function_exists('resizeImage')) {
 if (!function_exists('cropImage')) {
     function cropImage($source, $destination, $maxWidth = 400, $maxHeight = 725, $quality = 100)
     {
-        $image = @imagecreatefromjpeg($source);
+        if (file_exists($source)) {
+            $image = @imagecreatefromjpeg($source);
+        } else {
+            $image = file_get_contents("http://s3.amazonaws.com/{$source}");
+        }
         if (!$image) {
             return false;
         }
