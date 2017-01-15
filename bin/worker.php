@@ -43,11 +43,15 @@ while (true) {
     $queue = Queue::where('status', Queue::PENDING)->get();
 
     foreach ($queue as $q) {
-        $res = processQueue($q);
-        if ($res === true) {
-            $q->finish();
-        } else {
-            $q->fail($res);
+        try {
+            $res = processQueue($q);
+            if ($res === true) {
+                $q->finish();
+            } else {
+                $q->fail($res);
+            }
+        } catch(\Exception $e) {
+            error_log($e->getMessage());
         }
     }
     sleep(10);
