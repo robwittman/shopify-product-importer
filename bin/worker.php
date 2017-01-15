@@ -235,8 +235,7 @@ function processQueue($queue) {
                     'images' => $imageUpdate
                 )
             ));
-            // var_dump($res);
-            exit;
+            error_log("Successfully created product {$res->product->id}");
         } else {
             error_log("Creating multiple products");
             $created_products = array();
