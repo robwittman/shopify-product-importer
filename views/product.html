@@ -60,12 +60,25 @@
                             <label class='control-label'>ZIP File</label>
                             <input type="file" name="zip_file" value="">
                         </div>
-                        <div class="form-group col-sm-6">
-                            <label class='control-label'>Showcase Product</label>
-                            <select name='default' class='form-control'>
-                                <option value='navy' selected>Navy</option>
-                                <option value='black'>Black</option>
-                            </select>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class='control-label'>Showcase Product</label>
+                                <select name='default_color' class='form-control'>
+                                    <option value='Navy' selected>Navy</option>
+                                    <option value='Black'>Black</option>
+                                    <option value='Charcoal'>Charcoal</option>
+                                    <option value='Royal'>Royal Blue</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class='control-label'>Showcase Color</label>
+                                <select class='form-control' name="default_product">
+                                    <option value="Hoodie">Hoodie</option>
+                                    <option value="Tank">Tank</option>
+                                    <option value="Tee">Tee</option>
+                                    <option value="Long Sleeve" selected>Long Sleeve</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">

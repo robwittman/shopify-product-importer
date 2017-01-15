@@ -218,7 +218,6 @@ function processQueue($queue) {
                 $variantMap[$variant->option2][$variant->option3][] = $variant->id;
             }
 
-            var_dump($images);
             foreach($variantMap as $color => $garments) {
                 foreach($garments as $garment => $ids) {
                     if($garment == "Tee") {
@@ -235,7 +234,7 @@ function processQueue($queue) {
                         'src' => "https://s3.amazonaws.com/shopify-product-importer/".$images[$search][$color],
                         'variant_ids' => $ids
                     );
-                    if($garment == "Tee" && $color == "Navy") {
+                    if($garment == $post['default_product'] && $color == $post['default_color']) {
                         $data['position'] = 1;
                     }
                     $imageUpdate[] = $data;
