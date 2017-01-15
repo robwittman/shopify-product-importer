@@ -27,7 +27,7 @@ class Products
 
     public function queue($request, $response, $arguments)
     {
-        $queue = Queue::all();
+        $queue = Queue::orderBy('created_at', 'desc')->get();
         return $this->view->render($response, 'queue.html', array(
             'queue' => $queue
         ));

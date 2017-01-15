@@ -23,14 +23,26 @@
                                 <th>Started At</th>
                                 <th>Completed At</th>
                                 <th>Elapsed Time</th>
+                                <th>Error</th>
                             </tr>
                             {% for q in queue %}
                             <tr>
-                                <td>{{q.created_at}}</td>
+                                <td>{{q.created_at | date('Y-m-d H:i')}}</td>
+                                <td>
+                                    {% if q.status == 'pending' %}
+                                            <span class='glyphicon glyphicon-minus'></span>
+                                    {% elseif q.status == 'failed' %}
+                                            <span class='glyphicon glyphicon-remove'></span>
+                                    {% elseif q.status == 'finished' %}
+                                            <span class='glyphicon glyphicon-ok'></span>
+                                    {% else %}
+                                        {{q.status}}
+                                    {% endif %}
+                                </td>
+                                <td>{% if q.started_at %} {{q.started_at | date('Y-m-d H:i')}} {% endif %}</td>
+                                <td>{% if q.finished_at %} {{q.finished_at | date('Y-m-d H:i')}} {% endif %}</td>
                                 <td></td>
-                                <td>{{q.started_at}}</td>
-                                <td>{{q.finished_at}}</td>
-                                <td></td>
+                                <td>{{q.error}}</td>
                             </tr>
                             {% endfor %}
                         </table>

@@ -62,7 +62,6 @@ function processQueue($queue) {
     $image_data = array();
     $images = array();
     $queue->started_at = date('Y-m-d H:i:s');
-    error_log("Processing queue {$id} with data {$queue->data}");
     $data = json_decode($queue->data, true);
     if (isset($data['file'])) {
         $post = $data['post'];
@@ -78,7 +77,6 @@ function processQueue($queue) {
 
         foreach ($image_data as $name) {
             if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
-                error_log("Skipping {$name}, no .jpg present");
                 continue;
             }
             $chunks = explode('/', $name);
@@ -86,6 +84,11 @@ function processQueue($queue) {
                 $images[$garment]["Pink"] = $name;
             } else {
                 $garment = $chunks[2];
+                if(!in_array($garment, array(
+                    'Hoodie','LS','Tanks','Tees'
+                ))) {
+                    continue;
+                }
                 $color = explode("-", basename($name, ".jpg"))[1];
                 $images[$garment][$color] = $name;
             }
@@ -116,11 +119,38 @@ function processQueue($queue) {
 
             $ignore = array(
                 'Hoodie' => array(
-                    'Pink'
+                    // 'Navy' => array('4XL'),
+                    // 'Royal' => array('4XL'),
+                    'Purple' => array('Small','Medium','Large','XL','2XL','3XL','4XL'),
+                    // 'Charcoal' => array('4XL'),
+                    // 'Black' => array('4XL'),
+                ),
+                'Tee' => array(
+                    // 'Black' => array('4XL'),
+                    // 'Navy' => array('4XL'),
+                    // 'Royal' => array('4XL'),
+                    'Purple' => array('Small','Medium','Large','XL','2XL','3XL','4XL'),
+                    // 'Charcoal' => array('4XL'),
+                ),
+                'Tank'=> array(
+                    'Pink' => array(
+                        'Small',
+                        'Medium',
+                        'Large',
+                        'XL',
+                        '2XL'
+                    )
+                ),
+                'Long Sleeve' => array(
+                    'Black' => array('4XL'),
+                    'Navy' => array('4XL'),
+                    'Royal' => array('4XL'),
+                    'Purple' => array('Small','Medium','Large','XL','2XL','3XL','4XL'),
+                    'Charcoal' => array('4XL'),
                 )
             );
 
-            foreach($images as $garment => $images) {
+            foreach($images as $garment => $img) {
                 if($garment == 'Tanks') {
                     $garment = 'Tank';
                 } else if($garment == 'Tees') {
@@ -128,17 +158,17 @@ function processQueue($queue) {
                 } else if($garment == "LS") {
                     $garment = 'Long Sleeve';
                 }
-                foreach ($images as $color => $src) {
+                foreach ($img as $color => $src) {
                     $variantSettings = $matrix[$garment];
                     foreach($variantSettings['sizes'] as $size => $sizeSettings) {
                         if (isset($ignore[$garment]) &&
                         isset($ignore[$garment][$color])) {
-                            if(is_array($ignore[$garment][$color]) &&
-                               in_array($size, $ignore[$garment][$color])) {
-                                   error_log("Ignoring {$garment}/{$color}/{$size}");
+                            if(is_array($ignore[$garment][$color])) {
+                              if(in_array($size, $ignore[$garment][$color])) {
                                    continue;
+                               }
                             } else {
-                                error_log("Ignoring {$garment}/$color}");
+                                error_log("Ignoring {$garment}/{$color}/{$size}");
                                 continue;
                             }
                         }
@@ -158,9 +188,50 @@ function processQueue($queue) {
                     }
                 }
             }
-            var_dump($product_data);
-            exit;
-            $res = callShopify($shop, '/admin/products.json', array('product' => $product_data));
+            $res = callShopify($shop, '/admin/products.json', 'POST', array('product' => $product_data));
+            $variantMap = array();
+            $imageUpdate = array();
+
+            foreach ($res->product->variants as $variant) {
+                if(!isset($variantMap[$variant->option2])) {
+                    $variantMap[$variant->option2] = array();
+                }
+                if (!isset($variantMap[$variant->option2][$variant->option3])) {
+                    $variantMap[$variant->option2][$variant->option3] = array();
+                }
+                $variantMap[$variant->option2][$variant->option3][] = $variant->id;
+            }
+
+            foreach($variantMap as $color => $garments) {
+                foreach($garments as $garment => $ids) {
+                    if($garment == "Tee") {
+                        $search = "Tees";
+                    } elseif($garment == "Long Sleeve") {
+                        $search = "LS";
+                    } elseif($garment == "Tank") {
+                        $search = "Tanks";
+                    } else {
+                        $search = $garment;
+                    }
+
+                    $data = array(
+                        'src' => "https://s3.amazonaws.com/shopify-product-importer/".$images[$search][$color],
+                        'variant_ids' => $ids
+                    );
+                    if($garment == "Tee" && $color == "Navy") {
+                        $data['position'] = 1;
+                    }
+                    $imageUpdate[] = $data;
+                }
+            }
+
+            $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
+                'product' => array(
+                    'id' => $res->product->id,
+                    'images' => $imageUpdate
+                )
+            ));
+            // var_dump($res);
             exit;
         } else {
             error_log("Creating multiple products");
@@ -200,7 +271,8 @@ function processQueue($queue) {
                             'weight_unit' => $data['weight_unit'],
                             'requires_shipping' => true,
                             'inventory_management' => null,
-                            'inventory_policy' => "deny"
+                            'inventory_policy' => "deny",
+                            'sku' => "SKU"
                         );
                         $variants[] = $variant;
                     }
