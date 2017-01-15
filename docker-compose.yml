@@ -6,8 +6,8 @@ services:
             - 80:80
         links:
             - postgres
-            - redis
-            - rabbitmq
+            # - redis
+            # - rabbitmq
         volumes:
             - ./:/var/www/
             - ./html/.user.ini:/usr/local/etc/php/php.ini
@@ -21,12 +21,12 @@ services:
             RABBITMQ_BIGWIG_URL: amqp://guest:guest@rabbitmq:5672/shopify
             AWS_ACCESS_KEY: AKIAIT7ME2OFCM23SECA
             AWS_ACCESS_SECRET: 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
-    redis:
-        image: redis
-        # volumes:
-            # - ./data/redis:/data # While on free plan, redis does not persist
-        ports:
-            - 6379:6379
+    # redis:
+    #     image: redis
+    #     # volumes:
+    #         # - ./data/redis:/data # While on free plan, redis does not persist
+    #     ports:
+    #         - 6379:6379
     postgres:
         image: postgres
         volumes:
@@ -37,8 +37,8 @@ services:
             POSTGRES_PASSWORD: password
             POSTGRES_USER: postgres
             POSTGRES_DB: shopify
-    rabbitmq:
-        image: rabbitmq:3
-        ports:
-            - 5672:5672
-            - 15672:15672
+    # rabbitmq:
+    #     image: rabbitmq:3
+    #     ports:
+    #         - 5672:5672
+    #         - 15672:15672

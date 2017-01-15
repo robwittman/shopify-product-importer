@@ -43,15 +43,13 @@ while (true) {
     $queue = Queue::where('status', Queue::PENDING)->get();
 
     foreach ($queue as $q) {
+        error_log("Processing {$q->id}");
         try {
+            $q->start();
             $res = processQueue($q);
-            if ($res === true) {
-                $q->finish();
-            } else {
-                $q->fail($res);
-            }
+            $q->finish($res);
         } catch(\Exception $e) {
-            error_log($e->getMessage());
+            $q->fail($e->getMessage());
         }
     }
     sleep(10);
@@ -148,7 +146,7 @@ function processQueue($queue) {
                 'Long Sleeve' => array(
                     'Black' => array('4XL'),
                     'Navy' => array('4XL'),
-                    'Royal' => array('4XL'),
+                    'Royal Blue' => array('4XL'),
                     'Purple' => array('Small','Medium','Large','XL','2XL','3XL','4XL'),
                     'Charcoal' => array('4XL'),
                 )
@@ -163,12 +161,19 @@ function processQueue($queue) {
                     $garment = 'Long Sleeve';
                 }
                 foreach ($img as $color => $src) {
+                    if($color == "Royal") {
+                        $color = "Royal Blue";
+                    } elseif ($color == "Grey") {
+                        $color = "Charcoal";
+                    }
+
                     $variantSettings = $matrix[$garment];
                     foreach($variantSettings['sizes'] as $size => $sizeSettings) {
                         if (isset($ignore[$garment]) &&
                         isset($ignore[$garment][$color])) {
                             if(is_array($ignore[$garment][$color])) {
                               if(in_array($size, $ignore[$garment][$color])) {
+                                  error_log("Ingnoring");
                                    continue;
                                }
                             } else {
@@ -176,6 +181,7 @@ function processQueue($queue) {
                                 continue;
                             }
                         }
+
                         $product_data['variants'][] = array(
                             'title' => "{$garment} \/ {$size} \/ {$color}",
                             'price' => $sizeSettings['price'],
@@ -192,6 +198,8 @@ function processQueue($queue) {
                     }
                 }
             }
+            var_dump($product_data);
+            error_log(count($product_data['variants'])." variants pending creation");
             $res = callShopify($shop, '/admin/products.json', 'POST', array('product' => $product_data));
             $variantMap = array();
             $imageUpdate = array();
@@ -203,9 +211,14 @@ function processQueue($queue) {
                 if (!isset($variantMap[$variant->option2][$variant->option3])) {
                     $variantMap[$variant->option2][$variant->option3] = array();
                 }
+
+                if($variant->option2 == "Royal Blue") {
+                    $variant->option2 = "Royal";
+                }
                 $variantMap[$variant->option2][$variant->option3][] = $variant->id;
             }
 
+            var_dump($images);
             foreach($variantMap as $color => $garments) {
                 foreach($garments as $garment => $ids) {
                     if($garment == "Tee") {
@@ -235,7 +248,9 @@ function processQueue($queue) {
                     'images' => $imageUpdate
                 )
             ));
-            error_log("Successfully created product {$res->product->id}");
+
+            $queue->finish(array($res->prouct->id));
+            return array($res->product->id);
         } else {
             error_log("Creating multiple products");
             $created_products = array();
@@ -335,7 +350,6 @@ function processQueue($queue) {
                     }
 
                     foreach ($images[$garment] as $col => $image) {
-                        var_dump($image);
                         $variant_ids = array();
                         $crop = false;
                         $position = 0;

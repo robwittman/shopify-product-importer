@@ -7,6 +7,7 @@ class Queue extends Elegant
     const PENDING = 'pending';
     const FAILED = 'failed';
     const FINISHED = 'finished';
+    const STARTED = 'started';
 
     protected $table = 'queue';
     public $timestamps = false;
@@ -18,11 +19,22 @@ class Queue extends Elegant
         $this->save();
     }
 
-    public function finish()
+    public function finish($data)
     {
         $this->finished_at = date("Y-m-d H:i:s");
         $this->status = self::FINISHED;
+        $this->product_id = $data;
         $this->save();
+    }
+
+    public function getProductIdAttribute()
+    {
+        return json_decode($this->attributes['product_id']);
+    }
+
+    public function setProductIdAttribute($data)
+    {
+        $this->attributes['product_id'] = json_encode($data);
     }
 
     public function start()
