@@ -97,14 +97,23 @@ function processQueue($queue) {
             }
         }
 
+        switch($shop->myshopify_domain) {
+            case 'piper-lou-collection.myshopify.com':
+                $html = '<p>Designed, printed, and shipped in the USA!</p><p><a href="https://www.piperloucollection.com/pages/sizing-chart">View our sizing chart</a></p>';
+                break;
+            case 'hopecaregive.myshopify.com':
+                $html = '<';
+                break;
+            default:
+                $html = '<p><img src="https://cdn.shopify.com/s/files/1/1255/4519/files/16128476_220904601702830_291172195_n.jpg?9775130656601803865"></p><p>Designed, printed, and shipped in the USA!</p>';
+        }
         if (isset($post['single']) && $post['single'] == true) {
-            error_log("Creating single product");
             $product_data = array(
-                'title' => $post['product_title'],
-                'body_html' => '<p>Designed, printed, and shipped in the USA!</p><p><a href="https://www.piperloucollection.com/pages/sizing-chart">View our sizing chart</a></p>',
-                'tags' => $post['tags'],
-                'vendor' => $post['vendor'],
-                'product_type' => $post['product_type'],
+                'title'         => $post['product_title'],
+                'body_html'     => $html,
+                'tags'          => $post['tags'],
+                'vendor'        => $post['vendor'],
+                'product_type'  => $post['product_type'],
                 'options' => array(
                     array(
                         'name' => "Size"
@@ -116,8 +125,8 @@ function processQueue($queue) {
                         'name' => "Style"
                     )
                 ),
-                'variants' => array(),
-                'images' => array()
+                'variants'      => array(),
+                'images'        => array()
             );
 
             $ignore = array(
@@ -145,15 +154,14 @@ function processQueue($queue) {
                     )
                 ),
                 'Long Sleeve' => array(
-                    'Black' => array('4XL'),
-                    'Navy' => array('4XL'),
-                    'Royal Blue' => array('4XL'),
-                    'Purple' => array('Small','Medium','Large','XL','2XL','3XL','4XL'),
-                    'Grey' => array('4XL'),
+                    'Black'         => array('4XL'),
+                    'Navy'          => array('4XL'),
+                    'Royal Blue'    => array('4XL'),
+                    'Purple'        => array('Small','Medium','Large','XL','2XL','3XL','4XL'),
+                    'Grey'          => array('4XL'),
                 )
             );
 
-            var_dump($images);
             foreach($images as $garment => $img) {
                 if($garment == 'Tanks') {
                     $garment = 'Tank';
@@ -173,16 +181,13 @@ function processQueue($queue) {
 
                     $variantSettings = $matrix[$garment];
                     foreach($variantSettings['sizes'] as $size => $sizeSettings) {
-                        error_log("$garment/$color/$size");
                         if (isset($ignore[$garment]) &&
                         isset($ignore[$garment][$color])) {
                             if(is_array($ignore[$garment][$color])) {
                               if(in_array($size, $ignore[$garment][$color])) {
-                                 error_log("Ignoring");
                                  continue;
                                }
                             } else {
-                                error_log("Ignoring");
                                 continue;
                             }
                         }
