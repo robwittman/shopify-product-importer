@@ -52,15 +52,16 @@ while (true) {
             $q->fail($e->getMessage());
         }
     }
+
     sleep(10);
 }
 
 function processQueue($queue) {
+    global $s3;
     $matrix = json_decode(file_get_contents(DIR.'/src/matrix.json'), true);
     if (!$matrix) {
         return "Unable to open matrix file";
     }
-    global $s3;
     $image_data = array();
     $images = array();
     $queue->started_at = date('Y-m-d H:i:s');
@@ -148,10 +149,11 @@ function processQueue($queue) {
                     'Navy' => array('4XL'),
                     'Royal Blue' => array('4XL'),
                     'Purple' => array('Small','Medium','Large','XL','2XL','3XL','4XL'),
-                    'Charcoal' => array('4XL'),
+                    'Grey' => array('4XL'),
                 )
             );
 
+            var_dump($images);
             foreach($images as $garment => $img) {
                 if($garment == 'Tanks') {
                     $garment = 'Tank';
@@ -163,19 +165,24 @@ function processQueue($queue) {
                 foreach ($img as $color => $src) {
                     if($color == "Royal") {
                         $color = "Royal Blue";
-                    } elseif ($color == "Grey") {
+                    } else if($color == "Charcoal") {
+                        $color = "Grey";
+                    } else if($color == "Grey") {
                         $color = "Charcoal";
                     }
 
                     $variantSettings = $matrix[$garment];
                     foreach($variantSettings['sizes'] as $size => $sizeSettings) {
+                        error_log("$garment/$color/$size");
                         if (isset($ignore[$garment]) &&
                         isset($ignore[$garment][$color])) {
                             if(is_array($ignore[$garment][$color])) {
                               if(in_array($size, $ignore[$garment][$color])) {
-                                   continue;
+                                 error_log("Ignoring");
+                                 continue;
                                }
                             } else {
+                                error_log("Ignoring");
                                 continue;
                             }
                         }
@@ -196,6 +203,7 @@ function processQueue($queue) {
                     }
                 }
             }
+
             $res = callShopify($shop, '/admin/products.json', 'POST', array('product' => $product_data));
             $variantMap = array();
             $imageUpdate = array();
@@ -210,6 +218,8 @@ function processQueue($queue) {
 
                 if($variant->option2 == "Royal Blue") {
                     $variant->option2 = "Royal";
+                } elseif ($variant->option2 == "Grey") {
+                    $variant->option2 = "Charcoal";
                 }
                 $variantMap[$variant->option2][$variant->option3][] = $variant->id;
             }
