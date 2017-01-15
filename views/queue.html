@@ -23,6 +23,7 @@
                                 <th>Started At</th>
                                 <th>Completed At</th>
                                 <th>Elapsed Time</th>
+                                <th>Results</th>
                                 <th>Error</th>
                             </tr>
                             {% for q in queue %}
@@ -42,6 +43,13 @@
                                 <td>{% if q.started_at %} {{q.started_at | date('Y-m-d H:i')}} {% endif %}</td>
                                 <td>{% if q.finished_at %} {{q.finished_at | date('Y-m-d H:i')}} {% endif %}</td>
                                 <td></td>
+                                <td>
+                                    <ul>
+                                        {% for product in q.product_id %}
+                                            <li><a href="https://{{shop.myshopify_domain}}/admin/products/{{product}}">{{product}}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
                                 <td>{{q.error}}</td>
                             </tr>
                             {% endfor %}

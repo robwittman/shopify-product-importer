@@ -100,7 +100,7 @@ function processQueue($queue) {
             error_log("Creating single product");
             $product_data = array(
                 'title' => $post['product_title'],
-                'body_html' => $data['body_html'],
+                'body_html' => '<p>Designed, printed, and shipped in the USA!</p><p><a href="https://www.piperloucollection.com/pages/sizing-chart">View our sizing chart</a></p>',
                 'tags' => $post['tags'],
                 'vendor' => $post['vendor'],
                 'product_type' => $post['product_type'],
@@ -173,11 +173,9 @@ function processQueue($queue) {
                         isset($ignore[$garment][$color])) {
                             if(is_array($ignore[$garment][$color])) {
                               if(in_array($size, $ignore[$garment][$color])) {
-                                  error_log("Ingnoring");
                                    continue;
                                }
                             } else {
-                                error_log("Ignoring {$garment}/{$color}/{$size}");
                                 continue;
                             }
                         }
@@ -198,8 +196,6 @@ function processQueue($queue) {
                     }
                 }
             }
-            var_dump($product_data);
-            error_log(count($product_data['variants'])." variants pending creation");
             $res = callShopify($shop, '/admin/products.json', 'POST', array('product' => $product_data));
             $variantMap = array();
             $imageUpdate = array();
