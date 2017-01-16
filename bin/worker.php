@@ -191,8 +191,7 @@ function processQueue($queue) {
                                 continue;
                             }
                         }
-
-                        $product_data['variants'][] = array(
+                        $varData = array(
                             'title' => "{$garment} \/ {$size} \/ {$color}",
                             'price' => $sizeSettings['price'],
                             'grams' => $sizeSettings['grams'],
@@ -205,6 +204,14 @@ function processQueue($queue) {
                             'inventory_management' => null,
                             'inventory_policy' => "deny"
                         );
+                        // error_log($garment.' => '.$post['default_product']);
+                        // error_log($color.' => '.$post['default_color']);
+                        if($garment == $post['default_product'] && $color == $post['default_color']) {
+                            error_log("Moving $color / $garment to front of array");
+                            $product_data['variants'] = array_merge(array($varData), $product_data['variants']);
+                        } else {
+                            $product_data['variants'][] = $varData;
+                        }
                     }
                 }
             }
