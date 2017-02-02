@@ -104,7 +104,7 @@ function processQueue($queue) {
             case 'hopecaregive.myshopify.com':
                 $html = '<p><img src="https://cdn.shopify.com/s/files/1/1255/4519/files/16128476_220904601702830_291172195_n.jpg?9775130656601803865"></p><p>Designed, printed, and shipped in the USA!</p>';
                 break;
-            case '':
+            case 'game-slave.myshopify.com':
                 $html = '<p><img src="https://cdn.shopify.com/s/files/1/1066/2470/files/TC_Best_seller.jpg?v=1486047696"></p><p>Designed, printed, and shipped in the USA!</p>';
                 break;
             default:
