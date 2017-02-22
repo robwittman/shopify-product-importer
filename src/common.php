@@ -6,6 +6,7 @@ if (!function_exists("callShopify")) {
 	error_log($auth);
 	error_log($url);
 	error_log($method);
+	error_log(json_encode($params));
         $base = generateUrl($auth);
         $c = curl_init();
         if ($method == "GET") {
