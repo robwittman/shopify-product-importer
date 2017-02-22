@@ -108,7 +108,7 @@ function processQueue($queue) {
                 $html = '<p><img src="https://cdn.shopify.com/s/files/1/1066/2470/files/TC_Best_seller.jpg?v=1486047696"></p><p>Designed, printed, and shipped in the USA!</p>';
                 break;
             default:
-                $html = '';
+                $html = '<p></p>';
         }
         if (isset($post['single']) && $post['single'] == true) {
             $product_data = array(
