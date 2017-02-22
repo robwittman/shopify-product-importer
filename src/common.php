@@ -3,6 +3,7 @@
 if (!function_exists("callShopify")) {
     function callShopify($auth, $url, $method = 'GET', $params = array())
     {
+	error_log(json_encode(func_get_args()));
         $base = generateUrl($auth);
         $c = curl_init();
         if ($method == "GET") {
@@ -23,6 +24,7 @@ if (!function_exists("callShopify")) {
         $code = curl_getinfo($c, CURLINFO_HTTP_CODE);
         if(!in_array($code, [200,201])) {
             error_log($code);
+	    error_log($res);
             throw new \Exception("Shopify API response error. [$code] [$res]");
         }
         return json_decode($res);
