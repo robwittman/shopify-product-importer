@@ -505,7 +505,6 @@ function createTumbler($queue)
             if (strpos($object["Key"], "MACOSX") !== false) {
                 continue;
             }
-            var_dump($object);
             $image_data[] = $object["Key"];
         }
         $shop = \App\Model\Shop::find($post['shop']);
@@ -515,7 +514,7 @@ function createTumbler($queue)
                 continue;
             }
 
-            $availColors = array('Navy','Black','Pink','Teal','Steel');
+            $availColors = array('Navy','Black','Pink','Teal','Grey');
             foreach ($availColors as $color) {
                 if (strpos($name, $color) !== false) {
                     $imageUrls[$color] = $name;
@@ -557,7 +556,6 @@ function createTumbler($queue)
             'images' => array()
         );
 
-        var_dump($imageUrls);
         foreach ($imageUrls as $color => $image) {
             $variantData = array(
                 'title' => "30 oz Stainless Steel Powder Coated Tumbler and Lid. / {$color}",
@@ -584,7 +582,7 @@ function createTumbler($queue)
             'product' => $product_data
         ));
 
-        $variantMap = array("Navy" => array(),"Black" => array(),"Pink" => array(),"Teal" => array(),"Steel" => array());
+        $variantMap = array("Navy" => array(),"Black" => array(),"Pink" => array(),"Teal" => array(),"Grey" => array());
         $imageUpdate = array();
 
         foreach ($res->product->variants as $variant) {
@@ -611,7 +609,6 @@ function createTumbler($queue)
 
         $queue->finish(array($res->product->id));
         error_log($res->product->id);
-        sleep(10);
         return array($res->product->id);
     }
 }
