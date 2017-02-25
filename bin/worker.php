@@ -40,8 +40,8 @@ $capsule->getContainer()->singleton(
 );
 
 while (true) {
-    // $queue = Queue::where('status', Queue::PENDING)->get();
-    $queue = Queue::get();
+    $queue = Queue::where('status', Queue::PENDING)->get();
+    // $queue = Queue::get();
     foreach ($queue as $q) {
         error_log("Processing {$q->id}");
         try {
