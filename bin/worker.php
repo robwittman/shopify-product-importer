@@ -40,13 +40,19 @@ $capsule->getContainer()->singleton(
 );
 
 while (true) {
-    $queue = Queue::where('status', Queue::PENDING)->get();
-
+    // $queue = Queue::where('status', Queue::PENDING)->get();
+    $queue = Queue::get();
     foreach ($queue as $q) {
         error_log("Processing {$q->id}");
         try {
             $q->start();
-            $res = processQueue($q);
+            $data = json_decode($q->data, true);
+            var_dump($data);
+            if (isset($data['post']['tumbler']) && $data['post']['tumbler'] == 'on') {
+                $res = createTumbler($q);
+            } else {
+                $res = processQueue($q);
+            }
             $q->finish($res);
         } catch(\Exception $e) {
             $q->fail($e->getMessage());
@@ -66,6 +72,7 @@ function processQueue($queue) {
     $images = array();
     $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
+
     if (isset($data['file'])) {
         $post = $data['post'];
         $objects = $s3->getIterator('ListObjects', array(
@@ -475,4 +482,136 @@ function processQueue($queue) {
         }
     }
     return true;
+}
+
+function createTumbler($queue)
+{
+    error_log("Processing tumbler");
+    $image_data = array();
+    $imageUrls = array();
+    global $s3;
+    $queue->started_at = date('Y-m-d H:i:s');
+    $data = json_decode($queue->data, true);
+
+    if (isset($data['file'])) {
+        $post = $data['post'];
+
+        $objects = $s3->getIterator('ListObjects', array(
+            "Bucket" => "shopify-product-importer",
+            "Prefix" => $data['file']
+        ));
+
+        foreach ($objects as $object) {
+            if (strpos($object["Key"], "MACOSX") !== false) {
+                continue;
+            }
+            var_dump($object);
+            $image_data[] = $object["Key"];
+        }
+        $shop = \App\Model\Shop::find($post['shop']);
+
+        foreach ($image_data as $name) {
+            if (pathinfo($name, PATHINFO_EXTENSION) != 'jpg') {
+                continue;
+            }
+
+            $availColors = array('Navy','Black','Pink','Teal','Steel');
+            foreach ($availColors as $color) {
+                if (strpos($name, $color) !== false) {
+                    $imageUrls[$color] = $name;
+                }
+            }
+        }
+
+        switch ($shop->myshopify_domain) {
+            case 'piper-lou-collection.myshopify.com':
+            case 'hopecaregive.myshopify.com':
+            case 'game-slave.myshopify.com':
+            default:
+                $html = '<meta charset="utf-8" />'.
+                        "<ul>".
+                            "<li>30 oz Stainless Steel Powder Coated Tumbler and Lid.</li>".
+                            "<li>2x heat &amp; cold retention (compared to plastic tumblers).</li>".
+                            "<li>Double-walled vacuum insulation - Keeps Hot and Cold. </li>".
+                            "<li>Fits most cup holders, Clear lid to protect from spills. </li>".
+                            "<li>Sweat Free Design allows for a Strong Hold. </li>".
+                            "<li>These tumblers will ship separately from our distributor in Texas. </li>".
+                        '</ul>';
+        }
+
+        $product_data = array(
+            'title' => $post['product_title'],
+            'body_html' => $html,
+            'tags' => $post['tags'],
+            'vendor' => "Centex Powder Coating",
+            'product_type' => $post['product_type'],
+            'options' => array(
+                array(
+                    'name' => "Size"
+                ),
+                array(
+                    'name' => "Color"
+                )
+            ),
+            'variants' => array(),
+            'images' => array()
+        );
+
+        var_dump($imageUrls);
+        foreach ($imageUrls as $color => $image) {
+            $variantData = array(
+                'title' => "30 oz Stainless Steel Powder Coated Tumbler and Lid. / {$color}",
+                "price" => "29.99",
+                "grams" => 499,
+                "option1" => "30 oz Stainless Steel Powder Coated Tumbler and Lid.",
+                "option2" => $color,
+                "compare_at_price" => "39.99",
+                "weight" => "1.1",
+                "weight_unit" => "lb",
+                "requires_shipping" => true,
+                "inventory_management" => null,
+                "inventory_policy" => "deny",
+                "sku" => "{$color} / {$post['product_title']}"
+            );
+            if ($color == "Navy") {
+                array_unshift($product_data['variants'], $variantData);
+            } else {
+                $product_data['variants'][] = $variantData;
+            }
+        }
+
+        $res = callShopify($shop, '/admin/products.json', 'POST', array(
+            'product' => $product_data
+        ));
+
+        $variantMap = array("Navy" => array(),"Black" => array(),"Pink" => array(),"Teal" => array(),"Steel" => array());
+        $imageUpdate = array();
+
+        foreach ($res->product->variants as $variant) {
+            $variantMap[$variant->option2][] = $variant->id;
+            $image = array(
+                "src" => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$variant->option2]}",
+                "variant_ids" => $variantMap[$variant->option2]
+            );
+            if ($variant->option2 == "Navy") {
+                error_log("Setting navy product to 1st position");
+                $data['position'] = 1;
+            }
+            $imageUpdate[] = $image;
+        }
+
+
+
+        $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
+            "product" => array(
+                'id' => $res->product->id,
+                'images' => $imageUpdate
+            )
+        ));
+
+        $queue->finish(array($res->product->id));
+        error_log($res->product->id);
+        sleep(10);
+        return array($res->product->id);
+    }
 }

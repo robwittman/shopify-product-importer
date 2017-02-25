@@ -21,7 +21,6 @@
         "slim/flash": "^0.2.0",
         "illuminate/database": "^5.3",
         "robmorgan/phinx": "^0.6.5",
-        "php-amqplib/php-amqplib": "^2.6",
         "aws/aws-sdk-php": "^3.20"
     },
     "autoload" : {
