@@ -569,7 +569,7 @@ function createTumbler($queue)
                 "requires_shipping" => true,
                 "inventory_management" => null,
                 "inventory_policy" => "deny",
-                "sku" => "{$color} - {$post['product_title']}"
+                "sku" => "LDC - T30 - {$color} - {$post['product_title']}"
             );
             if ($color == "Navy") {
                 array_unshift($product_data['variants'], $variantData);
