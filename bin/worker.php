@@ -542,7 +542,7 @@ function createTumbler($queue)
             'title' => $post['product_title'],
             'body_html' => $html,
             'tags' => $post['tags'],
-            'vendor' => "Centex Powder Coating",
+            'vendor' => "LDC",
             'product_type' => $post['product_type'],
             'options' => array(
                 array(
