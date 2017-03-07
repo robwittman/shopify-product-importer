@@ -3,10 +3,6 @@
 if (!function_exists("callShopify")) {
     function callShopify($auth, $url, $method = 'GET', $params = array())
     {
-	error_log($auth);
-	error_log($url);
-	error_log($method);
-	error_log(json_encode($params));
         $base = generateUrl($auth);
         $c = curl_init();
         if ($method == "GET") {
@@ -19,6 +15,7 @@ if (!function_exists("callShopify")) {
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($params));
         }
         curl_setopt($c, CURLOPT_URL, $base.$url);
+        error_log($base.$url);
         curl_setopt($c, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json"
         ));
@@ -26,8 +23,6 @@ if (!function_exists("callShopify")) {
         $res = curl_exec($c);
         $code = curl_getinfo($c, CURLINFO_HTTP_CODE);
         if(!in_array($code, [200,201])) {
-            error_log($code);
-	    error_log($res);
             throw new \Exception("Shopify API response error. [$code] [$res]");
         }
         return json_decode($res);
