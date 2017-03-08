@@ -486,7 +486,6 @@ function processQueue($queue) {
 
 function createTumbler($queue)
 {
-    error_log("Processing tumbler");
     $image_data = array();
     $imageUrls = array();
     global $s3;
@@ -502,7 +501,7 @@ function createTumbler($queue)
         ));
 
         foreach ($objects as $object) {
-            if (strpos($object["Key"], "MACOSX") !== false) {
+            if (strpos($object["Key"], "MACOSX") !== false || strpos($object["Key"], "Icon^M" !== false)) {
                 continue;
             }
             $image_data[] = $object["Key"];

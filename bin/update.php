@@ -35,7 +35,7 @@ $capsule->getContainer()->singleton(
 
 $shops = Shop::all();
 foreach ($shops as $shop) {
-    if ($shop->myshopify_domain == 'school-bus-drivers-unite.myshopify.com') {
+    if (in_array($shop->myshopify_domain, array('school-bus-drivers-unite.myshopify.com', 'piper-lou-collection.myshopify.com'))) {
         error_log("Skipping {$shop->myshopify_domain}");
         continue;
     }
@@ -46,9 +46,7 @@ foreach ($shops as $shop) {
     );
     do {
         $res = callShopify($shop, '/admin/products.json', 'GET', $params);
-        error_log("Parising respoinse");
         foreach ($res->products as $product) {
-            error_log($product->vendor);
             if ($product->vendor == 'Centex Powder Coating') {
                 $params = array(
                     'vendor' => "LDC"
@@ -67,8 +65,7 @@ foreach ($shops as $shop) {
                         'variant' => $update
                     ));
                 }
-                error_log("Product finished");
-                sleep(5);
+                error_log("Product {$product->id} finished");
             }
         }
         $params['page']++;
