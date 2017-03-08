@@ -35,11 +35,15 @@ $capsule->getContainer()->singleton(
 
 $shops = Shop::all();
 foreach ($shops as $shop) {
-    if (in_array($shop->myshopify_domain, array('school-bus-drivers-unite.myshopify.com', 'piper-lou-collection.myshopify.com'))) {
+    if (in_array($shop->myshopify_domain, array('school-bus-drivers-unite.myshopify.com'))) {
         error_log("Skipping {$shop->myshopify_domain}");
         continue;
     }
-
+	
+    if($shop->myshopify_domain !== 'piper-lou-collection.myshopify.com') {
+    	error_log("Skippping {$shop->myshopify_domain}");
+	continue;
+    }
     $params = array(
         'limit' => 100,
         'page' => 1

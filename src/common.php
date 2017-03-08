@@ -21,7 +21,6 @@ if (!function_exists("callShopify")) {
         ));
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         $res = curl_exec($c);
-        error_log($res);
         $code = curl_getinfo($c, CURLINFO_HTTP_CODE);
         if(!in_array($code, [200,201])) {
             throw new \Exception("Shopify API response error. [$code] [$res]");
