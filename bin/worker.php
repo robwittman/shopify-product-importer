@@ -43,11 +43,9 @@ while (true) {
     $queue = Queue::where('status', Queue::PENDING)->get();
     // $queue = Queue::get();
     foreach ($queue as $q) {
-        error_log("Processing {$q->id}");
         try {
             $q->start();
             $data = json_decode($q->data, true);
-            var_dump($data);
             if (isset($data['post']['tumbler']) && $data['post']['tumbler'] == 'on') {
                 $res = createTumbler($q);
             } else {
@@ -280,7 +278,6 @@ function processQueue($queue) {
             $queue->finish(array($res->prouct->id));
             return array($res->product->id);
         } else {
-            error_log("Creating multiple products");
             $created_products = array();
             foreach ($matrix as $type => $data) {
                 // $positioned = false;
@@ -452,9 +449,7 @@ function processQueue($queue) {
                             'attachment' => base64_encode(file_get_contents($loc)),
                             'variant_ids' => $variant_ids
                         );
-                        // if ($position) {
-                        //     $data['position'] = 1;
-                        // }
+
                         array_push($update, $data);
                     }
 
@@ -591,7 +586,6 @@ function createTumbler($queue)
                 "variant_ids" => $variantMap[$variant->option2]
             );
             if ($variant->option2 == "Navy") {
-                error_log("Setting navy product to 1st position");
                 $data['position'] = 1;
             }
             $imageUpdate[] = $image;
@@ -607,7 +601,6 @@ function createTumbler($queue)
         ));
 
         $queue->finish(array($res->product->id));
-        error_log($res->product->id);
         return array($res->product->id);
     }
 }

@@ -35,30 +35,26 @@ $capsule->getContainer()->singleton(
 
 $shops = Shop::all();
 foreach ($shops as $shop) {
-    if (in_array($shop->myshopify_domain, array('school-bus-drivers-unite.myshopify.com'))) {
-        error_log("Skipping {$shop->myshopify_domain}");
-        continue;
-    }
-	
-    if($shop->myshopify_domain !== 'piper-lou-collection.myshopify.com') {
+    if($shop->myshopify_domain !== 'game-slave.myshopify.com') {
     	error_log("Skippping {$shop->myshopify_domain}");
-	continue;
+	    continue;
     }
     $params = array(
         'limit' => 100,
-        'page' => 1
+        'page' => 1,
+        'vendor' => "Trusty Compass"
     );
     do {
         $res = callShopify($shop, '/admin/products.json', 'GET', $params);
         foreach ($res->products as $product) {
-            if ($product->vendor == 'Centex Powder Coating') {
-                $params = array(
+            if ($product->vendor == 'Trusty Compass') {
+                $productUpdate = array(
                     'vendor' => "LDC"
                 );
                 $res = callShopify($shop, "/admin/products/{$product->id}.json", "PUT", array(
-                    'product' => $params
+                    'product' => $productUpdate
                 ));
-                error_log(json_encode($res));
+                error_log($res);
                 foreach ($product->variants as $variant) {
                     $color = $variant->option2;
                     $newSku = "LDC - T30 - {$color} - {$product->title}";
@@ -68,11 +64,12 @@ foreach ($shops as $shop) {
                     $res = callShopify($shop, "/admin/variants/{$variant->id}.json", "PUT", array(
                         'variant' => $update
                     ));
+                    sleep(1);
                 }
                 error_log("Product {$product->id} finished");
             }
         }
         $params['page']++;
-        sleep(0.5);
+        sleep(1);
     } while (count($res->products) == $params['limit']);
 }
