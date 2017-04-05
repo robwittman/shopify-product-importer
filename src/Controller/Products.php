@@ -28,6 +28,12 @@ class Products
     public function queue($request, $response, $arguments)
     {
         $queue = Queue::orderBy('created_at', 'desc')->take(50)->get();
+        foreach ($queue as $record) {
+            // TODO: Move shop_id to table column
+            $data = json_decode($record->data, true);
+            $shop = Shop::find($data['post']['shop']);
+            $record->shop = $shop;
+        }
         return $this->view->render($response, 'queue.html', array(
             'queue' => $queue
         ));
