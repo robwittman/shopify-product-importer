@@ -53,7 +53,7 @@ class Shops
 
         $params = $request->getParsedBody();
         $shop = new Shop();
-        $shop->myshopify_domain = $params['myshopify_domain'];
+        $shop->myshopify_domain = preg_replace("(^https?://)", "", $params['myshopify_domain']);
         $shop->api_key = $params['api_key'];
         $shop->password = $params['password'];
         $shop->shared_secret = $params['shared_secret'];
