@@ -18,6 +18,7 @@
                     <div class="panel-body">
                         <table class='table table-bordered table-condensed'>
                             <tr>
+                                <th></th>
                                 <th>Shop</th>
                                 <th>Created</th>
                                 <th>Status</th>
@@ -29,6 +30,17 @@
                             </tr>
                             {% for q in queue %}
                             <tr>
+                                <td>
+                                    {% if q.status == 'pending' %}
+                                    {% elseif q.status == 'failed' %}
+                                        <form action="/queue/restart" method="post">
+                                            <input type="hidden" name="id" value="{{q.id}}">
+                                            <button type="submit" class='btn btn-default'>Restart</button>
+                                        </form>
+                                    {% elseif q.status == 'finished' %}
+                                    {% else %}
+                                    {% endif %}
+                                </td>
                                 <td>{{q.shop.myshopify_domain}}</td>
                                 <td>{{q.created_at | date('Y-m-d H:i')}}</td>
                                 <td>

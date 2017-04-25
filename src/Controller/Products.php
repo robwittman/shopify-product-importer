@@ -104,4 +104,15 @@ class Products
         $this->flash->addMessage("message", "Product successfully added to queue. [Process took {$elapsed_time} seconds]");
         return $response->withRedirect('products');
     }
+
+    public function restart_queue($request, $response, $args)
+    {
+        $post = $request->getParsedBody();
+        $queue_id = $post['queue_id'];
+        $queue = Queue::find($queue_id);
+        $queue->status = Queue::PEDING;
+        $queue->save();
+        $this->flash->addMessage("message", "Queued product successfully restarted");
+        return $response->withRedirect('queue');
+    }
 }

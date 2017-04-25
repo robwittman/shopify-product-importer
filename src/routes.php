@@ -61,7 +61,10 @@ $app->group('/shops', function () use ($app) {
 ========================================*/
 $app->get('/products', 'ProductController:show_form')->add(new \App\Middleware\Authorization());
 $app->post('/products', 'ProductController:create')->add(new \App\Middleware\Authorization());
-$app->get('/queue', 'ProductController:queue')->add(new \App\Middleware\Authorization());
+$app->group('/queue', function() use ($app) {
+    $app->get('', 'ProductController:queue');
+    $app->post('/restart', 'ProductController:restart_queue');
+})->add(new \App\Middleware\Authorization());
 
 $app->post('/productsasd', function ($request, $response) {
     $matrix = json_decode(file_get_contents('../src/matrix.json'), true);
