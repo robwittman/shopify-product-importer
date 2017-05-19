@@ -578,7 +578,7 @@ function createTumbler($queue)
         $res = callShopify($shop, '/admin/products.json', 'POST', array(
             'product' => $product_data
         ));
-        
+
         $variantMap = array();
         $imageUpdate = array();
 
@@ -597,7 +597,7 @@ function createTumbler($queue)
                 'images' => $imageUpdate
             )
         ));
-        
+
 
         $queue->finish(array($res->product->id));
         return array($res->product->id);
@@ -691,7 +691,7 @@ function createUvTumbler($queue)
                     "requires_shipping" => true,
                     "inventory_management" => null,
                     "inventory_policy" => "deny",
-                    "sku" => "TX (UV PRINTED) - T{$size}- {$color} - {$post['product_title']} {$size}oz"
+                    "sku" => "TX - T{$size}- {$color} - {$post['product_title']} {$size}oz"
                 );
                 $product_data['variants'][] = $variantData;
             }
@@ -700,7 +700,7 @@ function createUvTumbler($queue)
         $res = callShopify($shop, '/admin/products.json', 'POST', array(
             'product' => $product_data
         ));
-        
+
         $variantMap = array();
         $imageUpdate = array();
 
@@ -719,7 +719,7 @@ function createUvTumbler($queue)
                 'images' => $imageUpdate
             )
         ));
-        
+
 
         $queue->finish(array($res->product->id));
         return array($res->product->id);
