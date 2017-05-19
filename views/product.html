@@ -23,7 +23,7 @@
             </div>
             {% else %}
             <div class="panel panel-default">
-                <form action="/products" method="post" enctype='multipart/form-data' id='productForm'>
+                <form action="" method="post" enctype='multipart/form-data' id='productForm'>
                     <div class="panel-heading">
                         Create New Product
                         <span class='pull-right'>
@@ -90,6 +90,11 @@
                                 <label class='control-label'><input type="checkbox" name="tumbler"> Tumbler?</label>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class='control-label'><input type="checkbox" name="uv_tumbler">UV Tumbler ?</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="panel-footer">
                         <input type="submit" name="name" value="Submit" class='btn btn-primary pull-right' id='submit'>
@@ -131,13 +136,13 @@
             $('#advanced').click(function(ev) {
                 $('#advanced-wrapper').toggle();
             })
-            $('#productForm').submit(function(ev) {
-                $('#submit').attr('disabled', 'disabled').prop('value', 'Submitting');
-                $(this).submit(function() {
-                    return false;
-                });
-                return true;
-            })
+            // $('#productForm').submit(function(ev) {
+            //     $('#submit').attr('disabled', 'disabled').prop('value', 'Submitting');
+            //     $(this).submit(function() {
+            //         return false;
+            //     });
+            //     return true;
+            // })
         })
     </script>
 {% endblock %}
