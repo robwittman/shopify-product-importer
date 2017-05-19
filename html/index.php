@@ -9,7 +9,6 @@ require_once '../src/common.php';
 use App\Model\Errors;
 use App\Model\Messages;
 
-var_dump($_POST);
 $dbUrl = getenv("DATABASE_URL");
 $dbConfig = parse_url($dbUrl);
 // Load our App and container
