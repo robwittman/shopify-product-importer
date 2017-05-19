@@ -484,11 +484,10 @@ function processQueue($queue) {
 
 function createTumbler($queue)
 {
-    error_log("Creating regular Tumbler");
     $image_data = array();
     $imageUrls = array();
     global $s3;
-    // $queue->started_at = date('Y-m-d H:i:s');
+    $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
 
     if (isset($data['file'])) {
@@ -571,7 +570,12 @@ function createTumbler($queue)
                     "inventory_policy" => "deny",
                     "sku" => "TX (UV PRINTED) - T{$size}- {$color} - {$post['product_title']} {$size}oz"
                 );
-                $product_data['variants'][] = $variantData;
+                if($color == 'Navy' && $size == '30') {
+                    error_log("Moving $color / $size to front of array");
+                    $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
+                } else {
+                    $product_data['variants'][] = $variantData;
+                }
             }
         }
 
@@ -606,11 +610,10 @@ function createTumbler($queue)
 
 function createUvTumbler($queue)
 {
-    error_log("Creating UV Tumbler");
     $image_data = array();
     $imageUrls = array();
     global $s3;
-    // $queue->started_at = date('Y-m-d H:i:s');
+    $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
 
     if (isset($data['file'])) {
@@ -693,7 +696,12 @@ function createUvTumbler($queue)
                     "inventory_policy" => "deny",
                     "sku" => "TX - T{$size}- {$color} - {$post['product_title']} {$size}oz"
                 );
-                $product_data['variants'][] = $variantData;
+                if($color == 'Navy' && $size == '30') {
+                    error_log("Moving $color / $size to front of array");
+                    $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
+                } else {
+                    $product_data['variants'][] = $variantData;
+                }
             }
         }
 
@@ -719,7 +727,6 @@ function createUvTumbler($queue)
                 'images' => $imageUpdate
             )
         ));
-
 
         $queue->finish(array($res->product->id));
         return array($res->product->id);

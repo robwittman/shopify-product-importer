@@ -60,7 +60,7 @@
                                 <td>
                                     <ul>
                                         {% for product in q.product_id %}
-                                            <li><a href="https://{{shop.myshopify_domain}}/admin/products/{{product}}">{{product}}</a></li>
+                                            <li><a href="https://{{q.shop.myshopify_domain}}/admin/products/{{product}}">{{product}}</a></li>
                                         {% endfor %}
                                     </ul>
                                 </td>
