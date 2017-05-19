@@ -484,10 +484,11 @@ function processQueue($queue) {
 
 function createTumbler($queue)
 {
+    error_log("Creating regular Tumbler");
     $image_data = array();
     $imageUrls = array();
     global $s3;
-    $queue->started_at = date('Y-m-d H:i:s');
+    // $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
 
     if (isset($data['file'])) {
@@ -506,17 +507,17 @@ function createTumbler($queue)
         }
         $shop = \App\Model\Shop::find($post['shop']);
 
+        $shopReq = [];
+
         foreach ($image_data as $name) {
             if (pathinfo($name, PATHINFO_EXTENSION) != 'jpg') {
                 continue;
             }
-
-            $availColors = array('Navy','Black','Pink','Teal','Grey');
-            foreach ($availColors as $color) {
-                if (strpos($name, $color) !== false) {
-                    $imageUrls[$color] = $name;
-                }
-            }
+            $productData = pathinfo($name)['filename'];
+            $specs = explode('_-_', $productData);
+            $size = $specs[0];
+            $color = $specs[1];
+            $imageUrls[$size][$color] = $name;
         }
 
         switch ($shop->myshopify_domain) {
@@ -526,7 +527,6 @@ function createTumbler($queue)
             default:
                 $html = '<meta charset="utf-8" />'.
                         "<ul>".
-                            "<li>30 oz Stainless Steel Powder Coated Tumbler and Lid.</li>".
                             "<li>2x heat &amp; cold retention (compared to plastic tumblers).</li>".
                             "<li>Double-walled vacuum insulation - Keeps Hot and Cold. </li>".
                             "<li>Fits most cup holders, Clear lid to protect from spills. </li>".
@@ -539,7 +539,7 @@ function createTumbler($queue)
             'title' => $post['product_title'],
             'body_html' => $html,
             'tags' => $post['tags'],
-            'vendor' => "LDC",
+            'vendor' => "Tx Tumbler",
             'product_type' => $post['product_type'],
             'options' => array(
                 array(
@@ -553,24 +553,24 @@ function createTumbler($queue)
             'images' => array()
         );
 
-        foreach ($imageUrls as $color => $image) {
-            $variantData = array(
-                'title' => "30 oz Stainless Steel Powder Coated Tumbler and Lid. / {$color}",
-                "price" => "29.99",
-                "grams" => 499,
-                "option1" => "30 oz Stainless Steel Powder Coated Tumbler and Lid.",
-                "option2" => $color,
-                "compare_at_price" => "39.99",
-                "weight" => "1.1",
-                "weight_unit" => "lb",
-                "requires_shipping" => true,
-                "inventory_management" => null,
-                "inventory_policy" => "deny",
-                "sku" => "LDC - T30 - {$color} - {$post['product_title']}"
-            );
-            if ($color == "Navy") {
-                array_unshift($product_data['variants'], $variantData);
-            } else {
+        foreach ($imageUrls as $size => $colors) {
+            $price = 24.99;
+            if ($size == '30') {
+                $price = 29.99;
+            }
+            foreach ($colors as $color => $image) {
+                $variantData = array(
+                    'title' => "{$size}oz /{$color}",
+                    "price" => $price,
+                    "option1" => "{$size}oz",
+                    "option2" => str_replace('_', ' ', $color),
+                    "weight" => "1.1",
+                    "weight_unit" => "lb",
+                    "requires_shipping" => true,
+                    "inventory_management" => null,
+                    "inventory_policy" => "deny",
+                    "sku" => "TX (UV PRINTED) - T{$size}- {$color} - {$post['product_title']} {$size}oz"
+                );
                 $product_data['variants'][] = $variantData;
             }
         }
@@ -578,30 +578,26 @@ function createTumbler($queue)
         $res = callShopify($shop, '/admin/products.json', 'POST', array(
             'product' => $product_data
         ));
-
-        $variantMap = array("Navy" => array(),"Black" => array(),"Pink" => array(),"Teal" => array(),"Grey" => array());
+        
+        $variantMap = array();
         $imageUpdate = array();
 
         foreach ($res->product->variants as $variant) {
-            $variantMap[$variant->option2][] = $variant->id;
+            $size = str_replace("oz", '', $variant->option1);
+            $color = str_replace(' ', '_', $variant->option2);
             $image = array(
-                "src" => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$variant->option2]}",
-                "variant_ids" => $variantMap[$variant->option2]
+                "src" => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$size][$color]}",
+                'variant_ids' => [$variant->id]
             );
-            if ($variant->option2 == "Navy") {
-                $data['position'] = 1;
-            }
             $imageUpdate[] = $image;
         }
-
-
-
         $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
             "product" => array(
                 'id' => $res->product->id,
                 'images' => $imageUpdate
             )
         ));
+        
 
         $queue->finish(array($res->product->id));
         return array($res->product->id);
@@ -686,11 +682,10 @@ function createUvTumbler($queue)
             }
             foreach ($colors as $color => $image) {
                 $variantData = array(
-                    'title' => "{$size} oz Stainless Steel Powder Coated Tumbler and Lid. / {$color}",
+                    'title' => "{$size}oz/{$color}",
                     "price" => $price,
                     "option1" => "{$size}oz",
                     "option2" => str_replace('_', ' ', $color),
-                    "compare_at_price" => "39.99",
                     "weight" => "1.1",
                     "weight_unit" => "lb",
                     "requires_shipping" => true,
@@ -705,7 +700,7 @@ function createUvTumbler($queue)
         $res = callShopify($shop, '/admin/products.json', 'POST', array(
             'product' => $product_data
         ));
-        var_dump($res);
+        
         $variantMap = array();
         $imageUpdate = array();
 
@@ -724,7 +719,7 @@ function createUvTumbler($queue)
                 'images' => $imageUpdate
             )
         ));
-        var_dump($res);
+        
 
         $queue->finish(array($res->product->id));
         return array($res->product->id);
