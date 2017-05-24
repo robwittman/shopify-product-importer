@@ -568,7 +568,7 @@ function createTumbler($queue)
                     "requires_shipping" => true,
                     "inventory_management" => null,
                     "inventory_policy" => "deny",
-                    "sku" => "TX - T{$size}- {$color} - {$post['product_title']} {$size}oz"
+                    "sku" => "TX - T{$size} - {$color} - {$post['product_title']} {$size}oz"
                 );
                 if($color == 'Navy' && $size == '30') {
                     error_log("Moving $color / $size to front of array");
@@ -679,7 +679,7 @@ function createUvTumbler($queue)
         );
 
         foreach ($imageUrls as $size => $colors) {
-            $price = 29.99;
+            $price = 34.99;
             if ($size == '30') {
                 $price = 39.99;
             }
@@ -694,7 +694,7 @@ function createUvTumbler($queue)
                     "requires_shipping" => true,
                     "inventory_management" => null,
                     "inventory_policy" => "deny",
-                    "sku" => "TX (UV PRINTED) - T{$size}- {$color} - {$post['product_title']} {$size}oz"
+                    "sku" => "TX (UV PRINTED) - T{$size} - {$color} - {$post['product_title']} {$size}oz"
                 );
                 if($color == 'Navy' && $size == '30') {
                     error_log("Moving $color / $size to front of array");
