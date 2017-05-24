@@ -558,12 +558,16 @@ function createTumbler($queue)
                 $price = 29.99;
             }
             foreach ($colors as $color => $image) {
-                $skuColor = str_replace('_', '', $color);
+                $optionColor = $color;
+                if ($color == "Stainless") {
+                    $optionColor = "Grey";
+                }
+                $skuColor = str_replace('_', ' ', $color);
                 $variantData = array(
                     'title' => "{$size}oz /{$color}",
                     "price" => $price,
                     "option1" => "{$size}oz",
-                    "option2" => str_replace('_', ' ', $color),
+                    "option2" => str_replace('_', ' ', $optionColor),
                     "weight" => "1.1",
                     "weight_unit" => "lb",
                     "requires_shipping" => true,
@@ -685,12 +689,16 @@ function createUvTumbler($queue)
                 $price = 39.99;
             }
             foreach ($colors as $color => $image) {
-                $skuColor = str_replace('_', '', $color);
+                $skuColor = str_replace('_', ' ', $color);
+                $optionColor = $color;
+                if ($color == "Stainless") {
+                    $optionColor = "Grey";
+                }
                 $variantData = array(
                     'title' => "{$size}oz/{$color}",
                     "price" => $price,
                     "option1" => "{$size}oz",
-                    "option2" => str_replace('_', ' ', $color),
+                    "option2" => str_replace('_', ' ', $optionColor),
                     "weight" => "1.1",
                     "weight_unit" => "lb",
                     "requires_shipping" => true,
