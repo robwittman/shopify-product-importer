@@ -126,6 +126,12 @@ function createHats($queue) {
         'variants' => array(),
         'images' => array()
     );
+    $store_name = '';
+    switch ($shop->myshopify_domain) {
+        case 'piper-lou-collection.myshopify.com':
+            $store_name = 'Piper Lou';
+            break;
+    }
     foreach ($imageUrls as $style => $colors) {
         foreach ($colors as $color => $image) {
             $variantData = array(
@@ -138,9 +144,13 @@ function createHats($queue) {
                 'requires_shipping' => true,
                 'inventory_management' => null,
                 'inventory_policy' => 'deny',
-                'sku' => "Piper Lou - Hat"
+                'sku' => "{$store_name} - Hat"
             );
-            $product_data['variants'][] = $variantData;
+            if ($color == 'Navy' && $style == 'Hat') {
+                $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
+            } else {
+                $product_data['variants'][] = $variantData;
+            }
         }
     }
     $res = callShopify($shop, '/admin/products.json', 'POST', array(
@@ -151,13 +161,15 @@ function createHats($queue) {
     foreach ($res->product->variants as $variant) {
         $style = $variant->option1 == 'Trucker Hat' ? "Hat" : "TwillHat";
         $color = str_replace(' ', '_', $variant->option2);
-
+        var_dump($style);
+        var_dump($color);
         $image = array(
             'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$style][$color]}",
             'variant_ids' => [$variant->id]
         );
         $imageUpdate[] = $image;
     };
+    var_dump($imageUpdate);
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         "product" => array(
             'id' => $res->product->id,
