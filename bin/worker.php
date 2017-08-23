@@ -140,10 +140,13 @@ function createStemless($queue) {
         $color = $specs[1];
         $imageUrls[$color] = $name;
     }
+    $tags = explode(',', trim($post['tags']));
+    $tags[] = 'wine cup';
+    $tags = implode(',', $tags);
     $product_data = array(
         'title' => $post['product_title'],
         'body_html' => $html,
-        'tags' => $post['tags'],
+        'tags' => $tags,
         'vendor' => 'Tx Tumbler',
         'options' => array(
             array(
@@ -161,6 +164,10 @@ function createStemless($queue) {
             break;
     }
     foreach ($imageUrls as $color => $url) {
+        $sku = $color;
+        if ($color == 'Grey') {
+            $sku = 'Stainless Steel';
+        }
         $variantData = array(
             'title' => $color,
             'price' => '24.99',
@@ -170,7 +177,7 @@ function createStemless($queue) {
             'requires_shipping' => true,
             'inventory_management' => null,
             'inventory_policy' => 'deny',
-            'sku' => 'Stemless Wine Cup - '.$color
+            'sku' => 'Stemless Wine Cup - '.$sku
         );
         if ($color == 'Black') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
@@ -261,10 +268,13 @@ function createHats($queue) {
         $color = $specs[1];
         $imageUrls[$style][$color] = $name;
     }
+    $tags = explode(',', trim($post['tags']));
+    $tags[] = 'hat';
+    $tags = implode(',', $tags);
     $product_data = array(
         'title' => $post['product_title'],
         'body_html' => $html,
-        'tags' => $post['tags'],
+        'tags' => $tags,
         'vendor' => 'Edge Promotions',
         'product_type' => 'hat',
         'options' => array(
