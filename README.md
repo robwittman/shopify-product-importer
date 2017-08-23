@@ -1,3 +1,1 @@
 ### Shopify Product Importer
- 
- 

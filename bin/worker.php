@@ -46,20 +46,127 @@ while (true) {
         try {
             // $q->start();
             $data = json_decode($q->data, true);
-            if (isset($data['post']['tumbler']) && $data['post']['tumbler'] == 'on') {
-                $res = createTumbler($q);
-            } else if (isset($data['post']['uv_tumbler']) && $data['post']['uv_tumbler'] == 'on') {
-                $res = createUvTumbler($q);
-            } else {
-                $res = processQueue($q);
+            switch ($data['post']['template']) {
+                case 'tumbler':
+                    $res = createTumbler($q);
+                    break;
+                case 'uv_tumbler':
+                    $res = createUvTumbler($q);
+                    break;
+                case 'hats':
+                    $res = createHats($q);
+                    break;
+                case 'stemless':
+                    $res = createStemless($q);
+                    break;
+                case 'base_apparel':
+                    $res = processQueue($q);
+                    break;
             }
             $q->finish($res);
         } catch(\Exception $e) {
+            exit($e->getMessage());
             $q->fail($e->getMessage());
         }
     }
 
     sleep(10);
+}
+
+function getImages($s3, $prefix) {
+    $objects = $s3->getIterator('ListObjects', array(
+        "Bucket" => "shopify-product-importer",
+        "Prefix" => $prefix
+    ));
+    $res = array();
+    foreach ($objects as $object) {
+        $key = $object["Key"];
+        if (strpos($key, "MACOSX") || strpos($key, "Icon^M")) {
+            continue;
+        }
+        if (pathinfo($key, PATHINFO_EXTENSION) != "jpg") {
+            continue;
+        }
+        $res[] = $object;
+    }
+    return array_map(function($object) {
+        return $object["Key"];
+    }, $res);
+}
+
+function createHats($queue) {
+    global $s3;
+    $queue->started_at = date('Y-m-d H:i:s');
+    $data = json_decode($queue->data, true);
+    $post = $data['post'];
+    $shop = \App\Model\Shop::find($post['shop']);
+    $image_data = getImages($s3, $data['file']);
+    $imageUrls = [];
+    foreach ($image_data as $name) {
+        $productData = pathinfo($name)['filename'];
+        $specs = explode('_-_', $productData);
+        $style = $specs[0];
+        $color = $specs[1];
+        $imageUrls[$style][$color] = $name;
+    }
+    $product_data = array(
+        'title' => $post['product_title'],
+        'body_html' => $html,
+        'tags' => $post['tags'],
+        'vendor' => 'Edge Promotions',
+        'product_type' => 'hat',
+        'options' => array(
+            array(
+                'name' => "Style"
+            ),
+            array(
+                'name' => "Color"
+            )
+        ),
+        'variants' => array(),
+        'images' => array()
+    );
+    foreach ($imageUrls as $style => $colors) {
+        foreach ($colors as $color => $image) {
+            $variantData = array(
+                'title' => ($style == "Hat" ? "Trucker Hat" : "Cotton Twill Hat").' / '.$color,
+                'price' => '29.99',
+                'option1' => ($style == "Hat" ? "Trucker Hat" : "Cotton Twill Hat"),
+                'option2' => str_replace('_', ' ', $color),
+                'weight' => '5.0',
+                'weight_unit' => 'oz',
+                'requires_shipping' => true,
+                'inventory_management' => null,
+                'inventory_policy' => 'deny',
+                'sku' => "Piper Lou - Hat"
+            );
+            $product_data['variants'][] = $variantData;
+        }
+    }
+    $res = callShopify($shop, '/admin/products.json', 'POST', array(
+        'product' => $product_data
+    ));
+    $variantMap = array();
+    $imageUpdate = array();
+    foreach ($res->product->variants as $variant) {
+        $style = $variant->option1 == 'Trucker Hat' ? "Hat" : "TwillHat";
+        $color = str_replace(' ', '_', $variant->option2);
+
+        $image = array(
+            'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$style][$color]}",
+            'variant_ids' => [$variant->id]
+        );
+        $imageUpdate[] = $image;
+    };
+    $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
+        "product" => array(
+            'id' => $res->product->id,
+            'images' => $imageUpdate
+        )
+    ));
+
+    $queue->finish(array($res->product->id));
+    return array($res->product->id);
 }
 
 function processQueue($queue) {
@@ -74,15 +181,8 @@ function processQueue($queue) {
     $data = json_decode($queue->data, true);
 
     if (isset($data['file'])) {
+        $image_data = getImages($s3, $data['file']);
         $post = $data['post'];
-        $objects = $s3->getIterator('ListObjects', array(
-            "Bucket" => 'shopify-product-importer',
-            "Prefix" => $data['file']
-        ));
-        foreach($objects as$object) {
-            $image_data[] = $object["Key"];
-        }
-
         $shop = \App\Model\Shop::find($post['shop']);
 
         foreach ($image_data as $name) {
@@ -492,18 +592,7 @@ function createTumbler($queue)
 
     if (isset($data['file'])) {
         $post = $data['post'];
-
-        $objects = $s3->getIterator('ListObjects', array(
-            "Bucket" => "shopify-product-importer",
-            "Prefix" => $data['file']
-        ));
-
-        foreach ($objects as $object) {
-            if (strpos($object["Key"], "MACOSX") !== false || strpos($object["Key"], "Icon^M" !== false)) {
-                continue;
-            }
-            $image_data[] = $object["Key"];
-        }
+        $image_data = getImages($s3, $data['file']);
         $shop = \App\Model\Shop::find($post['shop']);
 
         $shopReq = [];

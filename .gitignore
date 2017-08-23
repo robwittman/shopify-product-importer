@@ -1,3 +1,4 @@
 /vendor/
 /data/
-docker-compose.yml
+.env
+.DS_Store

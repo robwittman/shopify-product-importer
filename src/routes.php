@@ -314,24 +314,3 @@ $app->post('/productsasd', function ($request, $response) {
     $this->flash->addMessage('message', "Product successfully queued");
     return $response->withRedirect('/products');
 })->add(new \App\Middleware\Authorization());
-
-/*=========================================
-Miscellaneous Routes
-=========================================*/
-$app->get('/changelog', function ($request, $response) {
-    $changelog = json_decode(file_get_contents('../src/changelog.json'), true);
-    return $this->view->render($response, 'changelog.html', array(
-        'changelog' => $changelog['changelog']
-    ));
-})->add(new \App\Middleware\Authorization());
-
-$app->get('/matrix', function ($request, $response) {
-    $matrix = file_get_contents('../src/matrix.json');
-    if (!$matrix) {
-        $this->flash->addMessage('error', "Failed loading product matrix!");
-        return $this->view->render($response, 'product.html');
-    }
-    return $this->view->render($response, 'matrix.html', array(
-        'matrix' => $matrix
-    ));
-})->add(new \App\Middleware\Authorization());

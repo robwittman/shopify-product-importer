@@ -1,0 +1,19 @@
+version: "2"
+services:
+    web:
+        build: .
+        ports:
+            - "80:80"
+        links:
+            - postgres
+        volumes:
+            - ./:/var/www
+            - ./html/.user.ini:/usr/local/etc/php/php.ini
+        env_file: .env
+    postgres:
+        image: postgres
+        volumes:
+            - ./data/postgres:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        env_file: .env
