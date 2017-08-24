@@ -73,6 +73,7 @@ while (true) {
             }
             $q->finish($res);
         } catch(\Exception $e) {
+            error_log($e->getMessage());
             // exit($e->getMessage());
             $q->fail($e->getMessage());
         }
@@ -178,22 +179,26 @@ function createDrinkware($queue)
 
     foreach ($imageUrls as $size => $colors) {
         foreach ($colors as $color => $url) {
+            $sku = $color;
+            if ($color == 'Cyan') {
+                $sku = 'Seafoam';
+            }
             switch ($size) {
                 case '30':
                     $option1 = '30oz Tumbler';
-                    $sku = "TX - T30 - {$color} - Coated 30oz Tumbler";
+                    $sku = "TX - T30 - {$sku} - Coated 30oz Tumbler";
                     break;
                 case '20':
                     $option1 = '20oz Tumbler';
-                    $sku = "TX - T20 - {$color} - Coated 20oz Tumbler";
+                    $sku = "TX - T20 - {$sku} - Coated 20oz Tumbler";
                     break;
                 case 'Bottle':
                     $option1 = '40oz Water Bottle';
-                    $sku = "TX - T40 - {$color} - Coated 40oz Water Bottle";
+                    $sku = "TX - T40 - {$sku} - Coated 40oz Water Bottle";
                     break;
                 case 'SmallBottle':
                     $option1 = '16oz Water Bottle';
-                    $sku = "TX - T16 - {$color} - Coated 16oz Water Bottle";
+                    $sku = "TX - T16 - {$sku} - Coated 16oz Water Bottle";
                     break;
             }
             $variantData = array(
