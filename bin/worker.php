@@ -71,6 +71,9 @@ while (true) {
                 case 'raglans':
                     $res = createRaglans($q);
                     break;
+                case 'front_back_pocket':
+                    $res = createFrontBackPocket($q);
+                    break;
                 default:
                     throw new \Exception("Invalid template {$data['post']['template']} provided");
             }
@@ -80,6 +83,7 @@ while (true) {
             // exit($e->getMessage());
             $q->fail($e->getMessage());
         }
+        error_log("Product finished");
     }
 
     sleep(10);
@@ -96,7 +100,7 @@ function getImages($s3, $prefix) {
         if (strpos($key, "MACOSX") || strpos($key, "Icon^M")) {
             continue;
         }
-        if (pathinfo($key, PATHINFO_EXTENSION) != "jpg") {
+        if (!in_array(pathinfo($key, PATHINFO_EXTENSION), array('jpg', 'png', 'jpeg'))) {
             continue;
         }
         $res[] = $object;
@@ -105,6 +109,140 @@ function getImages($s3, $prefix) {
         return $object["Key"];
     }, $res);
 }
+
+function createFrontBackPocket($queue)
+{
+    $prices = array(
+        'Tee' => array(
+            'small' => array(
+                'price' => '14',
+                'weight' => '0.0',
+            ),
+            'medium' => array(
+                'price' => '14',
+                'weight' => '0.0',
+            ),
+            'large' => array(
+                'price' => '14',
+                'weight' => '0.0',
+            ),
+            'XL' => array(
+                'price' => '14',
+                'weight' => '0.0',
+            ),
+            '2XL' => array(
+                'price' => '16',
+                'weight' => '0.0',
+            )
+        ),
+        'Long Sleeve' => array(
+            'small' => array(
+                'price' => '16',
+                'weight' => '0.0',
+            ),
+            'medium' => array(
+                'price' => '16',
+                'weight' => '0.0',
+            ),
+            'large' => array(
+                'price' => '16',
+                'weight' => '0.0',
+            ),
+            'XL' => array(
+                'price' => '16',
+                'weight' => '0.0',
+            ),
+            '2XL' => array(
+                'price' => '18',
+                'weight' => '0.0',
+            )
+        )
+    );
+
+    global $s3;
+    $queue->started_at = date('Y-m-d H:i:s');
+    $data = json_decode($queue->data, true);
+    $post = $data['post'];
+    $shop = \App\Model\Shop::find($post['shop']);
+    error_log($data['file']);
+    $image_data = getImages($s3, $data['file']);
+    $imageUrls = [];
+
+    $html = '';
+    foreach ($image_data as $name) {
+        $productData = pathinfo($name)['filename'];
+        $specs = explode('_-_', $productData);
+        $color = $specs[1];
+        $imageUrls[$color] = $name;
+    }
+    $tags = explode(',', trim($post['tags']));
+    $tags = implode(',', $tags);
+    $product_data = array(
+        'title' => $post['product_title'],
+        'body_html' => $html,
+        'tags' => $tags,
+        'vendor' => 'PLCWholesale',
+        'options' => array(
+            array(
+                'name' => "Size"
+            ),
+            array(
+                'name' => "Color"
+            ),
+            array(
+                'name' => "Style"
+            )
+        ),
+        'variants' => array(),
+        'images' => array()
+    );
+    foreach ($prices as $style => $sizes) {
+        foreach ($sizes as $size => $options) {
+            foreach ($imageUrls as $color => $url) {
+                $color = str_replace('_', ' ', $color);
+                $variantData = array(
+                    'title' => $size . ' / ' . $color . ' / ' . $style,
+                    'price' => $options['price'],
+                    'option1' => $size,
+                    'option2' => $color,
+                    'option3' => $style,
+                    'weight' => $options['weight'],
+                    'weight_unit' => 'oz',
+                    'requires_shipping' => true,
+                    'inventory_management' => null,
+                    'inventory_policy' => 'deny',
+                    'sku' => ""
+                );
+                $product_data['variants'][] = $variantData;
+            }
+        }
+    }
+    $res = callShopify($shop, '/admin/products.json', 'POST', array(
+        'product' => $product_data
+    ));
+    $imageUpdate = array();
+    foreach ($res->product->variants as $variant) {
+        $size = $variant->option1;
+        $color = str_replace(' ', '_', $variant->option2);
+        $image = array(
+            'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$color]}",
+            'variant_ids' => array($variant->id)
+        );
+        $imageUpdate[] = $image;
+    }
+    $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
+        "product" => array(
+            'id' => $res->product->id,
+            'images' => $imageUpdate
+        )
+    ));
+
+    $queue->finish(array($res->product->id));
+    return array($res->product->id);
+
+}
+
+
 
 function createUvDrinkware($queue)
 {
@@ -121,8 +259,12 @@ function createUvDrinkware($queue)
     $image_data = getImages($s3, $data['file']);
     $imageUrls = [];
     switch($shop->myshopify_domain) {
-        case 'piper-lou-collection.myshopify.com':
         case 'plcwholesale.myshopify.com':
+            $prices = array(
+                '30' => '20.00',
+                '20' => '17.50'
+            );
+        case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' />
                     <ul>
@@ -233,11 +375,7 @@ function createUvDrinkware($queue)
 
 function createFlasks($queue)
 {
-    $prices = array(
-        '30' => '39.99',
-        '20' => '34.99'
-    );
-
+    $price = '19.99';
     global $s3;
     $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
@@ -247,8 +385,9 @@ function createFlasks($queue)
     $imageUrls = [];
 
     switch($shop->myshopify_domain) {
-        case 'piper-lou-collection.myshopify.com':
         case 'plcwholesale.myshopify.com':
+            $price = '12.00';
+        case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' />
 <h5>Shipping &amp; Returns</h5>
@@ -306,7 +445,7 @@ function createFlasks($queue)
     foreach ($imageUrls as $color => $url) {
         $variantData = array(
             'title' => '6oz / '.$color,
-            'price' => '19.99',
+            'price' => $price,
             'option1' => '6oz',
             'option2' => $color,
             'weight' => '1.1',
@@ -349,6 +488,7 @@ function createFlasks($queue)
 
 function createBabyBodySuit($queue)
 {
+    $price = '14.99';
     $sizes = array(
         'Newborn',
         '6 Months',
@@ -366,8 +506,9 @@ function createBabyBodySuit($queue)
     $imageUrls = [];
 
     switch($shop->myshopify_domain) {
-        case 'piper-lou-collection.myshopify.com':
         case 'plcwholesale.myshopify.com':
+            $price = '8.50';
+        case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' /><meta charset='utf-8' />
 <h5>Shipping &amp; Returns</h5>
@@ -426,7 +567,7 @@ function createBabyBodySuit($queue)
         $imageUrl = $imageUrls[0];
         $variantData = array(
             'title' => $size .' / White',
-            'price' => '14.99',
+            'price' => $price,
             'option1' => $size,
             'option2' => 'White',
             'weight' => '0.6',
@@ -503,8 +644,38 @@ function createRaglans($queue)
     $imageUrls = [];
 
     switch($shop->myshopify_domain) {
-        case 'piper-lou-collection.myshopify.com':
         case 'plcwholesale.myshopify.com':
+            $prices = array(
+                'Small' => array(
+                    'price' => '12.50',
+                    'weight' => '7.6',
+                ),
+                'Medium' => array(
+                    'price' => '12.50',
+                    'weight' => '8.8',
+                ),
+                'Large' => array(
+                    'price' => '12.50',
+                    'weight' => '10.0',
+                ),
+                'XL' => array(
+                    'price' => '12.50',
+                    'weight' => '10.3',
+                ),
+                '2XL' => array(
+                    'price' => '12.50',
+                    'weight' => '12.4',
+                ),
+                '3XL' => array(
+                    'price' => '12.50',
+                    'weight' => '13.2',
+                ),
+                '4XL' => array(
+                    'price' => '14.50',
+                    'weight' => '14.0',
+                )
+            );
+        case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' /><meta charset='utf-8' /><meta charset='utf-8' />
 <h5>Shipping &amp; Returns</h5>
@@ -622,8 +793,14 @@ function createDrinkware($queue)
     $image_data = getImages($s3, $data['file']);
     $imageUrls = [];
     switch($shop->myshopify_domain) {
-        case 'piper-lou-collection.myshopify.com':
         case 'plcwholesale.myshopify.com':
+            $prices = array(
+                '30' => '17',
+                '20' => '16',
+                'Bottle' => '17.50',
+                'SmallBottle' => '13.50'
+            );
+        case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' />
 <h5>Shipping &amp; Returns</h5>
@@ -761,6 +938,7 @@ function createDrinkware($queue)
 }
 
 function createStemless($queue) {
+    $price = '24.99';
     global $s3;
     $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
@@ -769,8 +947,9 @@ function createStemless($queue) {
     $image_data = getImages($s3, $data['file']);
     $imageUrls = [];
     switch($shop->myshopify_domain) {
-        case 'piper-lou-collection.myshopify.com':
         case 'plcwholesale.myshopify.com':
+            $price = '12.50';
+        case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' />
 <h5>Shipping &amp; Returns</h5>
@@ -836,7 +1015,7 @@ function createStemless($queue) {
         }
         $variantData = array(
             'title' => $color,
-            'price' => '24.99',
+            'price' => $price,
             'option1' => $color,
             'weight' => '0.1',
             'weight_unit' => 'oz',
@@ -875,6 +1054,7 @@ function createStemless($queue) {
 }
 
 function createHats($queue) {
+    $price = '29.99';
     global $s3;
     $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
@@ -884,8 +1064,9 @@ function createHats($queue) {
     $imageUrls = [];
     $html = '<p></p>';
     switch($shop->myshopify_domain) {
-        case 'piper-lou-collection.myshopify.com':
         case 'plcwholesale.myshopify.com':
+            $price = '12.50';
+        case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' /><meta charset='utf-8' />
     <h5>Shipping &amp; Return Policy</h5>
@@ -965,7 +1146,7 @@ function createHats($queue) {
         foreach ($colors as $color => $image) {
             $variantData = array(
                 'title' => ($style == "Hat" ? "Trucker Hat" : "Cotton Twill Hat").' / '.$color,
-                'price' => '29.99',
+                'price' => $price,
                 'option1' => ($style == "Hat" ? "Trucker Hat" : "Cotton Twill Hat"),
                 'option2' => str_replace('_', ' ', $color),
                 'weight' => '5.0',
