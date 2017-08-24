@@ -180,7 +180,6 @@ function createUvDrinkware($queue)
                     $sku = "TX (UV PRINTED) - T20 - {$color} - {$post['product_title']} 20oz";
                     break;
             }
-            error_log($sku);
             $variantData = array(
                 'title' => $option1. ' / '.$color,
                 'price' => $prices[$size],
@@ -234,16 +233,375 @@ function createUvDrinkware($queue)
 
 function createFlasks($queue)
 {
+    $prices = array(
+        '30' => '39.99',
+        '20' => '34.99'
+    );
 
+    global $s3;
+    $queue->started_at = date('Y-m-d H:i:s');
+    $data = json_decode($queue->data, true);
+    $post = $data['post'];
+    $shop = \App\Model\Shop::find($post['shop']);
+    $image_data = getImages($s3, $data['file']);
+    $imageUrls = [];
+
+    switch($shop->myshopify_domain) {
+        case 'piper-lou-collection.myshopify.com':
+        case 'plcwholesale.myshopify.com':
+        case 'importer-testing.myshopify.com':
+            $html = "<meta charset='utf-8' />
+<h5>Shipping &amp; Returns</h5>
+<div>We want you to<span> </span><strong>LOVE</strong><span> </span>your Piper Lou items! They will ship out within 4-10 days from your order. If you're not 100% satisfied within the first 30 days of receiving your product, let us know and we'll make it right.</div>
+<ul>
+<li>Hassle free return/exchange policy! </li>
+<li>Please contact us at<span> </span><strong>info@piperloucollection.com</strong><span> </span>with any questions. </li>
+</ul>
+<h5>Product Description</h5>
+<p>You are going to <strong>LOVE<span> </span></strong>this awesome flask! Perfect addition for anybody who needs a quick drink on-the-go. Fill it with whatever you like, we won't judge....we'll encourage! </p>
+<ul>
+<li>Stainless Steel 6oz Flask</li>
+<li>Heavy Duty but Light-Weight. Will not easily scratch or tarnish </li>
+<li>Screw down cap ensures no liquid will escape the flask. Cap is attached to flask. </li>
+<li>Reliable method of storing beverages for personal use. </li>
+<li>Perfect gift for yourself or someone else.</li>
+</ul>";
+            break;
+        case 'hopecaregive.myshopify.com':
+            $html = '<p><img src="https://cdn.shopify.com/s/files/1/1255/4519/files/16128476_220904601702830_291172195_n.jpg?9775130656601803865"></p><p>Designed, printed, and shipped in the USA!</p>';
+            break;
+        case 'game-slave.myshopify.com':
+            $html = '<p><img src="https://cdn.shopify.com/s/files/1/1066/2470/files/TC_Best_seller.jpg?v=1486047696"></p><p>Designed, printed, and shipped in the USA!</p>';
+            break;
+        default:
+            $html = '<p></p>';
+    }
+    foreach ($image_data as $name) {
+        $productData = pathinfo($name)['filename'];
+        $specs = explode('_-_', $productData);
+        $color = $specs[1];
+        $imageUrls[$color] = $name;
+    }
+
+    $tags = explode(',', trim($post['tags']));
+    $tags[] = 'flask';
+    $tags = implode(',', $tags);
+    $product_data = array(
+        'title' => $post['product_title'],
+        'body_html' => $html,
+        'tags' => $tags,
+        'vendor' => 'Tx Tumbler',
+        'options' => array(
+            array(
+                'name' => "Szie"
+            ),
+            array(
+                'name' => "Color"
+            )
+        ),
+        'variants' => array(),
+        'images' => array()
+    );
+
+    foreach ($imageUrls as $color => $url) {
+        $variantData = array(
+            'title' => '6oz / '.$color,
+            'price' => '19.99',
+            'option1' => '6oz',
+            'option2' => $color,
+            'weight' => '1.1',
+            'weight_unit' => 'lb',
+            'requires_shipping' => true,
+            'inventory_management' => null,
+            'inventory_policy' => 'deny',
+            'sku' => '6oz - Flask - '.$color
+        );
+        if ($color == 'Blue') {
+            $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
+        } else {
+            $product_data['variants'][] = $variantData;
+        }
+    }
+    $res = callShopify($shop, '/admin/products.json', 'POST', array(
+        'product' => $product_data
+    ));
+
+    $imageUpdate = array();
+    foreach ($res->product->variants as $variant) {
+        $size = $variant->option1;
+        $color = $variant->option2;
+        $image = array(
+            'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$color]}",
+            'variant_ids' => array($variant->id)
+        );
+        $imageUpdate[] = $image;
+    }
+    $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
+        "product" => array(
+            'id' => $res->product->id,
+            'images' => $imageUpdate
+        )
+    ));
+
+    $queue->finish(array($res->product->id));
+    return array($res->product->id);
 }
 
 function createBabyBodySuit($queue)
 {
+    $sizes = array(
+        'Newborn',
+        '6 Months',
+        '12 Months',
+        '18 Months',
+        '24 Months'
+    );
 
+    global $s3;
+    $queue->started_at = date('Y-m-d H:i:s');
+    $data = json_decode($queue->data, true);
+    $post = $data['post'];
+    $shop = \App\Model\Shop::find($post['shop']);
+    $image_data = getImages($s3, $data['file']);
+    $imageUrls = [];
+
+    switch($shop->myshopify_domain) {
+        case 'piper-lou-collection.myshopify.com':
+        case 'plcwholesale.myshopify.com':
+        case 'importer-testing.myshopify.com':
+            $html = "<meta charset='utf-8' /><meta charset='utf-8' />
+<h5>Shipping &amp; Returns</h5>
+<div>We want you to<span> </span><strong>LOVE</strong><span> </span>your Piper Lou items! They will ship out within 4-10 days from your order. If you're not 100% satisfied within the first 30 days of receiving your product, let us know and we'll make it right.</div>
+<ul>
+<li>Hassle free return/exchange policy! </li>
+<li>Please contact us at<span> </span><strong>info@piperloucollection.com</strong><span> </span>with any questions. </li>
+</ul>
+<h5>Product Description</h5>
+<p>You are going to <strong>LOVE<span> </span></strong>this baby body suit! Perfect addition for to your baby's wardrobe. These are guaranteed to get hilarious and cute reactions from anybody that sees them! </p>
+<ul>
+<li>5.0 oz. 100% combed ring spun cotton</li>
+<li>Sewn with 100% cotton thread</li>
+<li>Flatlock seams</li>
+<li>Double-needle rib binding on neck, shoulders,sleeves and leg openings</li>
+<li>Reinforced three-snap closure</li>
+</ul>
+<p> </p>
+<p> </p>";
+            break;
+        case 'hopecaregive.myshopify.com':
+            $html = '<p><img src="https://cdn.shopify.com/s/files/1/1255/4519/files/16128476_220904601702830_291172195_n.jpg?9775130656601803865"></p><p>Designed, printed, and shipped in the USA!</p>';
+            break;
+        case 'game-slave.myshopify.com':
+            $html = '<p><img src="https://cdn.shopify.com/s/files/1/1066/2470/files/TC_Best_seller.jpg?v=1486047696"></p><p>Designed, printed, and shipped in the USA!</p>';
+            break;
+        default:
+            $html = '<p></p>';
+    }
+    foreach ($image_data as $name) {
+        $imageUrls[] = $name;
+    }
+
+    $tags = explode(',', trim($post['tags']));
+    $tags[] = 'Body Suit';
+    $tags[] = 'baby';
+    $tags = implode(',', $tags);
+    $product_data = array(
+        'title' => $post['product_title'],
+        'body_html' => $html,
+        'tags' => $tags,
+        'vendor' => 'Piper Lou Collection',
+        'options' => array(
+            array(
+                'name' => "Size"
+            ),
+            array(
+                'name' => "Color",
+
+            )
+        ),
+        'variants' => array(),
+        'images' => array()
+    );
+    foreach ($sizes as $size) {
+        $imageUrl = $imageUrls[0];
+        $variantData = array(
+            'title' => $size .' / White',
+            'price' => '14.99',
+            'option1' => $size,
+            'option2' => 'White',
+            'weight' => '0.6',
+            'weight_unit' => 'lb',
+            'requires_shipping' => true,
+            'inventory_management' => null,
+            'inventory_policy' => 'deny',
+            'sku' => 'Piper Lou - Baby Body Suit - White - '.$size
+        );
+        $product_data['variants'][] = $variantData;
+    }
+    $res = callShopify($shop, '/admin/products.json', 'POST', array(
+        'product' => $product_data
+    ));
+    $variantIds = array();
+    foreach ($res->product->variants as $variant) {
+        $variantIds[] = $variant->id;
+    }
+    error_log($imageUrls[0]);
+    $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
+        "product" => array(
+            'id' => $res->product->id,
+            'images' => array(
+                array(
+                    'src' => "https://s3.amazonaws.com/shopify-product-importer/".$imageUrls[0],
+                    'variant_ids' => $variantIds
+                )
+            )
+        )
+    ));
+    $queue->finish(array($res->product->id));
+    return array($res->product->id);
 }
 
 function createRaglans($queue)
 {
+    $prices = array(
+        'Small' => array(
+            'price' => '24.99',
+            'weight' => '7.6',
+        ),
+        'Medium' => array(
+            'price' => '24.99',
+            'weight' => '8.8',
+        ),
+        'Large' => array(
+            'price' => '24.99',
+            'weight' => '10.0',
+        ),
+        'XL' => array(
+            'price' => '24.99',
+            'weight' => '10.3',
+        ),
+        '2XL' => array(
+            'price' => '27.99',
+            'weight' => '12.4',
+        ),
+        '3XL' => array(
+            'price' => '27.99',
+            'weight' => '13.2',
+        ),
+        '4XL' => array(
+            'price' => '29.99',
+            'weight' => '14.0',
+        )
+    );
+
+    global $s3;
+    $queue->started_at = date('Y-m-d H:i:s');
+    $data = json_decode($queue->data, true);
+    $post = $data['post'];
+    $shop = \App\Model\Shop::find($post['shop']);
+    $image_data = getImages($s3, $data['file']);
+    $imageUrls = [];
+
+    switch($shop->myshopify_domain) {
+        case 'piper-lou-collection.myshopify.com':
+        case 'plcwholesale.myshopify.com':
+        case 'importer-testing.myshopify.com':
+            $html = "<meta charset='utf-8' /><meta charset='utf-8' /><meta charset='utf-8' />
+<h5>Shipping &amp; Returns</h5>
+<p>We want you to<span> </span><strong>LOVE</strong><span> </span>your Piper Lou items! They will ship out within 4-10 days from your order. If you're not 100% satisfied within the first 30 days of receiving your product, let us know and we'll make it right.</p>
+<ul>
+<li>Hassle free return/exchange policy! </li>
+<li>Please contact us at<span> </span><strong>info@piperloucollection.com</strong><span> </span>with any questions. </li>
+</ul>
+<h5>Product Description</h5>
+<p><span>You are going to <strong>LOVE</strong> this design! We offer apparel in Short Sleeve shirts, Long Sleeve Shirts, Tank tops, and Hoodies. If you want information on sizing, please view the sizing chart below. </span></p>
+<p><span>Apparel is designed, printed, and shipped in the USA. 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 </span></p>
+<p><a href='https://www.piperloucollection.com/pages/sizing-chart'>View our sizing chart</a></p>";
+            break;
+        case 'hopecaregive.myshopify.com':
+            $html = '<p><img src="https://cdn.shopify.com/s/files/1/1255/4519/files/16128476_220904601702830_291172195_n.jpg?9775130656601803865"></p><p>Designed, printed, and shipped in the USA!</p>';
+            break;
+        case 'game-slave.myshopify.com':
+            $html = '<p><img src="https://cdn.shopify.com/s/files/1/1066/2470/files/TC_Best_seller.jpg?v=1486047696"></p><p>Designed, printed, and shipped in the USA!</p>';
+            break;
+        default:
+            $html = '<p></p>';
+    }
+
+    foreach ($image_data as $name) {
+        $productData = pathinfo($name)['filename'];
+        $specs = explode('_-_', $productData);
+        $color = $specs[1];
+        $imageUrls[$color] = $name;
+    }
+    $tags = explode(',', trim($post['tags']));
+    $tags[] = '3/4 sleeve raglan';
+    $tags = implode(',', $tags);
+    $product_data = array(
+        'title' => $post['product_title'],
+        'body_html' => $html,
+        'tags' => $tags,
+        'vendor' => 'BPP',
+        'options' => array(
+            array(
+                'name' => "Size"
+            ),
+            array(
+                'name' => "Color"
+            ),
+            array(
+                'name' => "Style"
+            )
+        ),
+        'variants' => array(),
+        'images' => array()
+    );
+
+    foreach ($imageUrls as $color => $url) {
+        $color = str_replace('_', ' ', $color);
+        foreach ($prices as $size => $options) {
+            $variantData = array(
+                'title' => $size . ' / ' . $color . ' / Raglan 3/4 Sleeve',
+                'price' => $options['price'],
+                'option1' => $size,
+                'option2' => $color,
+                'option3' => 'Raglan 3/4 Sleeve',
+                'weight' => $options['weight'],
+                'weight_unit' => 'oz',
+                'requires_shipping' => true,
+                'inventory_management' => null,
+                'inventory_policy' => 'deny',
+                'sku' => "3/4 Sleeve Raglan - {$color} - {$size}"
+            );
+            if ($color == 'Navy' && $size == '30') {
+                $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
+            } else {
+                $product_data['variants'][] = $variantData;
+            }
+        }
+    }
+    $res = callShopify($shop, '/admin/products.json', 'POST', array(
+        'product' => $product_data
+    ));
+    $imageUpdate = array();
+    foreach ($res->product->variants as $variant) {
+        $size = $variant->option1;
+        $color = str_replace(' ', '_', $variant->option2);
+        $image = array(
+            'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$color]}",
+            'variant_ids' => array($variant->id)
+        );
+        $imageUpdate[] = $image;
+    }
+    $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
+        "product" => array(
+            'id' => $res->product->id,
+            'images' => $imageUpdate
+        )
+    ));
+
+    $queue->finish(array($res->product->id));
+    return array($res->product->id);
 
 }
 
