@@ -41,13 +41,6 @@ class Products
 
     public function create($request, $response, $arguments)
     {
-        $shopId = $_POST['shop'];
-        $shop = Shop::find($shopId);
-        if (empty($shop)) {
-            $this->flash->addMessage('error', "We couldnt find that shop");
-            return $response->withRedirect('/products');
-        }
-
         $start = time();
         $files = $request->getUploadedFiles();
 
@@ -91,14 +84,24 @@ class Products
             ]);
         }
 
-        $data = array(
-            'file' => $hash,
-            'post' => $request->getParsedBody()
-        );
-        $queue = new Queue();
-        $queue->data = json_encode($data);
-        $queue->status = Queue::PENDING;
-        $queue->save();
+        $stores = $_POST['stores'];
+        foreach ($stores as $shopId) {
+            $shop = Shop::find($shopId);
+            if (empty($shop)) {
+                $this->flash->addMessage('error', "We couldnt find that shop");
+                return $response->withRedirect('/products');
+            }
+
+            $data = array(
+                'file' => $hash,
+                'post' => $request->getParsedBody()
+            );
+            $data['post']['shop'] = $shopId;
+            $queue = new Queue();
+            $queue->data = json_encode($data);
+            $queue->status = Queue::PENDING;
+            $queue->save();
+        }
 
         $elapsed_time = time() - $start;
         $this->flash->addMessage("message", "Product successfully added to queue. [Process took {$elapsed_time} seconds]");

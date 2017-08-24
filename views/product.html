@@ -9,30 +9,23 @@
         {% endif %}
     </div>
     <div class="row">
-        <div class="col-lg-6 col-lg-offset-3 col-sm-12">
-            {% if shops is empty %}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Create New Product
-                </div>
-                <div class="panel-body">
-                    <div class="alert alert-warning">
-                        You need access to a shop before you can create products
-                    </div>
-                </div>
-            </div>
-            {% else %}
-            <div class="panel panel-default">
-                <form action="" method="post" enctype='multipart/form-data' id='productForm'>
+        <form action="" method="post" enctype='multipart/form-data' id='productForm'>
+            <div class="col-lg-6 col-lg-offset-2 col-sm-12">
+                {% if shops is empty %}
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         Create New Product
-                        <span class='pull-right'>
-                            <select class='form-control' name='shop'>
-                                {% for shop in shops %}
-                                    <option value='{{shop.id}}'>{{shop.myshopify_domain}}</option>
-                                {% endfor %}
-                            </select>
-                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-warning">
+                            You need access to a shop before you can create products
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Product Details
                     </div>
                     <div class="panel-body">
                         <div class='form-group col-lg-6 col-sm-12'>
@@ -99,13 +92,29 @@
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <input type="submit" name="name" value="Submit" class='btn btn-primary pull-right' id='submit'>
+                        <input type="submit" name="name" value="Submit" class='btn btn-primary pull-right' id='submit' disabled>
                         <div class='clearfix'></div>
                     </div>
-                </form>
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
-        </div>
+            <div class="col-lg-2 col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Stores
+                    </div>
+                    <div class="panel-body">
+                        {% for shop in shops %}
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="stores[]" value="{{shop.id}}">{{shop.myshopify_domain}}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
     <style media="screen">
@@ -134,17 +143,31 @@
     </style>
 
     <script type="text/javascript">
+        function selectAllStores() {
+            $('input[type="checkbox"]').each(function() {
+                if (!$(this).prop('checked')) {
+                    $(this).prop('checked', true);
+                }
+            })
+        }
+        function deselectAllStores() {
+            $('input[type="checkbox"]').each(function() {
+                if ($(this).prop('checked')) {
+                    $(this).prop('checked', false);
+                }
+            })
+        }
         $(document).ready(function() {
             $('#advanced').click(function(ev) {
                 $('#advanced-wrapper').toggle();
             })
-            // $('#productForm').submit(function(ev) {
-            //     $('#submit').attr('disabled', 'disabled').prop('value', 'Submitting');
-            //     $(this).submit(function() {
-            //         return false;
-            //     });
-            //     return true;
-            // })
+            $('input[type="checkbox"]').click(function() {
+                if ($('input[type="checkbox"]:checked').length > 0) {
+                    $('#submit').prop('disabled', false);
+                } else {
+                    $('#submit').prop('disabled', true);
+                }
+            })
         })
     </script>
 {% endblock %}
