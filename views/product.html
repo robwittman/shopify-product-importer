@@ -109,8 +109,8 @@
                         {% for shop in shops %}
                         <div class="checkbox">
                             <label>
-                                {% if shop.myshopify_domain in ['plcwholesale.myshopify.com', 'piper-lou-collection.myshopify.com'] %}
-                                <input type="checkbox" name="stores[]" value="{{shop.id}}" selected>{{shop.myshopify_domain}}
+                                {% if (shop.myshopify_domain == 'plcwholesale.myshopify.com' or shop.myshopify_domain == 'piper-lou-collection.myshopify.com') %}
+                                <input type="checkbox" name="stores[]" value="{{shop.id}}" checked>{{shop.myshopify_domain}}
                                 {% else %}
                                 <input type="checkbox" name="stores[]" value="{{shop.id}}">{{shop.myshopify_domain}}
                                 {% endif %}
