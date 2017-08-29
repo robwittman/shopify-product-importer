@@ -46,6 +46,7 @@ while (true) {
         try {
             // $q->start();
             $data = json_decode($q->data, true);
+            error_log($data['post']['template']);
             switch ($data['post']['template']) {
                 case 'hats':
                     $res = createHats($q);
@@ -224,15 +225,26 @@ function createFrontBackPocket($queue)
         'product' => $product_data
     ));
     $imageUpdate = array();
+    $variantMap = array();
+
     foreach ($res->product->variants as $variant) {
         $size = $variant->option1;
         $color = str_replace(' ', '_', $variant->option2);
-        $image = array(
-            'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$color]}",
-            'variant_ids' => array($variant->id)
-        );
-        $imageUpdate[] = $image;
+        if (!isset($variantMap[$color])) {
+            $variantMap[$color] = array();
+        }
+        $variantMap[$color][] = $variant->id;
     }
+    error_log($images);
+    error_log(json_encode($variantMap));
+    foreach ($variantMap as $color => $ids) {
+        $data = array(
+            'src' => "https://s3.amazonaws.com/shopify-product-importer/".$imageUrls[$color],
+            'variant_ids' => $ids
+        );
+        $imageUpdate[] = $data;
+    }
+    error_log(json_encode($imageUpdate));
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         "product" => array(
             'id' => $res->product->id,
@@ -1118,6 +1130,7 @@ function createHats($queue) {
         $color = $specs[1];
         $imageUrls[$style][$color] = $name;
     }
+
     $tags = explode(',', trim($post['tags']));
     $tags[] = 'hat';
     $tags = implode(',', $tags);
