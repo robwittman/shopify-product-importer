@@ -1636,7 +1636,7 @@ function createUvTumbler($queue)
                     'title' => "{$size}oz/{$color}",
                     "price" => $price,
                     "option1" => "{$size}oz",
-                    "option2" => str_replace('_', ' ', $optionColor),
+                    "option2" => $skuColor,
                     "weight" => "1.1",
                     "weight_unit" => "lb",
                     "requires_shipping" => true,
