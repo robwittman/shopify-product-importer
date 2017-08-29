@@ -298,9 +298,34 @@ function createChristmas($queue)
     $imageUrls = [];
     switch($shop->myshopify_domain) {
         case 'plcwholesale.myshopify.com':
-            $prices = array(
-                '30' => '20.00',
-                '20' => '17.50'
+            $variants = array(
+                'Hoodie' => array(
+                    'Small' => array('price' => '20.00', 'weight' => '16.1'),
+                    'Medium' => array('price' => '20.00', 'weight' => '17.5'),
+                    'Large' => array('price' => '20.00', 'weight' => '18.8'),
+                    'XL' => array('price' => '20.00', 'weight' => '21.2'),
+                    '2XL' => array('price' => '22.00', 'weight' => '22.9'),
+                    '3XL' => array('price' => '24.00', 'weight' => '24.1'),
+                    '4XL' => array('price' => '26.00', 'weight' => '24.5')
+                ),
+                'Long Sleeve' => array(
+                    'Small' => array('price' => '12.50', 'weight' => '7.6'),
+                    'Medium' => array('price' => '12.50', 'weight' => '8.8'),
+                    'Large' => array('price' => '12.50', 'weight' => '10.0'),
+                    'XL' => array('price' => '12.50', 'weight' => '10.3'),
+                    '2XL' => array('price' => '14.50', 'weight' => '12.4'),
+                    '3XL' => array('price' => '16.50', 'weight' => '12.6'),
+                    '4XL' => array('price' => '18.50', 'weight' => '13.6')
+                ),
+                'Tee' => array(
+                    'Small' => array('price' => '11', 'weight' => '5.6'),
+                    'Medium' => array('price' => '11', 'weight' => '6.3'),
+                    'Large' => array('price' => '11', 'weight' => '7.2'),
+                    'XL' => array('price' => '11', 'weight' => '8.0'),
+                    '2XL' => array('price' => '13', 'weight' => '8.7'),
+                    '3XL' => array('price' => '13', 'weight' => '9.8'),
+                    '4XL' => array('price' => '13', 'weight' => '10.2')
+                )
             );
         case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
@@ -399,8 +424,6 @@ function createChristmas($queue)
         $color = $variant->option2;
         $variantMap[$color][$style][] = $variant->id;
     }
-    error_log(json_encode($variantMap));
-    error_log(json_encode($imageUrls));
     foreach ($variantMap as $color => $styles) {
         foreach ($styles as $style => $ids) {
             $imageStyle = ($style == 'Long Sleeve') ? 'LS' : $style;
