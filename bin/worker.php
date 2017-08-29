@@ -78,6 +78,9 @@ while (true) {
                 case 'uv_with_bottles':
                     $res = createUvWithBottles($q);
                     break;
+                case 'christmas':
+                    $res = createChristmas($q);
+                    break;
                 default:
                     throw new \Exception("Invalid template {$data['post']['template']} provided");
             }
@@ -235,8 +238,6 @@ function createFrontBackPocket($queue)
         }
         $variantMap[$color][] = $variant->id;
     }
-    error_log($images);
-    error_log(json_encode($variantMap));
     foreach ($variantMap as $color => $ids) {
         $data = array(
             'src' => "https://s3.amazonaws.com/shopify-product-importer/".$imageUrls[$color],
@@ -244,7 +245,6 @@ function createFrontBackPocket($queue)
         );
         $imageUpdate[] = $data;
     }
-    error_log(json_encode($imageUpdate));
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         "product" => array(
             'id' => $res->product->id,
@@ -257,7 +257,171 @@ function createFrontBackPocket($queue)
 
 }
 
+function createChristmas($queue)
+{
+    $variants = array(
+        'Hoodie' => array(
+            'Small' => array('price' => '32.99', 'weight' => '16.1'),
+            'Medium' => array('price' => '32.99', 'weight' => '17.5'),
+            'Large' => array('price' => '32.99', 'weight' => '18.8'),
+            'XL' => array('price' => '32.99', 'weight' => '21.2'),
+            '2XL' => array('price' => '34.99', 'weight' => '22.9'),
+            '3XL' => array('price' => '36.99', 'weight' => '24.1'),
+            '4XL' => array('price' => '36.99', 'weight' => '24.5')
+        ),
+        'Long Sleeve' => array(
+            'Small' => array('price' => '24.99', 'weight' => '7.6'),
+            'Medium' => array('price' => '24.99', 'weight' => '8.8'),
+            'Large' => array('price' => '24.99', 'weight' => '10.0'),
+            'XL' => array('price' => '24.99', 'weight' => '10.3'),
+            '2XL' => array('price' => '26.99', 'weight' => '12.4'),
+            '3XL' => array('price' => '26.99', 'weight' => '12.6'),
+            '4XL' => array('price' => '26.99', 'weight' => '13.6')
+        ),
+        'Tee' => array(
+            'Small' => array('price' => '22.99', 'weight' => '5.6'),
+            'Medium' => array('price' => '22.99', 'weight' => '6.3'),
+            'Large' => array('price' => '22.99', 'weight' => '7.2'),
+            'XL' => array('price' => '22.99', 'weight' => '8.0'),
+            '2XL' => array('price' => '24.99', 'weight' => '8.7'),
+            '3XL' => array('price' => '26.99', 'weight' => '9.8'),
+            '4XL' => array('price' => '29.99', 'weight' => '10.2')
+        )
+    );
 
+    global $s3;
+    $queue->started_at = date('Y-m-d H:i:s');
+    $data = json_decode($queue->data, true);
+    $post = $data['post'];
+    $shop = \App\Model\Shop::find($post['shop']);
+    $image_data = getImages($s3, $data['file']);
+    $imageUrls = [];
+    switch($shop->myshopify_domain) {
+        case 'plcwholesale.myshopify.com':
+            $prices = array(
+                '30' => '20.00',
+                '20' => '17.50'
+            );
+        case 'piper-lou-collection.myshopify.com':
+        case 'importer-testing.myshopify.com':
+            $html = "<meta charset='utf-8' />
+                    <h5>Shipping &amp; Returns</h5>
+                    <p>We want you to<span> </span><strong>LOVE</strong><span> </span>your Piper Lou items! They will ship out within 4-10 days from your order. If you're not 100% satisfied within the first 30 days of receiving your product, let us know and we'll make it right.</p>
+                    <ul>
+                    <li>Hassle free return/exchange policy! </li>
+                    <li>Please contact us at<span> </span><strong>info@piperloucollection.com</strong><span> </span>with any questions. </li>
+                    </ul>
+                    <h5>Product Description</h5>
+                    <p><span>You are going to <strong>LOVE</strong> this design! We offer apparel in Short Sleeve shirts, Long Sleeve Shirts, Tank tops, and Hoodies. If you want information on sizing, please view the sizing chart below. </span></p>
+                    <p><span>Apparel is designed, printed, and shipped in the USA. 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 </span></p>
+                    <p><a href='https://www.piperloucollection.com/pages/sizing-chart'>View our sizing chart</a></p>";
+            break;
+        case 'hopecaregive.myshopify.com':
+            $html = '<p><img src="https://cdn.shopify.com/s/files/1/1255/4519/files/16128476_220904601702830_291172195_n.jpg?9775130656601803865"></p><p>Designed, printed, and shipped in the USA!</p>';
+            break;
+        case 'game-slave.myshopify.com':
+            $html = '<p><img src="https://cdn.shopify.com/s/files/1/1066/2470/files/TC_Best_seller.jpg?v=1486047696"></p><p>Designed, printed, and shipped in the USA!</p>';
+            break;
+        default:
+            $html = '<p></p>';
+    }
+
+    foreach ($image_data as $name) {
+        $productData = pathinfo($name)['filename'];
+        $specs = explode('_-_', $productData);
+        $style = $specs[0];
+        $color = $specs[1];
+        $imageUrls[$style][$color] = $name;
+    }
+
+    $tags = explode(',', trim($post['tags']));
+    $tags[] = 'christmas';
+    $tags = implode(',', $tags);
+    $product_data = array(
+        'title' => $post['product_title'],
+        'body_html' => $html,
+        'tags' => $tags,
+        'vendor' => 'BPP',
+        'options' => array(
+            array(
+                'name' => "Size"
+            ),
+            array(
+                'name' => "Color"
+            ),
+            array(
+                'name' => "Style"
+            )
+        ),
+        'variants' => array(),
+        'images' => array()
+    );
+
+    foreach ($variants as $style => $sizes) {
+        foreach ($sizes as $size => $options) {
+            foreach (['Green', 'Red'] as $color) {
+                $variantData = array(
+                    'title' => $size . ' / ' . $color . ' / ' . $style,
+                    'price' => $options['price'],
+                    'option1' => $size,
+                    'option2' => $color,
+                    'option3' => $style,
+                    'weight' => $options['weight'],
+                    'weight_unit' => 'oz',
+                    'requires_shipping' => true,
+                    'inventory_management' => null,
+                    'inventory_policy' => 'deny',
+                    'sku' => $style . ' - ' . $color . ' - ' . $size
+                );
+                $product_data['variants'][] = $variantData;
+            }
+        }
+    }
+
+    $res = callShopify($shop, '/admin/products.json', 'POST', array(
+        'product' => $product_data
+    ));
+    $imageUpdate = array();
+    $variantMap = array(
+        'Red' => array(
+            'Hoodie' => array(),
+            'Long Sleeve' => array(),
+            'Tee' => array()
+        ),
+        'Green' => array(
+            'Hoodie' => array(),
+            'Long Sleeve' => array(),
+            'Tee' => array()
+        )
+    );
+    foreach ($res->product->variants as $variant) {
+        $style = $variant->option3;
+        $color = $variant->option2;
+        $variantMap[$color][$style][] = $variant->id;
+    }
+    error_log(json_encode($variantMap));
+    error_log(json_encode($imageUrls));
+    foreach ($variantMap as $color => $styles) {
+        foreach ($styles as $style => $ids) {
+            $imageStyle = ($style == 'Long Sleeve') ? 'LS' : $style;
+            $data = array(
+                'src' => "https://s3.amazonaws.com/shopify-product-importer/".$imageUrls[$imageStyle][$color],
+                'variant_ids' => $ids
+            );
+            $imageUpdate[] = $data;
+        }
+    }
+
+    $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
+        "product" => array(
+            'id' => $res->product->id,
+            'images' => $imageUpdate
+        )
+    ));
+
+    $queue->finish(array($res->product->id));
+    return array($res->product->id);
+}
 
 function createUvDrinkware($queue)
 {
