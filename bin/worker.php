@@ -1569,7 +1569,6 @@ function processQueue($queue) {
                 if (!$matrix) {
                     return "Unable to open matrix file";
                 }
-                error_log(json_encode($matrix, JSON_PRETTY_PRINT));
             case 'piper-lou-collection.myshopify.com':
                 $html = "<meta charset='utf-8' />
 <h5>Shipping &amp; Returns</h5>
