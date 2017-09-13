@@ -1564,12 +1564,13 @@ function processQueue($queue) {
 
         switch($shop->myshopify_domain) {
             case 'plcwholesale.myshopify.com':
+            case 'importer-testing.myshopify.com':
                 $matrix = json_decode(file_get_contents(DIR.'/src/wholesale.json'), true);
                 if (!$matrix) {
                     return "Unable to open matrix file";
                 }
+                error_log(json_encode($matrix, JSON_PRETTY_PRINT));
             case 'piper-lou-collection.myshopify.com':
-            case 'importer-testing.myshopify.com':
                 $html = "<meta charset='utf-8' />
 <h5>Shipping &amp; Returns</h5>
 <p>We want you to<span> </span><strong>LOVE</strong><span> </span>your Piper Lou items! They will ship out within 4-10 days from your order. If you're not 100% satisfied within the first 30 days of receiving your product, let us know and we'll make it right.</p>
