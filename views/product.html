@@ -51,7 +51,7 @@
                         <hr>
                         <div class='form-group col-sm-12'>
                             <label class='control-label'>ZIP File</label>
-                            <input type="file" name="zip_file" value="">
+                            <input id='file' type="file" name="zip_file" value="">
                         </div>
 
                         <div class="row">
@@ -149,7 +149,7 @@
             display: block;
         }
     </style>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.4/jszip.js"></script>
     <script type="text/javascript">
         function selectAllStores() {
             $('input[type="checkbox"]').each(function() {
@@ -165,10 +165,21 @@
                 }
             })
         }
+        function handleFileSelect(evt) {
+            var styles = [];
+            var colors = [];
+            var files = evt.target.files;
+            var file = files[0];
+            var new_zip = new JSZip();
+            new_zip.loadAsync(file).then(function(zip) {
+                $.each(zip.files, function(index, zipFile) {
+                    if (index.indexOf('MACOSX') == -1) {
+                        
+                    }
+                });
+            });
+        }
         $(document).ready(function() {
-            $('#advanced').click(function(ev) {
-                $('#advanced-wrapper').toggle();
-            })
             $('input[type="checkbox"]').click(function() {
                 if ($('input[type="checkbox"]:checked').length > 0) {
                     $('#submit').prop('disabled', false);
@@ -177,5 +188,6 @@
                 }
             })
         })
+        document.getElementById('file').addEventListener('change', handleFileSelect, false);
     </script>
 {% endblock %}
