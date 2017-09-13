@@ -180,7 +180,6 @@ function createMasculineHats($queue)
         $color = preg_replace('%([a-z])([A-Z])%', '\1-\2', $specs[1]);
         $imageUrls[trim($color, '_')] = $name;
     }
-    error_log(json_encode($imageUrls));
 
     $tags = explode(',', trim($post['tags']));
     $tags[] = 'hat';
@@ -1564,8 +1563,12 @@ function processQueue($queue) {
         }
 
         switch($shop->myshopify_domain) {
-            case 'piper-lou-collection.myshopify.com':
             case 'plcwholesale.myshopify.com':
+                $matrix = json_decode(file_get_contents(DIR.'/src/wholesale.json'), true);
+                if (!$matrix) {
+                    return "Unable to open matrix file";
+                }
+            case 'piper-lou-collection.myshopify.com':
             case 'importer-testing.myshopify.com':
                 $html = "<meta charset='utf-8' />
 <h5>Shipping &amp; Returns</h5>
