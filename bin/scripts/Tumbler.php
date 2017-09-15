@@ -45,7 +45,7 @@ function createTumbler($queue)
             'title' => $post['product_title'],
             'body_html' => $html,
             'tags' => $post['tags'],
-            'vendor' => "Tx Tumbler",
+            'vendor' => "ISIKEL",
             'product_type' => $post['product_type'],
             'options' => array(
                 array(

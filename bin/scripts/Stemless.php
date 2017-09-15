@@ -55,7 +55,7 @@ function createStemless($queue) {
         'title' => $post['product_title'],
         'body_html' => $html,
         'tags' => $tags,
-        'vendor' => 'Tx Tumbler',
+        'vendor' => 'ISIKEL',
         'options' => array(
             array(
                 'name' => "Color"

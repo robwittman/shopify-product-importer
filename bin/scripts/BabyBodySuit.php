@@ -64,7 +64,7 @@ function createBabyBodySuit($queue)
         'title' => $post['product_title'],
         'body_html' => $html,
         'tags' => $tags,
-        'vendor' => 'Piper Lou Collection',
+        'vendor' => 'BPP',
         'options' => array(
             array(
                 'name' => "Size"

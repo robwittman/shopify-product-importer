@@ -54,7 +54,6 @@ function createFrontBackPocket($queue)
     $data = json_decode($queue->data, true);
     $post = $data['post'];
     $shop = \App\Model\Shop::find($post['shop']);
-    error_log($data['file']);
     $image_data = getImages($s3, $data['file']);
     $imageUrls = [];
 
@@ -71,7 +70,7 @@ function createFrontBackPocket($queue)
         'title' => $post['product_title'],
         'body_html' => $html,
         'tags' => $tags,
-        'vendor' => 'PLCWholesale',
+        'vendor' => 'BPP',
         'options' => array(
             array(
                 'name' => "Size"

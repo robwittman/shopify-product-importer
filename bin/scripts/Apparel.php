@@ -70,7 +70,7 @@ function processQueue($queue) {
             'title'         => $post['product_title'],
             'body_html'     => $html,
             'tags'          => $post['tags'],
-            'vendor'        => $post['vendor'],
+            'vendor'        => 'BPP',
             'product_type'  => $post['product_type'],
             'options' => array(
                 array(
