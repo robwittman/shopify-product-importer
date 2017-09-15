@@ -1,6 +1,7 @@
 <?php
 
 function processQueue($queue) {
+    $vendor = 'BPP';
     global $s3;
     $matrix = json_decode(file_get_contents(DIR.'/src/matrix.json'), true);
     if (!$matrix) {
@@ -43,6 +44,7 @@ function processQueue($queue) {
                     return "Unable to open matrix file";
                 }
             case 'piper-lou-collection.myshopify.com':
+                $vendor = 'Canvus Print';
                 $html = "<meta charset='utf-8' />
 <h5>Shipping &amp; Returns</h5>
 <p>We want you to<span> </span><strong>LOVE</strong><span> </span>your Piper Lou items! They will ship out within 4-10 days from your order. If you're not 100% satisfied within the first 30 days of receiving your product, let us know and we'll make it right.</p>
@@ -70,7 +72,7 @@ function processQueue($queue) {
             'title'         => $post['product_title'],
             'body_html'     => $html,
             'tags'          => $post['tags'],
-            'vendor'        => 'BPP',
+            'vendor'        => $vendor,
             'product_type'  => $post['product_type'],
             'options' => array(
                 array(

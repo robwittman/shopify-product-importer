@@ -2,6 +2,7 @@
 
 function createChristmas($queue)
 {
+    $vendor = 'Canvus Print';
     $variants = array(
         'Hoodie' => array(
             'Small' => array('price' => '32.99', 'weight' => '16.1'),
@@ -71,6 +72,7 @@ function createChristmas($queue)
                 )
             );
         case 'piper-lou-collection.myshopify.com':
+            $vendor = 'BPP';
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' />
                     <h5>Shipping &amp; Returns</h5>
@@ -109,7 +111,7 @@ function createChristmas($queue)
         'title' => $post['product_title'],
         'body_html' => $html,
         'tags' => $tags,
-        'vendor' => 'BPP',
+        'vendor' => $vendor,
         'options' => array(
             array(
                 'name' => "Size"

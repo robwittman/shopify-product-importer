@@ -2,6 +2,7 @@
 
 function createFrontBackPocket($queue)
 {
+    $vendor = 'Canvus Print';
     $prices = array(
         'Tee' => array(
             'small' => array(
@@ -56,7 +57,9 @@ function createFrontBackPocket($queue)
     $shop = \App\Model\Shop::find($post['shop']);
     $image_data = getImages($s3, $data['file']);
     $imageUrls = [];
-
+    if (in_array($shop->myshopify_domain, ['piper-lou-collection.myshopify.com', 'plcwholesale.myshopify.com'])) {
+        $vendor = 'BPP';
+    }
     $html = '';
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];
@@ -70,7 +73,7 @@ function createFrontBackPocket($queue)
         'title' => $post['product_title'],
         'body_html' => $html,
         'tags' => $tags,
-        'vendor' => 'BPP',
+        'vendor' => $vendor,
         'options' => array(
             array(
                 'name' => "Size"

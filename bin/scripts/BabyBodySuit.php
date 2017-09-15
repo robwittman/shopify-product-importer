@@ -2,6 +2,7 @@
 
 function createBabyBodySuit($queue)
 {
+    $vendor = 'BPP';
     $price = '14.99';
     $sizes = array(
         'Newborn',
@@ -23,6 +24,7 @@ function createBabyBodySuit($queue)
         case 'plcwholesale.myshopify.com':
             $price = '8.50';
         case 'piper-lou-collection.myshopify.com':
+            $vendor = 'Canvus Print';
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' /><meta charset='utf-8' />
 <h5>Shipping &amp; Returns</h5>
@@ -64,7 +66,7 @@ function createBabyBodySuit($queue)
         'title' => $post['product_title'],
         'body_html' => $html,
         'tags' => $tags,
-        'vendor' => 'BPP',
+        'vendor' => $vendor,
         'options' => array(
             array(
                 'name' => "Size"
