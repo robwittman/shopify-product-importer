@@ -86,6 +86,7 @@ function createDrinkware($queue)
             if ($color == 'Cyan') {
                 $sku = 'Seafoam';
             }
+            $sku = str_replace('_', '', $sku);
             switch ($size) {
                 case '30':
                     $option1 = '30oz Tumbler';

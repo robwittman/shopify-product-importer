@@ -68,14 +68,15 @@ function createUvDrinkware($queue)
 
     foreach ($imageUrls as $size => $colors) {
         foreach ($colors as $color => $url) {
+            $sku = str_replace('_', '', $color);
             switch ($size) {
                 case '30':
                     $option1 = '30oz Tumbler';
-                    $sku = "TX (UV PRINTED) - T30 - {$color} - Coated 30oz Tumbler";
+                    $sku = "TX (UV PRINTED) - T30 - {$sku} - Coated 30oz Tumbler";
                     break;
                 case '20':
                     $option1 = '20oz Tumbler';
-                    $sku = "TX (UV PRINTED) - T20 - {$color} - Coated 20oz Tumbler";
+                    $sku = "TX (UV PRINTED) - T20 - {$sku} - Coated 20oz Tumbler";
                     break;
             }
             $variantData = array(
