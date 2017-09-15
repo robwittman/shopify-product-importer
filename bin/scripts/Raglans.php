@@ -142,7 +142,7 @@ function createRaglans($queue)
                 'requires_shipping' => true,
                 'inventory_management' => null,
                 'inventory_policy' => 'deny',
-                'sku' => "3/4 Sleeve Raglan - {$color} - {$size}"
+                'sku' => "3/4 Sleeve Raglan - {$color} - ".getSku($size)
             );
             if ($color == 'Navy' && $size == '30') {
                 $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);

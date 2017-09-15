@@ -120,3 +120,15 @@ function getImages($s3, $prefix) {
         return $object["Key"];
     }, $res);
 }
+
+function getSku($size)
+{
+    switch ($size) {
+        case 'Small':
+            return 'S';
+        case 'Medium':
+            return 'M';
+        case 'Large':
+            return 'L';
+    }
+}

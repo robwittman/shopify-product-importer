@@ -141,7 +141,7 @@ function createChristmas($queue)
                     'requires_shipping' => true,
                     'inventory_management' => null,
                     'inventory_policy' => 'deny',
-                    'sku' => $style . ' - ' . $color . ' - ' . $size
+                    'sku' => $style . ' - ' . $color . ' - ' . getSku($size)
                 );
                 $product_data['variants'][] = $variantData;
             }

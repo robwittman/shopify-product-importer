@@ -151,7 +151,7 @@ function processQueue($queue) {
                             continue;
                         }
                     }
-                    $sku = "$garment - $color - $size";
+                    $sku = "$garment - $color - ".getSku($size);
                     $varData = array(
                         'title' => "{$garment} \/ {$size} \/ {$color}",
                         'price' => $sizeSettings['price'],
