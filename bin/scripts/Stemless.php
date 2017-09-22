@@ -80,7 +80,7 @@ function createStemless($queue) {
             'title' => $color,
             'price' => $price,
             'option1' => $color,
-            'weight' => '0.1',
+            'weight' => '10',
             'weight_unit' => 'oz',
             'requires_shipping' => true,
             'inventory_management' => null,
