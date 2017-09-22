@@ -4,6 +4,7 @@ use App\Result\FrontPrint;
 
 function processQueue($queue) {
     $results = array(
+        'product_name' => null,
         'shopify_product_admin_url' => null,
         'front_print_file_url' => '',
         'back_print_file_url' => '',
@@ -22,6 +23,7 @@ function processQueue($queue) {
     $data = json_decode($queue->data, true);
 
     if (isset($data['file'])) {
+        error_log($data['file']);
         $image_data = getImages($s3, $data['file']);
         $post = $data['post'];
         $shop = \App\Model\Shop::find($post['shop']);
@@ -148,14 +150,6 @@ function processQueue($queue) {
                 $garment = 'Long Sleeve';
             }
             foreach ($img as $color => $src) {
-                $sku = generateSku($post['product_title'], $garment, $color);
-                $results['variants'][] = new FrontPrint(array(
-                    'product_name' => $post['product_title'],
-                    'garment_name' => $garment,
-                    'product_fulfiller_code' => null,
-                    'garment_color' => $color,
-                    'product_sku' => $sku
-                ))
                 if($color == "Royal") {
                     $color = "Royal Blue";
                 } else if($color == "Charcoal") {
@@ -163,7 +157,13 @@ function processQueue($queue) {
                 } else if($color == "Grey") {
                     $color = "Charcoal";
                 }
-
+                $sku = generateSku($post['product_title'], $garment, $color);
+                $results['variants'][] = new FrontPrint(array(
+                    'garment_name' => $garment,
+                    'product_fulfiller_code' => null,
+                    'garment_color' => $color,
+                    'product_sku' => $sku
+                ));
                 $variantSettings = $matrix[$garment];
                 foreach($variantSettings['sizes'] as $size => $sizeSettings) {
                     if (isset($ignore[$garment]) &&
@@ -192,8 +192,7 @@ function processQueue($queue) {
                     );
 
                     if($garment == $post['default_product'] && $color == $post['default_color'] && $size == 'Small') {
-                        error_log("Moving $color / $garment to front of array");
-                        $product_data['variants'] = array_merge(array($varData), $product_data['variants']);
+                        array_unshift($product_data['variants'], $varData);
                     } else {
                         $product_data['variants'][] = $varData;
                     }
@@ -202,6 +201,7 @@ function processQueue($queue) {
         }
 
         $res = callShopify($shop, '/admin/products.json', 'POST', array('product' => $product_data));
+        $results['shopify_product_admin_url'] = "https://{$shop->myshopify_domain}/admin/products/{$res->product->id}";
         $variantMap = array();
         $imageUpdate = array();
 
@@ -250,7 +250,7 @@ function processQueue($queue) {
                 'images' => $imageUpdate
             )
         ));
-        $this->logResults($client, $shop->google_sheet_slug, 'Front Print', array());
+        $this->logResults($client, $shop->google_sheet_slug, 'Front Print', $results);
         $queue->finish(array($res->product->id));
         return array($res->product->id);
     }

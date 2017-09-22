@@ -27,10 +27,10 @@ abstract class BaseResult
     public function __construct(array $data = array())
     {
         foreach ($data as $key => $value) {
-            if (property_exists($key, $this)) {
+            if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             } else {
-                throw new \Exception("Undefined property ".get_called_class()."::".{$key});
+                throw new \Exception("Undefined property ".get_called_class()."::".$key);
             }
         }
     }

@@ -28,8 +28,8 @@ $s3 = new \Aws\S3\S3Client([
     'credentials' => $credentials
 ]);
 
-$app = new Slim\App();
-require_once '../../src/container.php';
+$app = new Slim\App(['settings' => $settings]);
+require_once DIR.'/src/container.php';
 $container = $app->getContainer();
 
 $client = $container->get('GoogleDrive');
@@ -142,11 +142,21 @@ function logResults(Google_Client $client, $sheet, $type, array $results)
     $service = new Google_Services_Sheets($client);
     $range = $type.'!A:J';
     $valueRange = new Google_Service_Sheets_ValueRange();
-    $export = array_map(function($result) {
-        return $result->export();
-    }, $results)
-    $valueRange->setValues(array(
-        'values' => $export
-    ));
+    $valueRange->setValues(array('values' => compressValues($results)));
     $service->spreadsheets_values->append($sheet, $range, $valueRange, array('valueInputOption' => "RAW"));
+}
+
+function compressValues($results)
+{
+    $return = array();
+    foreach ($results['variants'] as $variant) {
+        $return['product_name'] = $results['product_name'];
+        $return['shopify_product_admin_url'] = $results['shopify_product_admin_url'];
+        $return['front_print_file_url'] = $result['front_print_file_url'];
+        $return['back_print_file_url'] = $result['back_print_file_url'];
+        $return['garment_color'] = $variant['garment_color'];
+        $return['product_fulfiller_code'] = $variant['product_fulfiller_code'];
+        $return['product_sku'] = $variant['product_sku'];
+    }
+    return $return;
 }
