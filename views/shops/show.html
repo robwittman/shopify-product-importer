@@ -35,4 +35,31 @@
             </form>
         </div>
 </div>
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Google Authentication
+        </div>
+        <div class="panel-body">
+            {% if shop.google_access_token %}
+                <form class="form-horizontal" action="/google/sheet" method="post">
+                    <input type="hidden" name="shop_id" value="{{shop.id}}">
+                    <div class="input-group">
+                        <span class='input-group-addon'>
+                            Sheet URL
+                        </span>
+                        <input type="text" class='form-control' name="google_sheet_slug" value="{{shop.google_sheet_slug}}">
+                        <span class='input-group-btn'>
+                            <button type="submit" name="button" class='btn btn-primary'>Update</button>
+                        </span>
+
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+        <div class="panel-footer">
+            <a href="/google/oauth?shop_id={{shop.id}}">Authenticate with Google</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

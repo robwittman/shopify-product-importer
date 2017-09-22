@@ -122,4 +122,14 @@ class Shops
             return $response->withRedirect('/shops');
         }
     }
+
+    public function setSheet($request, $response)
+    {
+        $body = $request->getParsedBody();
+        $shop = Shop::find($body['shop_id']);
+        $shop->google_sheet_slug = $body['google_sheet_slug'];
+        $shop->update();
+        $this->flash->addMessage('message', 'Google Sheet updated successfully');
+        return $response->withRedirect('/shops/'.$body['shop_id']);
+    }
 }

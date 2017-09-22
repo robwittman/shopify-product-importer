@@ -29,7 +29,11 @@ $s3 = new \Aws\S3\S3Client([
 ]);
 
 $app = new Slim\App();
+require_once '../../src/container.php';
 $container = $app->getContainer();
+
+$client = $container->get('GoogleDrive');
+
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($settings['db']);
 $capsule->setAsGlobal();
@@ -58,7 +62,7 @@ while (true) {
                     $res = createStemless($q);
                     break;
                 case 'single_product':
-                    $res = processQueue($q);
+                    $res = processQueue($q, $client);
                     break;
                 case 'drinkware':
                     $res = createDrinkware($q);
@@ -70,19 +74,19 @@ while (true) {
                     $res = createFlasks($q);
                     break;
                 case 'baby_body_suit':
-                    $res = createBabyBodySuit($q);
+                    $res = createBabyBodySuit($q, $client);
                     break;
                 case 'raglans':
-                    $res = createRaglans($q);
+                    $res = createRaglans($q, $client);
                     break;
                 case 'front_back_pocket':
-                    $res = createFrontBackPocket($q);
+                    $res = createFrontBackPocket($q, $client);
                     break;
                 case 'uv_with_bottles':
                     $res = createUvWithBottles($q);
                     break;
                 case 'christmas':
-                    $res = createChristmas($q);
+                    $res = createChristmas($q, $client);
                     break;
                 case 'hats_masculine':
                     $res = createMasculineHats($q);
@@ -131,4 +135,18 @@ function getSku($size)
         case 'Large':
             return 'L';
     }
+}
+
+function logResults(Google_Client $client, $sheet, $type, array $results)
+{
+    $service = new Google_Services_Sheets($client);
+    $range = $type.'!A:J';
+    $valueRange = new Google_Service_Sheets_ValueRange();
+    $export = array_map(function($result) {
+        return $result->export();
+    }, $results)
+    $valueRange->setValues(array(
+        'values' => $export
+    ));
+    $service->spreadsheets_values->append($sheet, $range, $valueRange, array('valueInputOption' => "RAW"));
 }

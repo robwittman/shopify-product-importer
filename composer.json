@@ -21,7 +21,8 @@
         "slim/flash": "^0.2.0",
         "illuminate/database": "^5.3",
         "robmorgan/phinx": "^0.6.5",
-        "aws/aws-sdk-php": "^3.20"
+        "aws/aws-sdk-php": "^3.20",
+        "google/apiclient": "^2.2"
     },
     "autoload" : {
         "psr-4" : {

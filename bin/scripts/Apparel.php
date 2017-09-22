@@ -1,6 +1,15 @@
 <?php
 
+use App\Result\FrontPrint;
+
 function processQueue($queue) {
+    $results = array(
+        'shopify_product_admin_url' => null,
+        'front_print_file_url' => '',
+        'back_print_file_url' => '',
+        'variants' => array()
+    );
+
     $vendor = 'BPP';
     global $s3;
     $matrix = json_decode(file_get_contents(DIR.'/src/matrix.json'), true);
@@ -19,6 +28,14 @@ function processQueue($queue) {
 
         foreach ($image_data as $name) {
             if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
+                continue;
+            }
+            if (in_array(basename($name, '.png'), array('front', 'back'))) {
+                if (basename($name, '.png') == 'front') {
+                    $results['front_print_url'] = $name;
+                } else {
+                    $results['back_print_url'] = $name;
+                }
                 continue;
             }
             $chunks = explode('/', $name);
@@ -131,6 +148,14 @@ function processQueue($queue) {
                 $garment = 'Long Sleeve';
             }
             foreach ($img as $color => $src) {
+                $sku = generateSku($post['product_title'], $garment, $color);
+                $results['variants'][] = new FrontPrint(array(
+                    'product_name' => $post['product_title'],
+                    'garment_name' => $garment,
+                    'product_fulfiller_code' => null,
+                    'garment_color' => $color,
+                    'product_sku' => $sku
+                ))
                 if($color == "Royal") {
                     $color = "Royal Blue";
                 } else if($color == "Charcoal") {
@@ -151,7 +176,6 @@ function processQueue($queue) {
                             continue;
                         }
                     }
-                    $sku = "$garment - $color - ".getSku($size);
                     $varData = array(
                         'title' => "{$garment} \/ {$size} \/ {$color}",
                         'price' => $sizeSettings['price'],
@@ -226,8 +250,8 @@ function processQueue($queue) {
                 'images' => $imageUpdate
             )
         ));
-
-        $queue->finish(array($res->prouct->id));
+        $this->logResults($client, $shop->google_sheet_slug, 'Front Print', array());
+        $queue->finish(array($res->product->id));
         return array($res->product->id);
     }
     return true;

@@ -55,3 +55,23 @@ $container['ProductController'] = function($c) {
     // $rabbit = $c->get('rabbit');
     return new \App\Controller\Products($view, $flash, $rabbit);
 };
+
+$container['GoogleAuthController'] = function($c) {
+    $client = $c->get('GoogleDrive');
+    $flash = $c->get('flash');
+    return new \App\Controller\Google($client, $flash);
+};
+
+$container['GoogleDrive'] = function($c) {
+    $client = new Google_Client(array(
+        'client_id' => getenv("GOOGLE_OAUTH_CLIENT_ID"),
+        'client_secret' => getenv("GOOGLE_OAUTH_CLIENT_SECRET"),
+        'redirect_uri' => getenv("GOOGLE_OAUTH_REDIRECT_URI")
+    ));
+    $client->setApplicationName("Product Importer");
+    $client->setScopes(implode(' ', array(
+        Google_Service_Sheets::SPREADSHEETS
+    )));
+    $client->setAccessType('offline');
+    return $client;
+};
