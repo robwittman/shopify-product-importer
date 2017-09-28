@@ -156,7 +156,7 @@ function processQueue($queue) {
                         'title' => "{$garment} \/ {$size} \/ {$color}",
                         'price' => $sizeSettings['price'],
                         'grams' => $sizeSettings['grams'],
-                        'option1' => $size,
+                        'option1' => getSku($size),
                         'option2' => $color,
                         'option3' => $garment,
                         'weight' => $sizeSettings['weight'],
@@ -168,7 +168,7 @@ function processQueue($queue) {
                     );
 
                     if($garment == $post['default_product'] && $color == $post['default_color'] && $size == 'Small') {
-                        error_log("Moving $color / $garment to front of array");
+
                         $product_data['variants'] = array_merge(array($varData), $product_data['variants']);
                     } else {
                         $product_data['variants'][] = $varData;
