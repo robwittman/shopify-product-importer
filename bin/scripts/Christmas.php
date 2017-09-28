@@ -72,7 +72,6 @@ function createChristmas($queue)
                 )
             );
         case 'piper-lou-collection.myshopify.com':
-            $vendor = 'BPP';
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' />
                     <h5>Shipping &amp; Returns</h5>
