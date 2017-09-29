@@ -24,8 +24,6 @@ class Google
             return $response->withHeader('Location', $this->client->createAuthUrl());
         } else {
             $creds = $this->client->fetchAccessTokenWithAuthCode($request->getQueryParam('code'));
-            var_dump($creds);
-            exit;
             $shop = Shop::find($_SESSION['shop']);
             $shop->google_access_token = $creds['access_token'];
             $shop->google_expires_in = $creds['expires_in'];
