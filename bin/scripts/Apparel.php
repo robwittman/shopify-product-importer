@@ -1,7 +1,18 @@
 <?php
 
-function processQueue($queue) {
+use App\Result\FrontPrint;
+
+function processQueue($queue, Google_Client $client) {
+
     $vendor = 'Canvus Print';
+    $results = array(
+        'product_name' => null,
+        'shopify_product_admin_url' => null,
+        'front_print_file_url' => '',
+        'back_print_file_url' => '',
+        'variants' => array()
+    );
+
     global $s3;
     $matrix = json_decode(file_get_contents(DIR.'/src/matrix.json'), true);
     if (!$matrix) {
@@ -21,6 +32,14 @@ function processQueue($queue) {
             if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
                 continue;
             }
+            if (in_array(basename($name, '.png'), array('front', 'back'))) {
+                if (basename($name, '.png') == 'front') {
+                    $results['front_print_url'] = $name;
+                } else {
+                    $results['back_print_url'] = $name;
+                }
+                continue;
+            }
             $chunks = explode('/', $name);
             if (strtolower(substr(basename($name, ".jpg"), -4)) == "pink") {
                 $images[$garment]["Pink"] = $name;
@@ -35,7 +54,7 @@ function processQueue($queue) {
                 $images[$garment][$color] = $name;
             }
         }
-
+        $client->setAccessToken($shop->google_access_token);
         switch($shop->myshopify_domain) {
             case 'plcwholesale.myshopify.com':
             case 'importer-testing.myshopify.com':
@@ -66,7 +85,9 @@ function processQueue($queue) {
                 $html = '<p></p>';
         }
 
-
+        $sku = generateSku($shop, $post['product_title']);
+        $results['product_name'] = $post['product_title'];
+        $results['front_print_file_url'] = $post['front_print_url'];
         $product_data = array(
             'title'         => $post['product_title'],
             'body_html'     => $html,
@@ -137,7 +158,13 @@ function processQueue($queue) {
                 } else if($color == "Grey") {
                     $color = "Charcoal";
                 }
-
+                $variantSku = getVariantSku($sku, $garment, $color);
+                $results['variants'][] = array(
+                    'garment_name' => $garment,
+                    'product_fulfiller_code' => null,
+                    'garment_color' => $color,
+                    'product_sku' => $variantSku
+                );
                 $variantSettings = $matrix[$garment];
                 foreach($variantSettings['sizes'] as $size => $sizeSettings) {
                     if (isset($ignore[$garment]) &&
@@ -150,7 +177,6 @@ function processQueue($queue) {
                             continue;
                         }
                     }
-                    $sku = "$garment - $color - ".getSku($size);
                     $varData = array(
                         'title' => "{$garment} \/ {$size} \/ {$color}",
                         'price' => $sizeSettings['price'],
@@ -167,8 +193,7 @@ function processQueue($queue) {
                     );
 
                     if($garment == $post['default_product'] && $color == $post['default_color'] && $size == 'Small') {
-
-                        $product_data['variants'] = array_merge(array($varData), $product_data['variants']);
+                        array_unshift($product_data['variants'], $varData);
                     } else {
                         $product_data['variants'][] = $varData;
                     }
@@ -177,6 +202,7 @@ function processQueue($queue) {
         }
 
         $res = callShopify($shop, '/admin/products.json', 'POST', array('product' => $product_data));
+        $results['shopify_product_admin_url'] = "https://{$shop->myshopify_domain}/admin/products/{$res->product->id}";
         $variantMap = array();
         $imageUpdate = array();
 
@@ -225,8 +251,10 @@ function processQueue($queue) {
                 'images' => $imageUpdate
             )
         ));
-
-        $queue->finish(array($res->prouct->id));
+        // if ($post['log_to_google']) {
+            logResults($client, $shop->google_sheet_slug, 'Front Print', $results);
+        // }
+        $queue->finish(array($res->product->id));
         return array($res->product->id);
     }
     return true;

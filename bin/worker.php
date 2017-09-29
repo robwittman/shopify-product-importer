@@ -4,6 +4,7 @@ require_once DIR.'/vendor/autoload.php';
 require_once DIR.'/src/common.php';
 
 use App\Model\Queue;
+use App\Model\Sku;
 
 $dbUrl = getenv("DATABASE_URL");
 $dbConfig = parse_url($dbUrl);
@@ -28,8 +29,12 @@ $s3 = new \Aws\S3\S3Client([
     'credentials' => $credentials
 ]);
 
-$app = new Slim\App();
+$app = new Slim\App(['settings' => $settings]);
+require_once DIR.'/src/container.php';
 $container = $app->getContainer();
+
+$client = $container->get('GoogleDrive');
+
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($settings['db']);
 $capsule->setAsGlobal();
@@ -58,7 +63,7 @@ while (true) {
                     $res = createStemless($q);
                     break;
                 case 'single_product':
-                    $res = processQueue($q);
+                    $res = processQueue($q, $client);
                     break;
                 case 'drinkware':
                     $res = createDrinkware($q);
@@ -70,19 +75,19 @@ while (true) {
                     $res = createFlasks($q);
                     break;
                 case 'baby_body_suit':
-                    $res = createBabyBodySuit($q);
+                    $res = createBabyBodySuit($q, $client);
                     break;
                 case 'raglans':
-                    $res = createRaglans($q);
+                    $res = createRaglans($q, $client);
                     break;
                 case 'front_back_pocket':
-                    $res = createFrontBackPocket($q);
+                    $res = createFrontBackPocket($q, $client);
                     break;
                 case 'uv_with_bottles':
                     $res = createUvWithBottles($q);
                     break;
                 case 'christmas':
-                    $res = createChristmas($q);
+                    $res = createChristmas($q, $client);
                     break;
                 case 'hats_masculine':
                     $res = createMasculineHats($q);
@@ -131,4 +136,74 @@ function getSku($size)
         case 'Large':
             return 'L';
     }
+    return $size;
+}
+
+function logResults(Google_Client $client, $sheet, $type, array $results)
+{
+    $service = new Google_Service_Sheets($client);
+    $range = $type.'!A:J';
+    $values = compressValues($results);
+    foreach ($values as $value) {
+        $valueRange = new Google_Service_Sheets_ValueRange();
+        $valueRange->setValues(array('values' => $value));
+        // $valueRange->setValues(array(
+        //     'values' => ["a", "b"]
+        // ));
+        $service->spreadsheets_values->append($sheet, $range, $valueRange, array('valueInputOption' => "RAW"));
+    }
+}
+
+function generateSku($shop, $title)
+{
+    $shopChunks = explode('-', explode('.', $shop->myshopify_domain)[0]);
+    $skuStart = strtoupper(implode('', array_map(function($chunk) {
+        return $chunk[0];
+    }, $shopChunks)));
+    $words = preg_split("/\s+/", $title);
+    $pt = '';
+    foreach ($words as $word) {
+        $pt .= $word[0];
+    }
+    $its = 0;
+    $originalSku = $skuStart.$pt;
+    do {
+        $check = $originalSku.$its;
+
+        $its++;
+    } while ($res = skuExists($check));
+
+    return $check;
+}
+
+function skuExists($sku)
+{
+    try {
+        $sku = Sku::where('sku', '=', $sku)->firstOrFail();
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $obj = new Sku();
+        $obj->sku = $sku;
+        $obj->save();
+        return false;
+    }
+    return true;
+}
+
+function compressValues($results)
+{
+    $return = array();
+    foreach ($results['variants'] as $result) {
+        $temp = array();
+        $temp['product_name'] = $results['product_name'];
+        $temp['garment_name'] = $result['garment_name'];
+        $temp['product_fulfiller_code'] = '';
+        $temp['garment_color'] = $result['garment_color'];
+        $temp['product_sku'] = $result['product_sku'];
+        $temp['shopify_product_admin_url'] = $results['shopify_product_admin_url'];
+        $temp['front_print_file_url'] = $results['front_print_file_url'];
+        $temp['integration_status'] = '';
+        $temp['date'] = date('m/d/Y');
+        $return[] = array_values($temp);
+    }
+    return $return;
 }

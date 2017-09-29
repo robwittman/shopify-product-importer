@@ -180,3 +180,15 @@ if (!function_exists('resizeImageByPercentage')) {
         return resizeImage($source, $destination, $newWidth, $newHeight, 100);
     }
 }
+
+if (!function_exists('getVariantSku')) {
+    function getVariantSku($sku, $garment, $color) {
+        $garment = array_map(function($word) {
+            return strtoupper(substr($word, 0, 1));
+        }, explode(' ', $garment));
+        $color = array_map(function($word) {
+            return strtoupper(substr($word, 0, 1));
+        }, explode(' ', $color));
+        return $sku.implode('', $garment).implode('', $color);
+    }
+}

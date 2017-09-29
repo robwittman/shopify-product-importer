@@ -83,7 +83,6 @@ class Products
                 'Content-Type' => 'application/zip_file'
             ]);
         }
-
         $stores = $_POST['stores'];
         foreach ($stores as $shopId) {
             $shop = Shop::find($shopId);
