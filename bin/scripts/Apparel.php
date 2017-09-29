@@ -251,9 +251,9 @@ function processQueue($queue, Google_Client $client) {
                 'images' => $imageUpdate
             )
         ));
-        // if ($post['log_to_google']) {
+        if (isset($post['log_to_google']) && $post['log_to_google']) {
             logResults($client, $shop->google_sheet_slug, 'Front Print', $results);
-        // }
+        }
         $queue->finish(array($res->product->id));
         return array($res->product->id);
     }
