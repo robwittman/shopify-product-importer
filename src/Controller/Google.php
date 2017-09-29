@@ -24,6 +24,7 @@ class Google
             return $response->withHeader('Location', $this->client->createAuthUrl());
         } else {
             $creds = $this->client->fetchAccessTokenWithAuthCode($request->getQueryParam('code'));
+            error_log(json_encode($creds));
             $shop = Shop::find($_SESSION['shop']);
             $shop->google_access_token = $creds['access_token'];
             $shop->google_expires_in = $creds['expires_in'];
@@ -31,8 +32,9 @@ class Google
             $shop->google_created_at = $creds['google_created_at'];
 
             $shop->update();
+            $this->flash->addMessage('message', "Google OAuth successful!");
         }
-        $this->flash->addMessage('message', "Google OAuth successful!");
+
         return $response->withRedirect('/shops/'.$_SESSION['shop']);
     }
 }
