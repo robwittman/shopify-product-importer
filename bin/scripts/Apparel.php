@@ -252,7 +252,10 @@ function processQueue($queue, Google_Client $client) {
             )
         ));
         if (isset($post['log_to_google']) && $post['log_to_google']) {
+            error_log("Logging results");
             logResults($client, $shop->google_sheet_slug, 'Front Print', $results);
+        } else {
+            error_log("No google sync...");
         }
         $queue->finish(array($res->product->id));
         return array($res->product->id);
