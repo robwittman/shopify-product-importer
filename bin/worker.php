@@ -141,8 +141,15 @@ function getSku($size)
 
 function logResults(Google_Client $client, $sheet, $printType, array $results)
 {
+    if ($printType == 'front_print') {
+        $sheetName = 'Front Print';
+    } elseif ($printType == 'back_print') {
+        $sheetName = 'Back Print';
+    } elseif ($printType == 'double_sided') {
+        $sheetName = 'Two Sided';
+    }
     $service = new Google_Service_Sheets($client);
-    $range = $printType.'!A:J';
+    $range = $sheetName.'!A:J';
     $values = compressValues($results, $printType);
     foreach ($values as $value) {
         $valueRange = new Google_Service_Sheets_ValueRange();
