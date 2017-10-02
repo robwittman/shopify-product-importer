@@ -152,7 +152,7 @@ function processQueue($queue, Google_Client $client) {
                 $fulfillerCode = 'NL3600';
             } else if($garment == "LS") {
                 $garment = 'Long Sleeve';
-                $fulfillerCode = '2400'
+                $fulfillerCode = '2400';
             } else if($garment == 'Hoodie') {
                 $fulfillerCode = '18500';
             }
