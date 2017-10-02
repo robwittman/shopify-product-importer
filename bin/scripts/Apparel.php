@@ -189,7 +189,7 @@ function processQueue($queue, Google_Client $client) {
                         'requires_shipping' => true,
                         'inventory_management' => null,
                         'inventory_policy' => "deny",
-                        'sku' => $sku
+                        'sku' => $variantSku
                     );
 
                     if($garment == $post['default_product'] && $color == $post['default_color'] && $size == 'Small') {
