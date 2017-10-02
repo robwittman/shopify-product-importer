@@ -166,9 +166,13 @@ function generateSku($shop, $title)
         $pt .= $word[0];
     }
     $its = 0;
-    $originalSku = $skuStart.$pt;
+    $originalSku = strtolower(str_replace(' ', '', $title));
     do {
-        $check = $originalSku.$its;
+        if ($its > 0) {
+            $check = $originalSku.$its;
+        } else {
+            $check = $originalSku;
+        }
 
         $its++;
     } while ($res = skuExists($check));
