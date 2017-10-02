@@ -207,7 +207,7 @@ function compressValues($results, $printType)
         $temp = array();
         $temp['product_name'] = $results['product_name'];
         $temp['garment_name'] = $result['garment_name'];
-        $temp['product_fulfiller_code'] = '';
+        $temp['product_fulfiller_code'] = $result['product_fulfiller_code'];
         $temp['garment_color'] = $result['garment_color'];
         $temp['product_sku'] = $result['product_sku'];
         $temp['shopify_product_admin_url'] = $results['shopify_product_admin_url'];

@@ -145,11 +145,16 @@ function processQueue($queue, Google_Client $client) {
 
         foreach($images as $garment => $img) {
             if($garment == 'Tanks') {
+                $fulfillerCode = 'NL1533';
                 $garment = 'Tank';
             } else if($garment == 'Tees') {
                 $garment = 'Tee';
+                $fulfillerCode = 'NL3600';
             } else if($garment == "LS") {
                 $garment = 'Long Sleeve';
+                $fulfillerCode = '2400'
+            } else if($garment == 'Hoodie') {
+                $fulfillerCode = '18500';
             }
             foreach ($img as $color => $src) {
                 if($color == "Royal") {
@@ -162,9 +167,9 @@ function processQueue($queue, Google_Client $client) {
                 $variantSku = getVariantSku($sku, $garment, $color);
                 $results['variants'][] = array(
                     'garment_name' => $garment,
-                    'product_fulfiller_code' => null,
+                    'product_fulfiller_code' => $fulfillerCode,
                     'garment_color' => $color,
-                    'product_sku' => $variantSku
+                    'product_sku' => $variantSku,
                 );
                 $variantSettings = $matrix[$garment];
                 foreach($variantSettings['sizes'] as $size => $sizeSettings) {
