@@ -139,11 +139,11 @@ function getSku($size)
     return $size;
 }
 
-function logResults(Google_Client $client, $sheet, $type, array $results)
+function logResults(Google_Client $client, $sheet, $printType, array $results)
 {
     $service = new Google_Service_Sheets($client);
-    $range = $type.'!A:J';
-    $values = compressValues($results);
+    $range = $printType.'!A:J';
+    $values = compressValues($results, $printType);
     foreach ($values as $value) {
         $valueRange = new Google_Service_Sheets_ValueRange();
         $valueRange->setValues(array('values' => $value));
@@ -193,7 +193,7 @@ function skuExists($sku)
     return true;
 }
 
-function compressValues($results)
+function compressValues($results, $printType);
 {
     $return = array();
     foreach ($results['variants'] as $result) {
@@ -204,7 +204,18 @@ function compressValues($results)
         $temp['garment_color'] = $result['garment_color'];
         $temp['product_sku'] = $result['product_sku'];
         $temp['shopify_product_admin_url'] = $results['shopify_product_admin_url'];
-        $temp['front_print_file_url'] = $results['front_print_file_url'];
+        switch ($printType) {
+            case 'front_print';
+                $temp['front_print_file_url'] = $results['front_print_file_url'];
+                break;
+            case 'back_print':
+                $temp['back_print_file_url'] = $results['back_print_file_url'];
+                break;
+            case 'double_sided':
+                $temp['front_print_file_url'] = $results['front_print_file_url'];
+                $temp['back_print_file_url'] = $results['back_print_file_url'];
+                break;
+        }
         $temp['integration_status'] = '';
         $temp['date'] = date('m/d/Y');
         $return[] = array_values($temp);

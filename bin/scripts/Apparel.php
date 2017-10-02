@@ -5,13 +5,7 @@ use App\Result\FrontPrint;
 function processQueue($queue, Google_Client $client) {
 
     $vendor = 'Canvus Print';
-    $results = array(
-        'product_name' => null,
-        'shopify_product_admin_url' => null,
-        'front_print_file_url' => '',
-        'back_print_file_url' => '',
-        'variants' => array()
-    );
+
 
     global $s3;
     $matrix = json_decode(file_get_contents(DIR.'/src/matrix.json'), true);
@@ -26,6 +20,13 @@ function processQueue($queue, Google_Client $client) {
     if (isset($data['file'])) {
         $image_data = getImages($s3, $data['file']);
         $post = $data['post'];
+        $results = array(
+            'product_name' => $post['product_title'],
+            'shopify_product_admin_url' => null,
+            'front_print_file_url' => $post['front_print_url'],
+            'back_print_file_url' => $post['back_print_url'],
+            'variants' => array()
+        );
         $shop = \App\Model\Shop::find($post['shop']);
 
         foreach ($image_data as $name) {
@@ -252,8 +253,7 @@ function processQueue($queue, Google_Client $client) {
             )
         ));
         if (isset($post['log_to_google']) && $post['log_to_google']) {
-            error_log("Logging results");
-            logResults($client, $shop->google_sheet_slug, 'Front Print', $results);
+            logResults($client, $shop->google_sheet_slug, $post['print_type'], $results);
         } else {
             error_log("No google sync...");
         }
