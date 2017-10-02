@@ -193,6 +193,6 @@ if (!function_exists('getVariantSku')) {
                 break;
         }
         $color = strtolower(str_replace(' ', '', $color));
-        return $sku.implode('', $garment).implode('', $color);
+        return $sku.$garment.$color;
     }
 }
