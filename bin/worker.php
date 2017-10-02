@@ -193,7 +193,7 @@ function skuExists($sku)
     return true;
 }
 
-function compressValues($results, $printType);
+function compressValues($results, $printType)
 {
     $return = array();
     foreach ($results['variants'] as $result) {
