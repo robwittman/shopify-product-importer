@@ -96,19 +96,31 @@
                         </div>
                         <div class="form-group">
                             <label>
-                                <input type='checkbox' name="log_to_google" value="1">Log to Google
+                                <input type='checkbox' name="log_to_google" value="1" onchange='setGoogleFieldsVisibility()'>Log to Google
                             </label>
                         </div>
-                        <div class="form-group">
-                            <label class='col-sm-3 control-label'>Front Print URL</label>
-                            <div class="col-sm-9">
-                                <input type="text" class='form-control' name="front_print_url" value="">
+                        <div id="google-fields" style='display:none'>
+                            <div class="form-group">
+                                <label class='col-sm-3 control-label'>Print Type</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" name="print_type" onchange='setPrintType()'>
+                                        <option value="front_print" selected>Front Print</option>
+                                        <option value="back_print">Back Print</option>
+                                        <option value="double_sided">Front &amp; Back</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class='col-sm-3 control-label'>Back Print URL</label>
-                            <div class="col-sm-9">
-                                <input type="text" class='form-control' name="back_print_url" value="">
+                            <div class="form-group" id='front_print_url_field'>
+                                <label class='col-sm-3 control-label'>Front Print URL</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class='form-control' name="front_print_url" value="">
+                                </div>
+                            </div>
+                            <div class="form-group" id='back_print_url_field' style='display:none'>
+                                <label class='col-sm-3 control-label'>Back Print URL</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class='form-control' name="back_print_url" value="">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -182,6 +194,36 @@
                 }
             })
         }
+        function setPrintType() {
+            var printType = $('select[name="print_type"] :selected').val();
+            console.log(printType);
+            switch (printType) {
+                case 'front_print':
+                    $('#front_print_url_field').show();
+                    $('#back_print_url_field').hide();
+                    break;
+                case 'back_print':
+                    $('#front_print_url_field').hide();
+                    $('#back_print_url_field').show();
+                    break;
+                case 'double_sided':
+                    $('#front_print_url_field').show();
+                    $('#back_print_url_field').show();
+                    break;
+
+            }
+        }
+
+        function setGoogleFieldsVisibility() {
+            if ($('input[name="log_to_google"]:checked').length > 0) {
+                console.log("Hiding google fields");
+                $('#google-fields').show();
+            } else {
+                console.log("Showing google fields");
+                $('#google-fields').hide();
+            }
+        }
+
         $(document).ready(function() {
             $('#advanced').click(function(ev) {
                 $('#advanced-wrapper').toggle();
