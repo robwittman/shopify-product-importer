@@ -257,7 +257,7 @@ function processQueue($queue, Google_Client $client) {
                 'images' => $imageUpdate
             )
         ));
-        if (isset($post['log_to_google']) && $post['log_to_google']) {
+        if (isset($post['log_to_google']) && $post['log_to_google'] && $shop->google_access_token) {
             logResults($client, $shop->google_sheet_slug, $post['print_type'], $results);
         } else {
             error_log("No google sync...");
