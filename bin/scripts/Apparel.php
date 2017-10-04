@@ -55,7 +55,10 @@ function processQueue($queue, Google_Client $client) {
                 $images[$garment][$color] = $name;
             }
         }
-        $client->setAccessToken($shop->google_access_token);
+        if ($shop->google_access_token) {
+            $client->setAccessToken($shop->google_access_token);
+        }
+
         switch($shop->myshopify_domain) {
             case 'plcwholesale.myshopify.com':
             case 'importer-testing.myshopify.com':

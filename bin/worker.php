@@ -53,7 +53,7 @@ while (true) {
     // $queue = Queue::get();
     foreach ($queue as $q) {
         try {
-            // $q->start();
+            $q->start();
             $data = json_decode($q->data, true);
             switch ($data['post']['template']) {
                 case 'hats':
