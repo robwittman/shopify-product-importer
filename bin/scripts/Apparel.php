@@ -153,6 +153,7 @@ function processQueue($queue, Google_Client $client) {
             } else if($garment == 'Tees') {
                 $garment = 'Tee';
                 $fulfillerCode = 'NL3600';
+
             } else if($garment == "LS") {
                 $garment = 'Long Sleeve';
                 $fulfillerCode = '2400';
@@ -160,9 +161,11 @@ function processQueue($queue, Google_Client $client) {
                 $fulfillerCode = '18500';
             }
             foreach ($img as $color => $src) {
+                $garmentColor = $color;
                 if($color == "Royal") {
                     $color = "Royal Blue";
                 } else if($color == "Charcoal") {
+                    $garmentColor = "Heavy Metal";
                     $color = "Grey";
                 } else if($color == "Grey") {
                     $color = "Charcoal";
@@ -171,7 +174,7 @@ function processQueue($queue, Google_Client $client) {
                 $results['variants'][] = array(
                     'garment_name' => $garment,
                     'product_fulfiller_code' => $fulfillerCode,
-                    'garment_color' => $color,
+                    'garment_color' => $garmentColor,
                     'product_sku' => $variantSku,
                 );
                 $variantSettings = $matrix[$garment];
