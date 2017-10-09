@@ -33,14 +33,7 @@ function processQueue($queue, Google_Client $client) {
             if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
                 continue;
             }
-            if (in_array(basename($name, '.png'), array('front', 'back'))) {
-                if (basename($name, '.png') == 'front') {
-                    $results['front_print_url'] = $name;
-                } else {
-                    $results['back_print_url'] = $name;
-                }
-                continue;
-            }
+
             $chunks = explode('/', $name);
             if (strtolower(substr(basename($name, ".jpg"), -4)) == "pink") {
                 $images[$garment]["Pink"] = $name;
@@ -92,6 +85,7 @@ function processQueue($queue, Google_Client $client) {
         $sku = generateSku($shop, $post['product_title']);
         $results['product_name'] = $post['product_title'];
         $results['front_print_file_url'] = $post['front_print_url'];
+        $results['back_print_file_url'] = $post['back_print_url'];
         $product_data = array(
             'title'         => $post['product_title'],
             'body_html'     => $html,
