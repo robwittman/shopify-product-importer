@@ -97,7 +97,7 @@ function createChristmas($queue)
 
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];
-        $specs = explode('_-_', $productData);
+        $specs = explode('-', $productData);
         $style = $specs[0];
         $color = $specs[1];
         $imageUrls[$style][$color] = $name;
@@ -178,6 +178,8 @@ function createChristmas($queue)
             $imageUpdate[] = $data;
         }
     }
+    error_log(json_encode($imageUrls, JSON_PRETTY_PRINT));
+    error_log(json_encode($imageUpdate, JSON_PRETTY_PRINT));
 
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         "product" => array(
@@ -185,7 +187,7 @@ function createChristmas($queue)
             'images' => $imageUpdate
         )
     ));
-
+    error_log(json_encode($res, JSON_PRETTY_PRINT));
     $queue->finish(array($res->product->id));
     return array($res->product->id);
 }
