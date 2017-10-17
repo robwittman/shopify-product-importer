@@ -86,10 +86,13 @@ function processQueue($queue, Google_Client $client) {
         $results['product_name'] = $post['product_title'];
         $results['front_print_file_url'] = $post['front_print_url'];
         $results['back_print_file_url'] = $post['back_print_url'];
+        $tags = explode(',', trim($post['tags']));
+        $tags[] = 'apparel';
+        $tags = implode(',', $tags);
         $product_data = array(
             'title'         => $post['product_title'],
             'body_html'     => $html,
-            'tags'          => $post['tags'],
+            'tags'          => $tags,
             'vendor'        => $vendor,
             'product_type'  => $post['product_type'],
             'options' => array(

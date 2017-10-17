@@ -57,15 +57,14 @@
                         <div class="row">
                             <div class="form-group col-sm-6">
                                 <label class='control-label'>Template</label>
-                                <select class="form-control" name="template">
+                                <select class="form-control" name="template" onchange='selectCallback()'>
                                     <option value="single_product" selected>Single Product</option>
                                     <option value="stemless">Stemless</option>
                                     <option value="hats">Hats</option>
-                                    <option value="hats_masculine">Mats 2 - Masculine</option>
+                                    <option value="hats_masculine">Hats 2 - Masculine</option>
                                     <option value="drinkware">Drinkware</option>
                                     <option value="uv_drinkware">UV Drinkware</option>
                                     <option value="uv_with_bottles">UV (With Bottles)</option>
-                                    <option value="flasks">Flasks</option>
                                     <option value="baby_body_suit">Baby Body Suit</option>
                                     <option value="raglans">Raglans</option>
                                     <option value="front_back_pocket">Front/Back Pocket</option>
@@ -96,10 +95,10 @@
                         </div>
                         <div class="form-group">
                             <label>
-                                <input type='checkbox' name="log_to_google" value="1" onchange='setGoogleFieldsVisibility()'>Log to Google
+                                <input type='checkbox' id='log_to_google' name="log_to_google" value="1" onchange='setGoogleFieldsVisibility()' checked>Log to Google
                             </label>
                         </div>
-                        <div id="google-fields" style='display:none'>
+                        <div id="google-fields">
                             <div class="form-group">
                                 <label class='col-sm-3 control-label'>Print Type</label>
                                 <div class="col-sm-9">
@@ -212,6 +211,18 @@
                     break;
 
             }
+        }
+
+        function selectCallback() {
+            console.log("Callback on select");
+            var option = $('select[name="template"] :selected').val();
+            console.log(option);
+            if (option == 'single_product') {
+                $('#log_to_google').prop('checked', true);
+            } else {
+                $('#log_to_google').prop('checked', false);
+            }
+            $('#log_to_google').trigger('change');
         }
 
         function setGoogleFieldsVisibility() {
