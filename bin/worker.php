@@ -97,6 +97,7 @@ while (true) {
             }
             $q->finish($res);
         } catch(\Exception $e) {
+            error_log($e->getMessage());
             if ($message = json_decode($e->getMessage())) {
                 $q->fail($message->error->message);
             } else {
