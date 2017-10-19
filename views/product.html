@@ -195,7 +195,6 @@
         }
         function setPrintType() {
             var printType = $('select[name="print_type"] :selected').val();
-            console.log(printType);
             switch (printType) {
                 case 'front_print':
                     $('#front_print_url_field').show();
@@ -214,9 +213,7 @@
         }
 
         function selectCallback() {
-            console.log("Callback on select");
             var option = $('select[name="template"] :selected').val();
-            console.log(option);
             if (option == 'single_product') {
                 $('#log_to_google').prop('checked', true);
             } else {
@@ -227,10 +224,8 @@
 
         function setGoogleFieldsVisibility() {
             if ($('input[name="log_to_google"]:checked').length > 0) {
-                console.log("Hiding google fields");
                 $('#google-fields').show();
             } else {
-                console.log("Showing google fields");
                 $('#google-fields').hide();
             }
         }

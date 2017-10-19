@@ -97,9 +97,11 @@ while (true) {
             }
             $q->finish($res);
         } catch(\Exception $e) {
-            error_log($e->getMessage());
-            // exit($e->getMessage());
-            $q->fail($e->getMessage());
+            if ($message = json_decode($e->getMessage())) {
+                $q->fail($message->error->message);
+            } else {
+                $q->fail($e->getMessage());
+            }
         }
     }
     sleep(10);
