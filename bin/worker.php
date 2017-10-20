@@ -95,6 +95,7 @@ while (true) {
                 default:
                     throw new \Exception("Invalid template {$data['post']['template']} provided");
             }
+            error_log("Product {$res} finished");
             $q->finish($res);
         } catch(\Exception $e) {
             error_log($e->getMessage());
