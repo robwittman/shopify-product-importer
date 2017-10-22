@@ -31,7 +31,7 @@ class Products
         foreach ($queue as $record) {
             // TODO: Move shop_id to table column
             $data = json_decode($record->data, true);
-            $shop = Shop::find($data['post']['shop']);
+            $shop = Shop::find($record->shop);
             $record->shop = $shop;
         }
         return $this->view->render($response, 'queue.html', array(

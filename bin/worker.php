@@ -50,7 +50,9 @@ foreach (glob(DIR."/bin/scripts/*.php") as $file) {
 
 while (true) {
     error_log("Getting queue");
-    $queue = Queue::where('status', Queue::PENDING)->first();
+    $queue = Queue::where('status', Queue::PENDING)
+        ->orderBy('created_at', 'asc')
+        ->first();
     if (!$queue) {
         error_log("Queue empty. Sleeping for a bit....");
         sleep(10);
