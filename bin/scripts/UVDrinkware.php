@@ -11,7 +11,7 @@ function createUvDrinkware($queue)
     $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
     $post = $data['post'];
-    $shop = \App\Model\Shop::find($post['shop']);
+    $shop = \App\Model\Shop::find($queue->shop);
     $image_data = getImages($s3, $data['file']);
     $imageUrls = [];
     switch($shop->myshopify_domain) {

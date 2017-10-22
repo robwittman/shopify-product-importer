@@ -27,7 +27,7 @@ function processQueue($queue, Google_Client $client) {
             'back_print_file_url' => $post['back_print_url'],
             'variants' => array()
         );
-        $shop = \App\Model\Shop::find($post['shop']);
+        $shop = \App\Model\Shop::find($queue->shop);
 
         foreach ($image_data as $name) {
             if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {

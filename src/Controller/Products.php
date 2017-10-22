@@ -99,6 +99,7 @@ class Products
             $queue = new Queue();
             $queue->data = json_encode($data);
             $queue->status = Queue::PENDING;
+            $queue->shop = $shopId;
             $queue->save();
         }
 
