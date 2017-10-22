@@ -49,64 +49,67 @@ foreach (glob(DIR."/bin/scripts/*.php") as $file) {
 }
 
 while (true) {
-    $queue = Queue::where('status', Queue::PENDING)->get();
-    // $queue = Queue::get();
-    foreach ($queue as $q) {
+    error_log("Getting queue");
+    $queue = Queue::where('status', Queue::PENDING)->first();
+    if (!$queue) {
+        error_log("Queue empty. Sleeping for a bit....");
+        sleep(10);
+    } else {
+        error_log("Queue record found. Processing...");
         try {
-            $q->start();
-            $data = json_decode($q->data, true);
+            $queue->start();
+            $data = json_decode($queue->data, true);
             switch ($data['post']['template']) {
                 case 'hats':
-                    $res = createHats($q);
+                    $res = createHats($queue);
                     break;
                 case 'stemless':
-                    $res = createStemless($q);
+                    $res = createStemless($queue);
                     break;
                 case 'single_product':
-                    $res = processQueue($q, $client);
+                    $res = processQueue($queue, $client);
                     break;
                 case 'drinkware':
-                    $res = createDrinkware($q);
+                    $res = createDrinkware($queue);
                     break;
                 case 'uv_drinkware':
-                    $res = createUvDrinkware($q);
+                    $res = createUvDrinkware($queue);
                     break;
                 case 'flasks':
-                    $res = createFlasks($q);
+                    $res = createFlasks($queue);
                     break;
                 case 'baby_body_suit':
-                    $res = createBabyBodySuit($q, $client);
+                    $res = createBabyBodySuit($queue, $client);
                     break;
                 case 'raglans':
-                    $res = createRaglans($q, $client);
+                    $res = createRaglans($queue, $client);
                     break;
                 case 'front_back_pocket':
-                    $res = createFrontBackPocket($q, $client);
+                    $res = createFrontBackPocket($queue, $client);
                     break;
                 case 'uv_with_bottles':
-                    $res = createUvWithBottles($q);
+                    $res = createUvWithBottles($queue);
                     break;
                 case 'christmas':
-                    $res = createChristmas($q, $client);
+                    $res = createChristmas($queue, $client);
                     break;
                 case 'hats_masculine':
-                    $res = createMasculineHats($q);
+                    $res = createMasculineHats($queue);
                     break;
                 default:
                     throw new \Exception("Invalid template {$data['post']['template']} provided");
             }
             error_log("Product {$res} finished");
-            $q->finish($res);
+            $queue->finish($res);
         } catch(\Exception $e) {
             error_log($e->getMessage());
             if ($message = json_decode($e->getMessage())) {
-                $q->fail($message->error->message);
+                $queue->fail($message->error->message);
             } else {
-                $q->fail($e->getMessage());
+                $queue->fail($e->getMessage());
             }
         }
     }
-    sleep(10);
 }
 
 function getImages($s3, $prefix) {
