@@ -59,6 +59,9 @@ while (true) {
             $queue->start();
             $data = json_decode($queue->data, true);
             switch ($queue->template) {
+                case 'product-with-crew':
+                    $res = apparelWithCrew($queue, $client);
+                    break;
                 case 'hats':
                     $res = createHats($queue);
                     break;
@@ -179,7 +182,7 @@ function generateSku($shop, $title)
         $pt .= $word[0];
     }
     $its = 0;
-    $originalSku = strtolower(str_replace(' ', '', $title));
+    $originalSku = strtolower(str_replace(array(' ', ','), '', $title));
     do {
         if ($its > 0) {
             $check = $originalSku.$its;

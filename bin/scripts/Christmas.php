@@ -94,6 +94,9 @@ function createChristmas($queue)
         default:
             $html = '<p></p>';
     }
+    if ($shop->description) {
+        $html = $shop->description;
+    }
 
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];

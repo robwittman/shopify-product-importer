@@ -61,6 +61,9 @@ function createFrontBackPocket($queue)
         $vendor = 'BPP';
     }
     $html = '';
+    if ($shop->description) {
+        $html = $shop->description;
+    }
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];
         $specs = explode('_-_', $productData);

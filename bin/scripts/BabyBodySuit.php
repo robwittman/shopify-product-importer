@@ -57,6 +57,9 @@ function createBabyBodySuit($queue)
     foreach ($image_data as $name) {
         $imageUrls[] = $name;
     }
+    if ($shop->description) {
+        $html = $shop->description;
+    }
 
     $tags = explode(',', trim($post['tags']));
     $tags[] = 'Body Suit';

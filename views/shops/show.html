@@ -24,6 +24,10 @@
                         <label class='control-label'>Shared Secret</label>
                         <input type="password" name="shared_secret" value="{{ shop.shared_secret }}" class='form-control'>
                     </div>
+                    <div class="form-group">
+                        <label class='col-sm-3 control-label'>Default Description</label>
+                        <textarea name="description" rows="8" cols="80" class='form-control'>{{shop.description}}</textarea>
+                    </div>
                 </div>
                 <div class="panel-footer">
                     <a href="/shops/{{shop.id}}/delete" class='btn btn-danger pull-left'>Delete</a>

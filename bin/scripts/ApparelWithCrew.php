@@ -1,8 +1,8 @@
-<?php
+<<?php
 
 use App\Result\FrontPrint;
 
-function processQueue($queue, Google_Client $client) {
+function apparelWithCrew($queue, Google_Client $client) {
 
     $vendor = 'Canvus Print';
 
@@ -12,8 +12,6 @@ function processQueue($queue, Google_Client $client) {
     if (!$matrix) {
         return "Unable to open matrix file";
     }
-    // Ignore crew settings
-    unset($matrix['Crew']);
     $image_data = array();
     $images = array();
     $queue->started_at = date('Y-m-d H:i:s');
@@ -41,7 +39,7 @@ function processQueue($queue, Google_Client $client) {
             } else {
                 $garment = $chunks[2];
                 if(!in_array($garment, array(
-                    'Hoodie','LS','Tanks','Tees'
+                    'Hoodie','LS','Tanks','Tees','Crew'
                 ))) {
                     continue;
                 }
@@ -60,18 +58,17 @@ function processQueue($queue, Google_Client $client) {
                 if (!$matrix) {
                     return "Unable to open matrix file";
                 }
-                unset($matrix['Crew']);
             case 'piper-lou-collection.myshopify.com':
                 $html = "<meta charset='utf-8' />
 <h5>Shipping &amp; Returns</h5>
-<p>We want you to<span> </span><strong>LOVE</strong><span> </span>your Piper Lou items! They will ship out within 4-10 days from your order. If you're not 100% satisfied within the first 30 days of receiving your product, let us know and we'll make it right.</p>
+<p>We want you to<span> </span><strong>LOVE</strong><span> </span>your Piper Lou items! They will ship out within 4-10 days from your order. If you're not 100% satisfied within the first 30 days of receiving your product, let us know and we'll make it right.</p>
 <ul>
-<li>Hassle free return/exchange policy! </li>
-<li>Please contact us at<span> </span><strong>info@piperloucollection.com</strong><span> </span>with any questions. </li>
+<li>Hassle free return/exchange policy! </li>
+<li>Please contact us at<span> </span><strong>info@piperloucollection.com</strong><span> </span>with any questions. </li>
 </ul>
 <h5>Product Description</h5>
-<p><span>You are going to <strong>LOVE</strong> this design! We offer apparel in Short Sleeve shirts, Long Sleeve Shirts, Tank tops, and Hoodies. If you want information on sizing, please view the sizing chart below. </span></p>
-<p><span>Apparel is designed, printed, and shipped in the USA. 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 </span></p>
+<p><span>You are going to <strong>LOVE</strong> this design! We offer apparel in Short Sleeve shirts, Long Sleeve Shirts, Tank tops, and Hoodies. If you want information on sizing, please view the sizing chart below. </span></p>
+<p><span>Apparel is designed, printed, and shipped in the USA. 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 </span></p>
 <p><a href='https://www.piperloucollection.com/pages/sizing-chart'>View our sizing chart</a></p>";
                 break;
             case 'hopecaregive.myshopify.com':
@@ -83,10 +80,10 @@ function processQueue($queue, Google_Client $client) {
             default:
                 $html = '<p></p>';
         }
-
         if ($shop->description) {
-            $html = $shop->description'
+            $html = $shop->description;
         }
+
         $sku = generateSku($shop, $post['product_title']);
         $results['product_name'] = $post['product_title'];
         $results['front_print_file_url'] = $post['front_print_url'];

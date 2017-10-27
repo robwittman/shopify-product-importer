@@ -57,6 +57,7 @@ class Shops
         $shop->api_key = $params['api_key'];
         $shop->password = $params['password'];
         $shop->shared_secret = $params['shared_secret'];
+        $shop->description = $params['description'];
 
         try {
             $shop->save();
@@ -87,6 +88,7 @@ class Shops
         $shop->api_key = $params['api_key'];
         $shop->password = $params['password'];
         $shop->shared_secret = $params['shared_secret'];
+        $shop->description = $params['description'];
 
         try {
             $shop->update();

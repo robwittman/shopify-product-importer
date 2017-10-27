@@ -213,5 +213,58 @@
             "Royal Blue" : "Royal",
             "Grey" : "Charcoal"
         }
+    },
+    "Crew" : {
+        "body_html" : "<p></p>",
+        "sizes" : {
+            "S" : {
+                "price" : "29.99",
+                "grams" : "159",
+                "weight" : "5.6",
+                "weight_unit" : "oz"
+            },
+            "M" : {
+                "price" : "29.99",
+                "grams" : "179",
+                "weight" : "6.3",
+                "weight_unit" : "oz"
+            },
+            "L" : {
+                "price" : "29.99",
+                "grams" : "204",
+                "weight" : "7.2",
+                "weight_unit" : "oz"
+            },
+            "XL" : {
+                "price" : "29.99",
+                "grams" : "227",
+                "weight" : "8.0",
+                "weight_unit" : "oz"
+            },
+            "2XL" : {
+                "price" : "31.99",
+                "grams" : "247",
+                "weight" : "8.7",
+                "weight_unit" : "oz"
+            },
+            "3XL" : {
+                "price" : "33.99",
+                "grams" : "278",
+                "weight" : "9.8",
+                "weight_unit" : "oz"
+            },
+            "4XL" : {
+                "price" : "35.99",
+                "grams" : "289",
+                "weight" : "10.2",
+                "weight_unit" : "oz"
+            }
+        },
+        "colors" : [
+            "Charcoal"
+        ],
+        "color_map" : {
+
+        }
     }
 }
