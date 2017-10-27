@@ -85,7 +85,7 @@ function processQueue($queue, Google_Client $client) {
         }
 
         if ($shop->description) {
-            $html = $shop->description'
+            $html = $shop->description;
         }
         $sku = generateSku($shop, $post['product_title']);
         $results['product_name'] = $post['product_title'];

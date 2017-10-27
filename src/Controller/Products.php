@@ -102,7 +102,7 @@ class Products
             $queue->shop = $shopId;
             $queue->file_name = $data['file'];
             $queue->template = $data['post']['template'];
-            $queue->log_to_google = $data['post']['log_to_google'];
+            $queue->log_to_google = (int) $data['post']['log_to_google'];
             $queue->save();
         }
 
