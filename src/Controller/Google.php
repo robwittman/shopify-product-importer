@@ -25,6 +25,7 @@ class Google
         } else {
             $creds = $this->client->fetchAccessTokenWithAuthCode($request->getQueryParam('code'));
             $shop = Shop::find($_SESSION['shop']);
+            error_log(json_encode($creds));
             $shop->google_access_token = $creds['access_token'];
             $shop->google_expires_in = $creds['expires_in'];
             $shop->google_refresh_token = $creds['refresh_token'];
