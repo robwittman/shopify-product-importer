@@ -54,10 +54,8 @@ while (true) {
         ->orderBy('created_at', 'asc')
         ->first();
     if (!$queue) {
-        error_log("Queue empty. Sleeping for a bit....");
         sleep(10);
     } else {
-        error_log("Queue record found. Processing...");
         try {
             $queue->start();
             $data = json_decode($queue->data, true);
