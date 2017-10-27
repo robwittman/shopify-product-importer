@@ -171,7 +171,7 @@ function createChristmas($queue, Google_Client $client)
                 break;
             case 'Crew':
                 $style = 'Crewneck';
-                $fulfillerCode = '';
+                $fulfillerCode = '18000';
                 break;
         }
         foreach ($sizes as $size => $options) {
