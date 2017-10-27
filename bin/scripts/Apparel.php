@@ -167,7 +167,11 @@ function processQueue($queue, Google_Client $client) {
                 if($color == "Royal") {
                     $color = "Royal Blue";
                 } else if($color == "Charcoal") {
-                    $garmentColor = "Heavy Metal";
+                    if ($fulfillerCode == 'NL1533') {
+                        $garmentColor = 'Dark Grey';
+                    } else {
+                        $garmentColor = "Heavy Metal";
+                    }
                     $color = "Grey";
                 } else if($color == "Grey") {
                     $color = "Charcoal";
