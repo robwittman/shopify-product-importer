@@ -59,9 +59,6 @@ while (true) {
             $queue->start();
             $data = json_decode($queue->data, true);
             switch ($queue->template) {
-                case 'product-with-crew':
-                    $res = apparelWithCrew($queue, $client);
-                    break;
                 case 'hats':
                     $res = createHats($queue);
                     break;
