@@ -44,6 +44,7 @@ foreach ($shops as $shop) {
     try {
         if (!is_null($shop->google_access_token)) {
             $creds = $client->refreshToken($shop->google_refresh_token);
+            error_log(json_encode($creds));
             $shop->google_access_token = $creds['access_token'];
             $shop->google_refresh_token = $creds['refresh_token'];
             $shop->save();
