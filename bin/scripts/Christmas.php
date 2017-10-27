@@ -38,7 +38,7 @@ function createChristmas($queue)
     $data = json_decode($queue->data, true);
     $post = $data['post'];
     $shop = \App\Model\Shop::find($queue->shop);
-    $image_data = getImages($s3, $data['file']);
+    $image_data = getImages($s3, $queue->file_name);
     $imageUrls = [];
     switch($shop->myshopify_domain) {
         case 'plcwholesale.myshopify.com':
@@ -178,8 +178,6 @@ function createChristmas($queue)
             $imageUpdate[] = $data;
         }
     }
-    error_log(json_encode($imageUrls, JSON_PRETTY_PRINT));
-    error_log(json_encode($imageUpdate, JSON_PRETTY_PRINT));
 
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         "product" => array(
@@ -187,7 +185,6 @@ function createChristmas($queue)
             'images' => $imageUpdate
         )
     ));
-    error_log(json_encode($res, JSON_PRETTY_PRINT));
     $queue->finish(array($res->product->id));
     return array($res->product->id);
 }

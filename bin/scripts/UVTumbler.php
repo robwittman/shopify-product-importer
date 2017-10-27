@@ -8,12 +8,12 @@ function createUvTumbler($queue)
     $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
 
-    if (isset($data['file'])) {
+    if (isset($queue->file_name)) {
         $post = $data['post'];
 
         $objects = $s3->getIterator('ListObjects', array(
             "Bucket" => "shopify-product-importer",
-            "Prefix" => $data['file']
+            "Prefix" => $queue->file_name
         ));
 
         foreach ($objects as $object) {

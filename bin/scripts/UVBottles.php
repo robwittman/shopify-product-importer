@@ -14,7 +14,7 @@ function createUvWithBottles($queue)
     $data = json_decode($queue->data, true);
     $post = $data['post'];
     $shop = \App\Model\Shop::find($queue->shop);
-    $image_data = getImages($s3, $data['file']);
+    $image_data = getImages($s3, $queue->file_name);
     $imageUrls = [];
     switch($shop->myshopify_domain) {
         case 'plcwholesale.myshopify.com':

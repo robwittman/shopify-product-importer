@@ -49,7 +49,6 @@ foreach (glob(DIR."/bin/scripts/*.php") as $file) {
 }
 
 while (true) {
-    error_log("Getting queue");
     $queue = Queue::where('status', Queue::PENDING)
         ->orderBy('created_at', 'asc')
         ->first();
@@ -59,7 +58,7 @@ while (true) {
         try {
             $queue->start();
             $data = json_decode($queue->data, true);
-            switch ($data['post']['template']) {
+            switch ($queue->template) {
                 case 'hats':
                     $res = createHats($queue);
                     break;
@@ -99,7 +98,7 @@ while (true) {
                 default:
                     throw new \Exception("Invalid template {$data['post']['template']} provided");
             }
-            error_log("Product {$res} finished");
+            error_log("Product {$res['product_id']} finished");
             $queue->finish($res);
         } catch(\Exception $e) {
             error_log($e->getMessage());

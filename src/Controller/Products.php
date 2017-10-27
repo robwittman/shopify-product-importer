@@ -100,6 +100,9 @@ class Products
             $queue->data = json_encode($data);
             $queue->status = Queue::PENDING;
             $queue->shop = $shopId;
+            $queue->file_name = $data['file'];
+            $queue->template = $data['post']['template'];
+            $queue->log_to_google = $data['post']['log_to_google'];
             $queue->save();
         }
 
