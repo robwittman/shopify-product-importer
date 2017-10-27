@@ -95,6 +95,9 @@ while (true) {
                 case 'hats_masculine':
                     $res = createMasculineHats($queue);
                     break;
+                case 'grey_collection':
+                    $res = createGreyCollection($queue, $client);
+                    break;
                 default:
                     throw new \Exception("Invalid template {$data['post']['template']} provided");
             }

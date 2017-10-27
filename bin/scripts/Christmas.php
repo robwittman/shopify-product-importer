@@ -1,7 +1,8 @@
 <?php
 
-function createChristmas($queue)
+function createChristmas($queue, Google_Client $client)
 {
+    $results = array();
     $vendor = 'Canvus Print';
     $variants = array(
         'Hoodie' => array(
@@ -30,6 +31,15 @@ function createChristmas($queue)
             '2XL' => array('price' => '24.99', 'weight' => '8.7'),
             '3XL' => array('price' => '26.99', 'weight' => '9.8'),
             '4XL' => array('price' => '29.99', 'weight' => '10.2')
+        ),
+        'Crew' => array(
+            'Small' => array('price' => '29.99', 'weight' => '5.6'),
+            'Medium' => array('price' => '29.99', 'weight' => '6.3'),
+            'Large' => array('price' => '29.99', 'weight' => '7.2'),
+            'XL' => array('price' => '29.99', 'weight' => '8.0'),
+            '2XL' => array('price' => '31.99', 'weight' => '8.7'),
+            '3XL' => array('price' => '33.99', 'weight' => '9.8'),
+            '4XL' => array('price' => '35.99', 'weight' => '10.2')
         )
     );
 
@@ -69,6 +79,15 @@ function createChristmas($queue)
                     '2XL' => array('price' => '13', 'weight' => '8.7'),
                     '3XL' => array('price' => '13', 'weight' => '9.8'),
                     '4XL' => array('price' => '13', 'weight' => '10.2')
+                ),
+                'Crew' => array(
+                    'Small' => array('price' => '29.99', 'weight' => '5.6'),
+                    'Medium' => array('price' => '29.99', 'weight' => '6.3'),
+                    'Large' => array('price' => '29.99', 'weight' => '7.2'),
+                    'XL' => array('price' => '29.99', 'weight' => '8.0'),
+                    '2XL' => array('price' => '31.99', 'weight' => '8.7'),
+                    '3XL' => array('price' => '33.99', 'weight' => '9.8'),
+                    '4XL' => array('price' => '35.99', 'weight' => '10.2')
                 )
             );
         case 'piper-lou-collection.myshopify.com':
@@ -97,6 +116,14 @@ function createChristmas($queue)
     if ($shop->description) {
         $html = $shop->description;
     }
+    $sku = generateSku($shop, $post['product_title']);
+    $results = array(
+        'product_name' => $post['product_title'],
+        'shopify_product_admin_url' => null,
+        'front_print_file_url' => $post['front_print_url'],
+        'back_print_file_url' => $post['back_print_url'],
+        'variants' => array()
+    );
 
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];
@@ -130,8 +157,32 @@ function createChristmas($queue)
     );
 
     foreach ($variants as $style => $sizes) {
+        switch ($style) {
+            case 'Hoodie':
+                $fulfillerCode = '18500';
+                break;
+            case 'LS':
+                $style = 'Long Sleeve';
+                $fulfillerCode = '2400';
+                break;
+            case 'Tees':
+                $style = 'Tee';
+                $fulfillerCode = 'NL3600';
+                break;
+            case 'Crew':
+                $style = 'Crewneck';
+                $fulfillerCode = '';
+                break;
+        }
         foreach ($sizes as $size => $options) {
             foreach (['Green', 'Red'] as $color) {
+                $variantSku = getVariantSku($sku, ($style == 'Crewneck' ? 'Crew' : $style), $color);
+                $results['variants'][] = array(
+                    'garment_name' => $style,
+                    'product_fulfiller_code' => $fulfillerCode,
+                    'garment_color' => $color,
+                    'product_sku' => $variantSku,
+                );
                 $variantData = array(
                     'title' => $size . ' / ' . $color . ' / ' . $style,
                     'price' => $options['price'],
@@ -143,7 +194,7 @@ function createChristmas($queue)
                     'requires_shipping' => true,
                     'inventory_management' => null,
                     'inventory_policy' => 'deny',
-                    'sku' => $style . ' - ' . $color . ' - ' . getSku($size)
+                    'sku' => $variantSku
                 );
                 $product_data['variants'][] = $variantData;
             }
@@ -153,17 +204,20 @@ function createChristmas($queue)
     $res = callShopify($shop, '/admin/products.json', 'POST', array(
         'product' => $product_data
     ));
+    $results['shopify_product_admin_url'] = "https://{$shop->myshopify_domain}/admin/products/{$res->product->id}";
     $imageUpdate = array();
     $variantMap = array(
         'Red' => array(
             'Hoodie' => array(),
             'Long Sleeve' => array(),
-            'Tee' => array()
+            'Tee' => array(),
+            'Crewneck' => array(),
         ),
         'Green' => array(
             'Hoodie' => array(),
             'Long Sleeve' => array(),
-            'Tee' => array()
+            'Tee' => array(),
+            'Crewneck' => array()
         )
     );
     foreach ($res->product->variants as $variant) {
@@ -173,7 +227,12 @@ function createChristmas($queue)
     }
     foreach ($variantMap as $color => $styles) {
         foreach ($styles as $style => $ids) {
-            $imageStyle = ($style == 'Long Sleeve') ? 'LS' : $style;
+            $imageStyle = $style;
+            if ($style == 'Long Sleeve') {
+                $imageStyle = 'LS';
+            } else if ($style == 'Crewneck') {
+                $imageStyle = 'Crew';
+            }
             $data = array(
                 'src' => "https://s3.amazonaws.com/shopify-product-importer/".$imageUrls[$imageStyle][$color],
                 'variant_ids' => $ids
@@ -188,6 +247,14 @@ function createChristmas($queue)
             'images' => $imageUpdate
         )
     ));
+    if (isset($queue->log_to_google) && $queue->log_to_google && $shop->google_access_token) {
+        if ($shop->google_access_token) {
+            $client->setAccessToken($shop->google_access_token);
+        }
+        logResults($client, $shop->google_sheet_slug, $post['print_type'], $results);
+    } else {
+        error_log("No google sync...");
+    }
     $queue->finish(array($res->product->id));
     return array($res->product->id);
 }
