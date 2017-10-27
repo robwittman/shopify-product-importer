@@ -21,6 +21,7 @@ class Google
     {
         if (!$request->getQueryParam('code')) {
             $_SESSION['shop'] = $request->getQueryParam('shop_id');
+            $this->client->setApprovalPrompt('force');
             return $response->withHeader('Location', $this->client->createAuthUrl());
         } else {
             $creds = $this->client->fetchAccessTokenWithAuthCode($request->getQueryParam('code'));
