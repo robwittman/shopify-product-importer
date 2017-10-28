@@ -16,7 +16,12 @@ class Shops
 
     public function index($request, $response)
     {
-        $shops = Shop::all();
+        // Only get shops that a user has access to, if they are not admin
+        // if ($request->getAttribute('user')->role == 'admin') {
+            $shops = Shop::all();
+        // } else {
+        //     $shops = [];
+        // }
         return $response->withJson(array(
             'shops' => $shops
         ));

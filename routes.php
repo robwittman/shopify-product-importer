@@ -2,6 +2,7 @@
 
 use App\Model\Shop;
 use App\Model\User;
+use App\Model\Template;
 
 $app->get('/', function($request, $response) {
     return $response->withRedirect('/app');
@@ -57,3 +58,25 @@ $app->group('/queue', function() use ($app) {
     $app->get('', 'controller.products:queue');
     $app->post('/restart', 'controller.products:restart_queue');
 });
+
+$app->get('/templates', function($request, $response) {
+    return $response->withJson(array(
+        'templates' => array(
+            new Template('single_product', 'Single Product'),
+            new Template('grey_collection', 'Grey Collection'),
+            new Template('stemless', 'Stemless'),
+            new Template('hats', 'Hats'),
+            new Template('masculine_hats', 'Masculine Hats'),
+            new Template('drinkware', 'Drinkware'),
+            new Template('uv_drinkware', 'UV Drinkware'),
+            new Template('uv_with_bottles', 'UV With Bottles'),
+            new Template('baby_body_suit', 'Baby Body Suit'),
+            new Template('raglans', 'Raglans'),
+            new Template('front_back_pocket', 'Front Back Pocket'),
+            new Template('christmas', 'Christmas')
+        )
+    ));
+});
+
+$app->post('/files', 'controller.files:create');
+$app->get('/files/{fileName}', 'controller.files:get');

@@ -5,7 +5,9 @@ angular
         'productImporter.controllers',
         'productImporter.services',
         'ngCookies',
-        'angular-jwt'
+        'angular-jwt',
+        'ngFileUpload',
+        'toaster'
     ])
     .config(function($routeProvider, $httpProvider) {
         var $cookies;
@@ -44,6 +46,10 @@ angular
         .when('/login', {
             controller: "LoginController",
             templateUrl: 'views/auth/login.html'
+        })
+        .when('/queue', {
+            controller: "QueueController",
+            templateUrl: 'views/queue.html'
         })
         .otherwise({redirectTo: '/products'});
 

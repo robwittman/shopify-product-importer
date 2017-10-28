@@ -1,0 +1,25 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Product Queue
+    </div>
+    <table class='table table-condensed'>
+        <tr>
+            <th>Shop</th>
+            <th>Template</th>
+            <th>Created</th>
+            <th>Started</th>
+            <th>Finished</th>
+            <th>Product ID</th>
+            <th>Error</th>
+        </tr>
+        <tr ng-repeat='record in queue track by $index'>
+            <td>{{record.shop.myshopify_domain}}</td>
+            <td>{{record.template}}</td>
+            <td>{{record.created_at}}</td>
+            <td>{{record.started_at}}</td>
+            <td>{{record.finished_at}}</td>
+            <td>{{record.product_id}}</td>
+            <td>{{record.error}}</td>
+        </tr>
+    </table>
+</div>

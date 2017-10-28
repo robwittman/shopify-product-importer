@@ -15,6 +15,9 @@ angular
         service.getUser = function(id) {
             return $http.get(`/users/${id}`);
         }
+        service.createUser = function(user) {
+            return $http.post('/users', $.param(user));
+        }
         return service;
     })
 ;

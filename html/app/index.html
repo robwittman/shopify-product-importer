@@ -6,11 +6,12 @@
     <!-- CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" integrity="sha256-fmMNkMcjSw3xcp9iuPnku/ryk9kaWgrEbfJfKmdZ45o=" crossorigin="anonymous" />
     <link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.svg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" integrity="sha256-xykLhwtLN4WyS7cpam2yiUOwr709tvF3N/r7+gOMxJw=" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css">
 
     <!-- JS -->
     <!-- load angular, nganimate, and ui-router -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js" integrity="sha256-IMA0EIgLE53aSU7jFyLtX6u4hqMZ6AeSxlSgiBQ+620=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap.js" integrity="sha256-7OT8H6uxStHOJMZE2TeZfI960JyEgNPn9+DEAvamJPg=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.js" integrity="sha256-FJnwuQv+FZqA9vMnFwe3QhipH+NPiplOYEeGTS9y5cQ=" crossorigin="anonymous"></script>
@@ -18,6 +19,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-animate.js" integrity="sha256-P7lykGUhUgCuLMOhuhW8wJAUUX1nmn8bxSrmJQJnI6c=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-cookies.js" integrity="sha256-wV1QpjF2mxDX/dwEb9ZdXc7BvTJqDF1Ehz+8vGkHAQ0=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js" integrity="sha256-Cr6N6zNN4bp0OwTQOZ6Z66M2r+2dpy/EwKMCyZ+SOMg=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.141.0/aws-sdk.js" integrity="sha256-H8PnaNqY1ulqBcY+oeP8X1Fr2UlyK/zDapmaG/0b6y0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.13/ng-file-upload.js" integrity="sha256-04+zgqt+4mvtEbwBMOwAoHV/iMLUvnpBsyiwLFm+dNI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/2.2.0/toaster.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
 </head>
 
 <!-- apply our angular app -->
@@ -51,7 +56,7 @@
     </nav>
     <div class="container">
         <!-- views will be injected here -->
-
+        <toaster-container></toaster-container>
         <ng-view></ng-view>
     </div>
 
@@ -59,6 +64,7 @@
     <script src='js/angular-jwt.js'></script>
     <script src='controllers/AppController.js'></script>
     <script src='controllers/ProductController.js'></script>
+    <script src='controllers/QueueController.js'></script>
     <script src='controllers/shops/ListShopsController.js'></script>
     <script src='controllers/shops/ShopController.js'></script>
     <script src='controllers/shops/NewShopController.js'></script>
@@ -68,6 +74,9 @@
     <script src='controllers/LoginController.js'></script>
     <script src='services/ShopService.js'></script>
     <script src='services/UserService.js'></script>
+    <script src='services/QueueService.js'></script>
+    <script src='services/FileService.js'></script>
+    <script src='services/TemplateService.js'></script>
     <script src='services/Auth.js'></script>
     <script src="app.js"></script>
 </body>

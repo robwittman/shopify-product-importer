@@ -5,17 +5,9 @@ namespace App\Controller;
 use App\Model\User;
 use App\Model\Queue;
 use App\Model\Shop;
-use PhpAmqpLib\Message\AMQPMessage;
 
 class Products
 {
-    public function __construct($view, $flash, $rabbit)
-    {
-        $this->view = $view;
-        $this->flash = $flash;
-        $this->rabbit = $rabbit;
-    }
-
     public function show_form($request, $response, $arguments)
     {
         $user = User::find($request->getAttribute('user')->id);
@@ -34,7 +26,7 @@ class Products
             $shop = Shop::find($record->shop);
             $record->shop = $shop;
         }
-        return $this->view->render($response, 'queue.html', array(
+        return $response->withJson(array(
             'queue' => $queue
         ));
     }
