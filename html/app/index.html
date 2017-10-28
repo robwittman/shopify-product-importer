@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" integrity="sha256-fmMNkMcjSw3xcp9iuPnku/ryk9kaWgrEbfJfKmdZ45o=" crossorigin="anonymous" />
+    <link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.svg" />
+    <link rel="stylesheet" href="style.css">
+
+    <!-- JS -->
+    <!-- load angular, nganimate, and ui-router -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js" integrity="sha256-IMA0EIgLE53aSU7jFyLtX6u4hqMZ6AeSxlSgiBQ+620=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap.js" integrity="sha256-7OT8H6uxStHOJMZE2TeZfI960JyEgNPn9+DEAvamJPg=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.js" integrity="sha256-FJnwuQv+FZqA9vMnFwe3QhipH+NPiplOYEeGTS9y5cQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-route.js" integrity="sha256-IlW7igJxIAH3fvC21xFmy7nuf3J4dDpbBHsrJsTIRQk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-animate.js" integrity="sha256-P7lykGUhUgCuLMOhuhW8wJAUUX1nmn8bxSrmJQJnI6c=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-cookies.js" integrity="sha256-wV1QpjF2mxDX/dwEb9ZdXc7BvTJqDF1Ehz+8vGkHAQ0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js" integrity="sha256-Cr6N6zNN4bp0OwTQOZ6Z66M2r+2dpy/EwKMCyZ+SOMg=" crossorigin="anonymous"></script>
+</head>
+
+<!-- apply our angular app -->
+<body ng-app="productImporter" ng-controller='AppController'>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/products">Product Uploader</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav" ng-if='user'>
+                    <li><a href="#!/users">Users</a></li>
+                    <li><a href="#!/shops">Shops</a></li>
+                    <li><a href="#!/products">Products</a></li>
+                    <li><a href="#!/queue">Queue</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li ng-if='user'><a ng-click='logout()'>Logout</a></li>
+                 </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+    <div class="container">
+        <!-- views will be injected here -->
+
+        <ng-view></ng-view>
+    </div>
+
+    <script src="modules.js"></script>
+    <script src='js/angular-jwt.js'></script>
+    <script src='controllers/AppController.js'></script>
+    <script src='controllers/ProductController.js'></script>
+    <script src='controllers/shops/ListShopsController.js'></script>
+    <script src='controllers/shops/ShopController.js'></script>
+    <script src='controllers/shops/NewShopController.js'></script>
+    <script src='controllers/users/ListUsersController.js'></script>
+    <script src='controllers/users/UserController.js'></script>
+    <script src='controllers/users/NewUserController.js'></script>
+    <script src='controllers/LoginController.js'></script>
+    <script src='services/ShopService.js'></script>
+    <script src='services/UserService.js'></script>
+    <script src='services/Auth.js'></script>
+    <script src="app.js"></script>
+</body>
+</html>

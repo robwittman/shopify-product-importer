@@ -8,45 +8,34 @@ use App\Model\Messages;
 
 class Shops
 {
-    public function __construct($view, $flash)
+    public function __construct()
     {
-        $this->view = $view;
-        $this->flash = $flash;
+        // $this->view = $view;
+        // $this->flash = $flash;
     }
 
     public function index($request, $response)
     {
         $shops = Shop::all();
-        return $this->view->render($response, 'shops/index.html', array(
+        return $response->withJson(array(
             'shops' => $shops
         ));
     }
 
     public function show($request, $response, $arguments)
     {
-        if ($request->getAttribute('user')->role != 'admin') {
-            $this->flash->addMessage('error', Errors::UNAUTHORIZED);
-            return $response->withRedirect('/shops');
-        }
-
         $shop = Shop::find($arguments['id']);
         if (empty($shop)) {
-            $this->flash->addMessage('error', "Shop not found");
-            return $response->withRedirect('/shops');
+            return $response->withStatus(404);
         }
 
-        return $this->view->render($response, 'shops/show.html', array(
+        return $response->withJson(array(
             'shop' => $shop
         ));
     }
 
     public function create($request, $response, $arguments)
     {
-        if ($request->getAttribute('user')->role != 'admin') {
-            $this->flash->addMessage('error', Errors::UNAUTHORIZED);
-            return $response->withRedirect('/shops');
-        }
-
         if ($request->isGet()) {
             return $this->view->render($response, 'shops/new.html');
         }
@@ -62,8 +51,9 @@ class Shops
         try {
             $shop->save();
         } catch (\Exception $e) {
-            $this->flash->addMessage('error', $e->getMessage());
-            return $response->withRedirect('/shops/create');
+            return $response->withStatus(400)->withJson(array(
+                'error' => $e->getMessage()
+            ));
         }
 
         $this->flash->addMessage('message', "Shop successfully created");

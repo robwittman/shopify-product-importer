@@ -1,0 +1,21 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Shops
+    </div>
+    <table class='table table-condensed'>
+        <tr>
+            <th>Actions</th>
+            <th>Domain</th>
+            <th>Api Key</th>
+        </tr>
+        <tr ng-repeat='shop in shops track by $index'>
+            <td></td>
+            <td>{{shop.myshopify_domain}}</td>
+            <td>{{shop.api_key}}</td>
+        </tr>
+    </table>
+    <div class="panel-footer">
+        <a type="button" name="button" class='btn btn-primary pull-right' href="#!/shops/new">Create New Shop</a>
+        <div class="clearfix"></div>
+    </div>
+</div>

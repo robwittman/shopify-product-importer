@@ -5,12 +5,10 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 $container = $app->getContainer();
 $container['view'] = function ($c) {
-    $view = new \Slim\Views\Twig('../views');
+    $view = new \Slim\Views\Twig('../app');
     $basePath = rtrim(str_ireplace('index.php', '', $c['request']->getUri()->getBasePath()), '/');
     $view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
 
-    $view->getEnvironment()->addGlobal('flash', $c['flash']);
-    $view->getEnvironment()->addGlobal('store', getenv("MYSHOPIFY_DOMAIN"));
     return $view;
 };
 $capsule = new \Illuminate\Database\Capsule\Manager;

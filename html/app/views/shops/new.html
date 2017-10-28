@@ -1,0 +1,36 @@
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Create New Shop
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class='control-label'>Domain</label>
+                <div class="input-group">
+                  <span class="input-group-addon" id="basic-addon3">https://</span>
+                  <input type="text" ng-model="shop.myshopify_domain" value="" class='form-control' placeholder='<store>.myshopify.com'>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class='control-label'>API Key</label>
+                <input type="text" ng-model="shop.api_key" value="" class='form-control'>
+            </div>
+            <div class="form-group">
+                <label class='control-label'>Password</label>
+                <input type="password" ng-model="shop.password" value="" class='form-control'>
+            </div>
+            <div class="form-group">
+                <label class='control-label'>Shared Secret</label>
+                <input type="password" ng-model="shop.shared_secret" value="" class='form-control'>
+            </div>
+            <div class="form-group">
+                <label class='col-sm-3 control-label'>Default Description</label>
+                <textarea ng-model="shop.description" rows="8" cols="80" class='form-control'></textarea>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button type='submit' class='btn btn-primary pull-right' ng-submit='submit()'>Create Shop</button>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>

@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Model\User;
 use App\Model\Errors;
 use App\Model\Messages;
+
+use Firebase\JWT\JWT;
+
 class Auth
 {
-    public function __construct($view, $flash)
+    public function __construct($key)
     {
-        $this->view = $view;
-        $this->flash = $flash;
+        $this->key = $key;
     }
 
     public function login($request, $response)
@@ -20,33 +22,28 @@ class Auth
         }
 
         $params = $request->getParsedBody();
-
+        error_log(json_encode($params));
         $user = User::where('email', $params['email'])->first();
         if (empty($user)) {
-            return $this->view->render($response, 'auth/login.html', array(
+            return $response->withStatus(400)->withJson(array(
                 'error' => Errors::INVALID_EMAIL
             ));
         }
 
         if (!$user->authenticate($params['password'])) {
-            return $this->view->render($response, 'auth/login.html', array(
-                'error' => Errors::INVALID_PASSWORD
+            return $response->withStatus(400)->withJson(array(
+                'error' => "Invalid username or password"
             ));
         }
 
-        // Our login was correct, so let's start a session!
-        $_SESSION['uid'] = $user->id;
-        $_SESSION['email'] = $user->email;
-        $_SESSION['expiration'] = strtotime('+2 hours');
-        $_SESSION['role'] = $user->role;
-
-        $this->flash->addMessage('message', Messages::LOGIN_SUCCESSFUL);
-        return $response->withRedirect('/products');
-    }
-
-    public function logout($request, $response)
-    {
-        session_destroy();
-        return $response->withRedirect('/auth/login');
+        $payload = array(
+            'exp' => strtotime('+1 hour'),
+            'iss' => time(),
+            'user' => $user
+        );
+        $jwt = JWT::encode($payload, $this->key);
+        return $response->withJson(array(
+            'access_token' => $jwt
+        ));
     }
 }

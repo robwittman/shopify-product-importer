@@ -1,0 +1,21 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Users
+    </div>
+    <table class='table table-condensed'>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+        <tr ng-repeat='user in users track by $index'>
+            <td>{{user.id}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.role}}</td>
+        </tr>
+    </table>
+    <div class="panel-footer">
+        <a href="#!/users/new" class='btn btn-primary pull-right'>Create New User</a>
+        <div class="clearfix"></div>
+    </div>
+</div>

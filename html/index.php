@@ -4,34 +4,32 @@ ini_set('upload_max_filesize', '10M');
 session_start();
 
 require_once '../vendor/autoload.php';
-require_once '../src/common.php';
 
-use App\Model\Errors;
-use App\Model\Messages;
+$container = new \Flexsounds\Component\SymfonyContainerSlimBridge\ContainerBuilder();
+$loader = new \Symfony\Component\DependencyInjection\Loader\PhpFileLoader($container, new \Symfony\Component\Config\FileLocator(dirname(__FILE__, 2)));
+$loader->load('container.php');
+if (file_exists('../container.env.php')) {
+    $loader->load('container.env.php');
+}
 
-$dbUrl = getenv("DATABASE_URL");
-$dbConfig = parse_url($dbUrl);
-// Load our App and container
-$app = new Slim\App(array(
-    'settings' => array(
-        'determineRouteBeforeAppMiddleware' => true,
-        'displayErrorDetails' => false,
-        'db' => array(
-            'driver' => 'pgsql',
-            'host' => $dbConfig['host'],
-            'database' => ltrim($dbConfig['path'], '/'),
-            'username' => $dbConfig['user'],
-            'password' => $dbConfig['pass'],
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix' => ''
-        )
-    )
-));
+$app = new \Slim\App($container);
 
-$app->add(new App\Middleware\Session());
+$config = $container->getParameter('database.config');
+$connection = array(
+    'driver' => 'pgsql',
+    'host' => $config['host'],
+    'database' => ltrim($config['path'], '/'),
+    'username' => $config['user'],
+    'password' => $config['pass'],
+    'charset' => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix' => ''
+);
+$capsule = new \Illuminate\Database\Capsule\Manager;
+$capsule->addConnection($connection);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
 
-require_once '../src/container.php';
-require_once '../src/routes.php';
+require_once '../routes.php';
 
 $app->run();

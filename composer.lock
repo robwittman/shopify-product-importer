@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "365f27c9c44469520211121f2023f9e7",
+    "content-hash": "ed8f35e6e7da1c18feae85faece89719",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -229,6 +229,52 @@
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
             "time": "2017-06-27T22:17:23+00:00"
+        },
+        {
+            "name": "flexsounds/slim-symfony-di-container",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/leroy0211/Slim-Symfony-Dependency-Injection-Bridge.git",
+                "reference": "571d6726abb7b321e43e0b2f0924829cdf730a0e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/leroy0211/Slim-Symfony-Dependency-Injection-Bridge/zipball/571d6726abb7b321e43e0b2f0924829cdf730a0e",
+                "reference": "571d6726abb7b321e43e0b2f0924829cdf730a0e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0",
+                "slim/slim": "^3.1",
+                "symfony/dependency-injection": "^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8",
+                "symfony/config": "^3.0",
+                "symfony/yaml": "^3.0"
+            },
+            "suggest": {
+                "symfony/config": "For using configuration to define the container"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Flexsounds\\Component\\SymfonyContainerSlimBridge\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Leroy Baeyens",
+                    "email": "info@leroybaeyens.nl"
+                }
+            ],
+            "description": "The bridge to use the Symfony Dependency Injection Container to use in Slim Framework 3",
+            "time": "2017-06-03T22:55:22+00:00"
         },
         {
             "name": "google/apiclient",
@@ -1849,6 +1895,69 @@
             "time": "2017-02-16T16:34:18+00:00"
         },
         {
+            "name": "symfony/dependency-injection",
+            "version": "v3.2.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/dependency-injection.git",
+                "reference": "d9f2e62e1a93d52ad4e4f6faaf66f6eef723d761"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/d9f2e62e1a93d52ad4e4f6faaf66f6eef723d761",
+                "reference": "d9f2e62e1a93d52ad4e4f6faaf66f6eef723d761",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "conflict": {
+                "symfony/yaml": "<3.2"
+            },
+            "require-dev": {
+                "symfony/config": "~2.8|~3.0",
+                "symfony/expression-language": "~2.8|~3.0",
+                "symfony/yaml": "~3.2"
+            },
+            "suggest": {
+                "symfony/config": "",
+                "symfony/expression-language": "For using expressions in service container configuration",
+                "symfony/proxy-manager-bridge": "Generate service proxies to lazy load them",
+                "symfony/yaml": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\DependencyInjection\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony DependencyInjection Component",
+            "homepage": "https://symfony.com",
+            "time": "2017-07-28T15:22:55+00:00"
+        },
+        {
             "name": "symfony/filesystem",
             "version": "v3.2.4",
             "source": {
@@ -2074,6 +2183,60 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2017-02-16T22:46:52+00:00"
+        },
+        {
+            "name": "tuupola/slim-jwt-auth",
+            "version": "2.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tuupola/slim-jwt-auth.git",
+                "reference": "1f9fb673e4f5bb9ca4104e328aabfc2e4af38c32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tuupola/slim-jwt-auth/zipball/1f9fb673e4f5bb9ca4104e328aabfc2e4af38c32",
+                "reference": "1f9fb673e4f5bb9ca4104e328aabfc2e4af38c32",
+                "shasum": ""
+            },
+            "require": {
+                "firebase/php-jwt": "^3.0 || ^4.0 || ^5.0",
+                "php": "^5.5 || ^7.0",
+                "psr/http-message": "^1.0",
+                "psr/log": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.6",
+                "squizlabs/php_codesniffer": "^2.3",
+                "zendframework/zend-diactoros": "^1.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Slim\\Middleware\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mika Tuupola",
+                    "email": "tuupola@appelsiini.net",
+                    "homepage": "http://www.appelsiini.net/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PSR-7 JWT Authentication Middleware",
+            "homepage": "https://github.com/tuupola/slim-jwt-auth",
+            "keywords": [
+                "auth",
+                "json",
+                "jwt",
+                "middleware",
+                "psr-7"
+            ],
+            "time": "2017-07-12T09:57:35+00:00"
         },
         {
             "name": "twig/twig",
