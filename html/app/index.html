@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" integrity="sha256-fmMNkMcjSw3xcp9iuPnku/ryk9kaWgrEbfJfKmdZ45o=" crossorigin="anonymous" />
     <link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.svg" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" integrity="sha256-xykLhwtLN4WyS7cpam2yiUOwr709tvF3N/r7+gOMxJw=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-busy/4.1.4/angular-busy.css" integrity="sha256-2DXRxOwFT29hDmd29CQo8la3A/A4/+hbHpjQJllBEZY=" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css">
 
     <!-- JS -->
@@ -23,6 +24,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.13/ng-file-upload.js" integrity="sha256-04+zgqt+4mvtEbwBMOwAoHV/iMLUvnpBsyiwLFm+dNI=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/2.2.0/toaster.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-busy/4.1.4/angular-busy.min.js" integrity="sha256-JMyjTeceSTeoAJkUTixBACswJcazM9dHqibeI13rnAQ=" crossorigin="anonymous"></script>
 </head>
 
 <!-- apply our angular app -->
@@ -46,6 +48,7 @@
                     <li><a href="#!/users">Users</a></li>
                     <li><a href="#!/shops">Shops</a></li>
                     <li><a href="#!/products">Products</a></li>
+                    <li><a href="#!/launch">Launch a Product</a></li>
                     <li><a href="#!/queue">Queue</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -71,12 +74,16 @@
     <script src='controllers/users/ListUsersController.js'></script>
     <script src='controllers/users/UserController.js'></script>
     <script src='controllers/users/NewUserController.js'></script>
+    <script src='controllers/catalog/CatalogListController.js'></script>
+    <script src='controllers/catalog/NewCatalogController.js'></script>
+    <script src='controllers/catalog/ShowCatalogController.js'></script>
     <script src='controllers/LoginController.js'></script>
     <script src='services/ShopService.js'></script>
     <script src='services/UserService.js'></script>
     <script src='services/QueueService.js'></script>
     <script src='services/FileService.js'></script>
     <script src='services/TemplateService.js'></script>
+    <script src='services/CatalogService.js'></script>
     <script src='services/Auth.js'></script>
     <script src="app.js"></script>
 </body>

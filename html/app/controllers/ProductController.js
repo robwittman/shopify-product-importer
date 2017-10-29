@@ -14,6 +14,9 @@ angular
         $scope.templates = [];
         $scope.fileUploaded = false;
         $scope.fileSelected = false;
+        $scope.fileUploadProgress = {
+
+        }
         $scope.print_types = [
             { value: 'front_print', text: 'Front Print'},
             { value: 'back_print', text: 'Back Print'},
@@ -51,8 +54,8 @@ angular
         $scope.upload = function(file) {
             $scope.file = file;
             $scope.fileSelected = true;
-            $scope.productForm.uploaded_file = file.name;
-            Upload.upload({
+            $scope.productForm.file_name = file.name;
+            $scope.filePromise = Upload.upload({
                 url: '/files',
                 data: {
                     file: file
@@ -61,14 +64,28 @@ angular
                 toaster.success("File finished uploading");
                 FileService.getFile(resp.data.uploaded_file_name).then(function(response) {
                     $scope.contents = response.data;
-                    console.log($scope.contents);
+                    $scope.fileUploaded = true;
+                    console.log($scope.contents)
                 })
                 console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
             }, function (resp) {
-                console.log('Error status: ' + resp.status);
+                toaster.warning("There was an error uploading the file");
+                $scope.fileUploaded = false;
+                $scope.fileSelected = false;
+                $scope.file = {};
             }, function (evt) {
                 var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
                 console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
             });
+        }
+        $scope.submit = function() {
+            QueueService.createQueue($scope.productForm).then(function(response) {
+                toaster.success("Product successfuly queued");
+                $scope.resetForm();
+            })
+        }
+
+        $scope.resetForm = function() {
+            console.log("Clearing the form");
         }
     })

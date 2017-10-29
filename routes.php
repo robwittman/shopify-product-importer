@@ -80,3 +80,17 @@ $app->get('/templates', function($request, $response) {
 
 $app->post('/files', 'controller.files:create');
 $app->get('/files/{fileName}', 'controller.files:get');
+
+$app->group('/catalogs', function() use ($app) {
+    $app->get('', 'controller.catalog:index');
+    $app->post('', 'controller.catalog:create');
+    $app->group('/{catalogId}', function() use ($app) {
+        $app->get('', 'controller.catalog:show');
+        $app->put('', 'controller.catalog:update');
+        $app->delete('', 'controller.catalog:delete');
+        $app->get('/colors', 'controller.catalog:view_colors');
+        $app->post('/colors', 'controller.catalog:add_color');
+        $app->put('/colors/{colorId}', 'controller.catalog:update_color');
+        $app->delete('/colors/{colorId}', 'controller.catalog:remove_color');
+    });
+});

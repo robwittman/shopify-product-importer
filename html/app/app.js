@@ -7,7 +7,8 @@ angular
         'ngCookies',
         'angular-jwt',
         'ngFileUpload',
-        'toaster'
+        'toaster',
+        'cgBusy'
     ])
     .config(function($routeProvider, $httpProvider) {
         var $cookies;
@@ -40,6 +41,18 @@ angular
             templateUrl: 'views/users/show.html'
         })
         .when('/products', {
+            controller: 'CatalogListController',
+            templateUrl: 'views/catalog/index.html',
+        })
+        .when('/products/new', {
+            controller: "NewCatalogController",
+            templateUrl: 'views/catalog/new.html'
+        })
+        .when('/products/:productId', {
+            controller: "ShowCatalogController",
+            templateUrl: 'views/catalog/show.html'
+        })
+        .when('/launch', {
             controller: 'ProductController',
             templateUrl: 'views/products/new.html'
         })

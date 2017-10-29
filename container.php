@@ -27,6 +27,7 @@ $container->register('s3', \Aws\S3\S3Client::class)
 $container->register('controller.shops', \App\Controller\Shops::class);
 $container->register('controller.products', \App\Controller\Products::class);
 $container->register('controller.users', \App\Controller\Users::class);
+$container->register('controller.catalog', \App\Controller\Catalogs::class);
 $container->register('controller.auth', \App\Controller\Auth::class)->setArguments(array('%jwt.secret%'));
 $container->register('controller.access', \App\Controller\Access::class);
 $container->register('controller.google', \App\Controller\Google::class);

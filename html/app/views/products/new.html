@@ -1,10 +1,10 @@
-<div class="col-lg-6 col-lg-offset-3 col-sm-12" ng-if='current_step.name == "upload_file"'>
-    <div class="panel panel-primary">
+<div class="col-lg-6 col-lg-offset-3 col-sm-12">
+    <div class="panel panel-default" cg-busy="{promise:filePromise,message:'Uploading file. Please continue with form'}">
         <div class="panel-heading">
             Step 1: Upload File
         </div>
         <div class="panel-body">
-            <div class="form-group" ng-if='!fileSelected'>
+            <div class="form-group text-center" ng-if='!fileSelected'>
                 <button type="file" name='file' ngf-select='upload($file)' ng-model='file' ngf-accept='application/zip'>Upload .zip</button>
             </div>
             <div ng-if='fileSelected'>
@@ -14,72 +14,86 @@
         </div>
     </div>
 </div>
-<!--
-<div class="col-lg-6 col-lg-offset-2 col-sm-12">
+
+<div class="col-lg-6 col-lg-offset-3 col-sm-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            Product Details
+            Select Template
         </div>
         <div class="panel-body">
-            <div class='form-group col-lg-6 col-sm-12'>
-                <label class='control-label'>Product Title</label>
-                <input type="text" name="product_title" class='form-control' ng-model='productForm.title'>
-            </div>
-            <div class='form-group col-lg-6 col-sm-12'>
-                <label class='control-label'>Handle</label>
-                <input type="text" name="product_handle" class='form-control' placeholder='Leave blank to auto-generate' ng-model='productForm.handle'>
-            </div>
-            <div class='form-group col-lg-6 col-sm-12'>
-                <label class='control-label'>Product Type</label>
-                <input type="text" name="product_type" value="Shirts" class='form-control' ng-model='productForm.type'>
-            </div>
-            <div class='form-group col-lg-6 col-sm-12'>
-                <label class='control-label'>Vendor</label>
-                <input type="text" name="vendor" value="BPP" class='form-control' ng-model='productForm.vendor'>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class='control-label'>Tags</label>
-                <textarea name="tags" rows="2" cols="40" placeholder='We can default this to whatever you want as well' class='form-control' ng-model='productForm.tags'></textarea>
-            </div>
-            <hr>
-            <div class='form-group col-sm-12'>
-                <label class='control-label'>ZIP File</label>
-                <input type="file" name="zip_file" value="">
-            </div>
-
-            <div class="row">
-                <div class="form-group col-sm-6">
-                    <label class='control-label'>Template</label>
-                    <select class="form-control" name="template" ng-model='productForm.template'>
-                        <option value="{{template.name}}" ng-repeat='template in templates track by $index'>{{template.description}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-sm-6">
-                    <label class='control-label'>Showcase Color</label>
-                    <select name='default_color' class='form-control'>
-                        <option value='Navy' selected>Navy</option>
-                        <option value='Black'>Black</option>
-                        <option value='Charcoal'>Charcoal</option>
-                        <option value='Royal'>Royal Blue</option>
-                    </select>
-                </div>
-                <div class="form-group col-sm-6">
-                    <label class='control-label'>Showcase Product</label>
-                    <select class='form-control' name="default_product">
-                        <option value="Hoodie">Hoodie</option>
-                        <option value="Tank">Tank</option>
-                        <option value="Tee">Tee</option>
-                        <option value="Long Sleeve" selected>Long Sleeve</option>
-                    </select>
-                </div>
             <div class="form-group">
-                <label>
-                    <input type='checkbox' id='log_to_google' name="log_to_google" ng-model='productForm.log_to_google'>Log to Google
-                </label>
+                <label class='col-sm-3 control-label'>Template</label>
+                <div class="col-sm-9">
+                    <select class="form-control" ng-model='productForm.template'>
+                        <option ng-repeat='template in templates track by $index' value="{{template.name}}">{{template.description}}</option>
+                    </select>
+                </div>
             </div>
-            <div ng-if='productForm.log_to_google'>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-6 col-lg-offset-3 col-sm-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Product Settings
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class='col-sm-3 control-label'>Title</label>
+                    <div class="col-sm-9">
+                        <input type="text" class='form-control' ng-model='productForm.title' placeholder='Title to give the product'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class='col-sm-3 control-label'>Handle</label>
+                    <div class="col-sm-9">
+                        <input type="text" class='form-control' ng-model='productForm.handle' placeholder='Handle to give the product (optional)'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class='col-sm-3 control-label'>Tags</label>
+                    <div class="col-sm-9">
+                        <textarea class='form-control' placeholder='Comma separated list of tags. (tag1, tag2, tag3, etc)'>{{productForm.tags}}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class='col-sm-3 control-label'>Product Type</label>
+                    <div class="col-sm-9">
+                        <input type="text" class='form-control' ng-model='productForm.type'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class='col-sm-3 control-label'>Vendor</label>
+                    <div class="col-sm-9">
+                        <input type="text" class='form-control' ng-model='productForm.vendor'>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="col-lg-6 col-lg-offset-3 col-sm-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Advanced Settings
+        </div>
+    </div>
+</div> -->
+
+<div class="col-lg-6 col-lg-offset-3 col-sm-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Google Logging
+            <button class='btn btn-default btn-xs pull-right' type="button" name="button" ng-click='productForm.log_to_google = !productForm.log_to_google'>
+                <span ng-if='productForm.log_to_google'>Disable</span>
+                <span ng-if='!productForm.log_to_google'>Enable</span>
+            </button>
+        </div>
+        <div class="panel-body" ng-if='productForm.log_to_google'>
+            <form class="form-horizontal">
                 <div class="form-group">
                     <label class='col-sm-3 control-label'>Print Type</label>
                     <div class="col-sm-9">
@@ -102,116 +116,11 @@
                         <input type="text" class='form-control' name="back_print_url" value="">
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="panel-footer">
-            <input type="submit" name="name" value="Submit" class='btn btn-primary pull-right' id='submit'>
-            <div class='clearfix'></div>
-        </div>
-    </div>
-</div>
-<div class="col-lg-2 col-sm-12">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            Stores
-        </div>
-        <div class="panel-body">
-            <div class="checkbox" ng-repeat='shop in shops track by $index'>
-                <label>
-                    <input type="checkbox">{{shop.myshopify_domain}}
-                </label>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
-    <style media="screen">
-        #advanced {
-            cursor: pointer;
-        }
-        .btn-file {
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-file input[type=file] {
-            position: absolute;
-            top: 0;
-            right: 0;
-            min-width: 100%;
-            min-height: 100%;
-            font-size: 100px;
-            text-align: right;
-            filter: alpha(opacity=0);
-            opacity: 0;
-            outline: none;
-            background: white;
-            cursor: inherit;
-            display: block;
-        }
-    </style>
-
-    <script type="text/javascript">
-        function selectAllStores() {
-            $('input[type="checkbox"]').each(function() {
-                if (!$(this).prop('checked')) {
-                    $(this).prop('checked', true);
-                }
-            })
-        }
-        function deselectAllStores() {
-            $('input[type="checkbox"]').each(function() {
-                if ($(this).prop('checked')) {
-                    $(this).prop('checked', false);
-                }
-            })
-        }
-        function setPrintType() {
-            var printType = $('select[name="print_type"] :selected').val();
-            switch (printType) {
-                case 'front_print':
-                    $('#front_print_url_field').show();
-                    $('#back_print_url_field').hide();
-                    break;
-                case 'back_print':
-                    $('#front_print_url_field').hide();
-                    $('#back_print_url_field').show();
-                    break;
-                case 'double_sided':
-                    $('#front_print_url_field').show();
-                    $('#back_print_url_field').show();
-                    break;
-
-            }
-        }
-
-        function selectCallback() {
-            var option = $('select[name="template"] :selected').val();
-            if (option == 'single_product') {
-                $('#log_to_google').prop('checked', true);
-            } else {
-                $('#log_to_google').prop('checked', false);
-            }
-            $('#log_to_google').trigger('change');
-        }
-
-        function setGoogleFieldsVisibility() {
-            if ($('input[name="log_to_google"]:checked').length > 0) {
-                $('#google-fields').show();
-            } else {
-                $('#google-fields').hide();
-            }
-        }
-
-        $(document).ready(function() {
-            $('#advanced').click(function(ev) {
-                $('#advanced-wrapper').toggle();
-            })
-            $('input[type="checkbox"]').click(function() {
-                if ($('input[type="checkbox"]:checked').length > 0) {
-                    $('#submit').prop('disabled', false);
-                } else {
-                    $('#submit').prop('disabled', true);
-                }
-            })
-        })
-    </script> -->
+<div class="text-center">
+    <button class='btn btn-primary' type="button" name="button" ng-click='submit()' ng-disabled='!fileUploaded'>Submit Product</button>
+</div>
