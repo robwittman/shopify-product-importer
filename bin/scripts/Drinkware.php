@@ -24,6 +24,7 @@ function createDrinkware($queue)
                 'Bottle' => '17.50',
                 'SmallBottle' => '13.50'
             );
+            break;
         case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' />
