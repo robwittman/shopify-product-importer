@@ -3,10 +3,10 @@
 function createDrinkware($queue)
 {
     $prices = array(
-        '30' => '15.00',
-        '20' => '14.00',
-        'Bottle' => '16.00',
-        'SmallBottle' => '12.50'
+        '30' => '29.99',
+        '20' => '24.99',
+        'Bottle' => '29.99',
+        'SmallBottle' => '26.99'
     );
 
     global $s3;
