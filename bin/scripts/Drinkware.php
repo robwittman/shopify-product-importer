@@ -19,10 +19,10 @@ function createDrinkware($queue)
     switch($shop->myshopify_domain) {
         case 'plcwholesale.myshopify.com':
             $prices = array(
-                '30' => '17',
-                '20' => '16',
-                'Bottle' => '17.50',
-                'SmallBottle' => '13.50'
+                '30' => '15',
+                '20' => '14',
+                'Bottle' => '16',
+                'SmallBottle' => '12.50'
             );
         case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
