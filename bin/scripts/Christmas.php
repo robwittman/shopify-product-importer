@@ -90,6 +90,7 @@ function createChristmas($queue, Google_Client $client)
                     '4XL' => array('price' => '35.99', 'weight' => '10.2')
                 )
             );
+            break;
         case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' />
