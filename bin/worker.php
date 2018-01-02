@@ -60,7 +60,7 @@ while (true) {
             $data = json_decode($queue->data, true);
             switch ($queue->template) {
                 case 'wholesale_apparel':
-                    $res = createWholesaleApparel($queue, $client);
+                    $res = createWholesaleApparel($queue);
                     break;
                 case 'hats':
                     $res = createHats($queue);
@@ -104,8 +104,8 @@ while (true) {
                 default:
                     throw new \Exception("Invalid template {$data['post']['template']} provided");
             }
-            error_log("Product {$res['product_id']} finished");
             $queue->finish($res);
+            error_log("Queue {$queue->id} finished. ".json_encode($res));
         } catch(\Exception $e) {
             error_log($e->getMessage());
             if ($message = json_decode($e->getMessage())) {

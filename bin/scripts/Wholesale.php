@@ -2,11 +2,11 @@
 
 use App\Result\FrontPrint;
 
-function createWholesaleApparel($queue, Google_Client $client) {
+function createWholesaleApparel($queue) {
 
     $vendor = 'Edge Promotion';
     global $s3;
-    $matrix = json_decode(file_get_contents(DIR.'/src/matrix.json'), true);
+    $matrix = json_decode(file_get_contents(DIR.'/src/new_wholesale.json'), true);
     if (!$matrix) {
         return "Unable to open matrix file";
     }
@@ -18,13 +18,9 @@ function createWholesaleApparel($queue, Google_Client $client) {
     $data = json_decode($queue->data, true);
 
     $image_data = getImages($s3, $queue->file_name);
-    var_dump($image_data);
+
     $post = $data['post'];
-    $type = null;
-    switch ($data['product']) {
-
-    }
-
+    $details = $matrix[$post['wholesale_product_type']];
     $shop = \App\Model\Shop::find($queue->shop);
     foreach ($image_data as $name) {
         if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
@@ -32,21 +28,9 @@ function createWholesaleApparel($queue, Google_Client $client) {
         }
 
         $chunks = explode('/', $name);
-        if (strtolower(substr(basename($name, ".jpg"), -4)) == "pink") {
-            $images[$garment]["Pink"] = $name;
-        } else {
-            $garment = $chunks[2];
-            if(!in_array($garment, array(
-                'Hoodie','LS','Tanks','Tees'
-            ))) {
-                continue;
-            }
-            $color = explode("-", basename($name, ".jpg"))[1];
-            $images[$garment][$color] = $name;
-        }
-    }
-    if ($shop->google_access_token) {
-        $client->setAccessToken($shop->google_access_token);
+        $fileName = $chunks[count($chunks) -1];
+        $pieces = explode('-', basename($fileName, '.jpg'));
+        $images[str_replace('_', ' ', trim($pieces[1], '_'))] = $name;
     }
 
     $tags = explode(',', trim($post['tags']));
@@ -57,7 +41,7 @@ function createWholesaleApparel($queue, Google_Client $client) {
         'body_html'     => $html,
         'tags'          => $tags,
         'vendor'        => $vendor,
-        'product_type'  => $post['product_type'],
+        'product_type'  => $details['product_type'],
         'options' => array(
             array(
                 'name' => "Size"
@@ -70,25 +54,21 @@ function createWholesaleApparel($queue, Google_Client $client) {
         'images'        => array()
     );
 
-    foreach ($img as $color => $src) {
-        $variantSettings = $matrix[$garment];
-        foreach($variantSettings['sizes'] as $size => $sizeSettings) {
+    foreach ($images as $color => $src) {
+        foreach($details['sizes'] as $size) {
             $varData = array(
-                'title' => "{$garment} \/ {$size} \/ {$color}",
-                'price' => $sizeSettings['price'],
-                'grams' => $sizeSettings['grams'],
-                'option1' => getSku($size),
+                'title' => "{$size} \/ {$color}",
+                'price' => ($size == '2XL') ? $details['price'] + $details['modifier'] : $details['price'],
+                'option1' => $size,
                 'option2' => $color,
-                'option3' => $garment,
-                'weight' => $sizeSettings['weight'],
-                'weight_unit' => $sizeSettings['weight_unit'],
+                'weight' => $details['weight'],
+                'weight_unit' => 'oz',
                 'requires_shipping' => true,
                 'inventory_management' => null,
-                'inventory_policy' => "deny",
-                'sku' => $variantSku
+                'inventory_policy' => "deny"
             );
 
-            if($garment == $post['default_product'] && $color == $post['default_color'] && $size == 'Small') {
+            if($color == $post['default_color'] && $size == 'S') {
                 array_unshift($product_data['variants'], $varData);
             } else {
                 $product_data['variants'][] = $varData;
@@ -97,7 +77,6 @@ function createWholesaleApparel($queue, Google_Client $client) {
     }
 
     $res = callShopify($shop, '/admin/products.json', 'POST', array('product' => $product_data));
-    $results['shopify_product_admin_url'] = "https://{$shop->myshopify_domain}/admin/products/{$res->product->id}";
     $variantMap = array();
     $imageUpdate = array();
 
@@ -105,39 +84,18 @@ function createWholesaleApparel($queue, Google_Client $client) {
         if(!isset($variantMap[$variant->option2])) {
             $variantMap[$variant->option2] = array();
         }
-        if (!isset($variantMap[$variant->option2][$variant->option3])) {
-            $variantMap[$variant->option2][$variant->option3] = array();
-        }
-
-        if($variant->option2 == "Royal Blue") {
-            $variant->option2 = "Royal";
-        } elseif ($variant->option2 == "Grey") {
-            $variant->option2 = "Charcoal";
-        }
-        $variantMap[$variant->option2][$variant->option3][] = $variant->id;
+        $variantMap[$variant->option2][] = $variant->id;
     }
 
-    foreach($variantMap as $color => $garments) {
-        foreach($garments as $garment => $ids) {
-            if($garment == "Tee") {
-                $search = "Tees";
-            } elseif($garment == "Long Sleeve") {
-                $search = "LS";
-            } elseif($garment == "Tank") {
-                $search = "Tanks";
-            } else {
-                $search = $garment;
-            }
-
-            $data = array(
-                'src' => "https://s3.amazonaws.com/shopify-product-importer/".$images[$search][$color],
-                'variant_ids' => $ids
-            );
-            if($garment == $post['default_product'] && $color == $post['default_color']) {
-                $data['position'] = 1;
-            }
-            $imageUpdate[] = $data;
+    foreach($variantMap as $color => $ids) {
+        $data = array(
+            'src' => "https://s3.amazonaws.com/shopify-product-importer/".$images[$color],
+            'variant_ids' => $ids
+        );
+        if($color == $post['default_color']) {
+            $data['position'] = 1;
         }
+        $imageUpdate[] = $data;
     }
 
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
@@ -146,11 +104,6 @@ function createWholesaleApparel($queue, Google_Client $client) {
             'images' => $imageUpdate
         )
     ));
-    if (isset($queue->log_to_google) && $queue->log_to_google && $shop->google_access_token) {
-        logResults($client, $shop->google_sheet_slug, $post['print_type'], $results);
-    } else {
-        error_log("No google sync...");
-    }
     $queue->finish(array($res->product->id));
     return array($res->product->id);
 }
