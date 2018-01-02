@@ -3,8 +3,8 @@
 function createDrinkware($queue)
 {
     $prices = array(
-        '30' => '29.99',
-        '20' => '24.99',
+        '30' => '34.99',
+        '20' => '29.99',
         'Bottle' => '29.99',
         'SmallBottle' => '26.99'
     );
