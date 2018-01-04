@@ -32,9 +32,7 @@ function createWholesaleApparel($queue) {
         $pieces = explode('-', basename($fileName, '.jpg'));
         $images[str_replace('_', ' ', trim($pieces[1], '_'))] = $name;
     }
-
     $tags = explode(',', trim($post['tags']));
-    $tags[] = 'apparel';
     $tags = implode(',', $tags);
     $product_data = array(
         'title'         => $post['product_title'],
@@ -86,7 +84,6 @@ function createWholesaleApparel($queue) {
         }
         $variantMap[$variant->option2][] = $variant->id;
     }
-
     foreach($variantMap as $color => $ids) {
         $data = array(
             'src' => "https://s3.amazonaws.com/shopify-product-importer/".$images[$color],
@@ -97,7 +94,6 @@ function createWholesaleApparel($queue) {
         }
         $imageUpdate[] = $data;
     }
-
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         'product' => array(
             'id' => $res->product->id,
