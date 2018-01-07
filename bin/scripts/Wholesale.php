@@ -2,8 +2,9 @@
 
 use App\Result\FrontPrint;
 
-function createWholesaleApparel($queue) {
-
+function createWholesaleApparel($queue)
+{
+    $html = '';
     $vendor = 'Edge Promotion';
     global $s3;
     $matrix = json_decode(file_get_contents(DIR.'/src/new_wholesale.json'), true);

@@ -83,7 +83,6 @@ function createTumbler($queue)
                     "sku" => "TX - T{$size} - {$skuColor} - Coated {$size}oz Tumbler"
                 );
                 if($color == 'Navy' && $size == '30') {
-                    error_log("Moving $color / $size to front of array");
                     $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
                 } else {
                     $product_data['variants'][] = $variantData;

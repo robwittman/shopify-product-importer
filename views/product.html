@@ -60,6 +60,7 @@
                                 <select class="form-control" name="template" onchange='selectCallback()'>
                                     <option value="single_product" selected>Single Product</option>
                                     <option value='wholesale_apparel'>Wholesale Apparel</option>
+                                    <option value="wholesale_tumbler">Wholesale Tumbler</option>
                                     <option value="grey_collection">Grey Collection</option>
                                     <option value="stemless">Stemless</option>
                                     <option value="hats">Hats</option>
@@ -95,6 +96,14 @@
                                     <option value="curvy_vneck_football_premium_jersey_tee">3837 - LADIES' CURVY V-NECK FOOTBALL PREMIUM JERSEY TEE</option>
                                     <option value="curvy_slouchy_french_terry_pullover">3862 - LADIES' CURVY SLOUCHY FRENCH TERRY PULLOVER</option>
                                     <option value="unisex_fine_jersey_tee">6901 - UNISEX FINE JERSEY TEE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row" style='display:none' id='tumbler_product_type'>
+                            <div class="form-group col-sm-6">
+                                <select class="form-control" name="tumbler_product_type">
+                                    <option value="etched">Standard Factory Colors (Etched)</option>
+                                    <option value="powder_coated">Custom Powder Coated (Piper Lou)</option>
                                 </select>
                             </div>
                         </div>
@@ -248,6 +257,11 @@
                 $('#wholesale_product_type').show();
             } else {
                 $('#wholesale_product_type').hide();
+            }
+            if (option == 'wholesale_tumbler') {
+                $('#tumbler_product_type').show();
+            } else {
+                $('#tumbler_product_type').hide();
             }
             $('#log_to_google').trigger('change');
         }
