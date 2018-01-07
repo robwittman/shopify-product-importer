@@ -3,10 +3,10 @@
 function createDrinkware($queue)
 {
     $prices = array(
-        '30' => '15.00',
-        '20' => '14.00',
-        'Bottle' => '16.00',
-        'SmallBottle' => '12.50'
+        '30' => '34.99',
+        '20' => '29.99',
+        'Bottle' => '29.99',
+        'SmallBottle' => '26.99'
     );
 
     global $s3;
@@ -19,10 +19,10 @@ function createDrinkware($queue)
     switch($shop->myshopify_domain) {
         case 'plcwholesale.myshopify.com':
             $prices = array(
-                '30' => '17',
-                '20' => '16',
-                'Bottle' => '17.50',
-                'SmallBottle' => '13.50'
+                '30' => '15',
+                '20' => '14',
+                'Bottle' => '16',
+                'SmallBottle' => '12.50'
             );
         case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':

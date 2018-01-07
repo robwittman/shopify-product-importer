@@ -60,9 +60,9 @@ function createTumbler($queue)
         );
 
         foreach ($imageUrls as $size => $colors) {
-            $price = 24.99;
+            $price = 29.99;
             if ($size == '30') {
-                $price = 29.99;
+                $price = 34.99;
             }
             foreach ($colors as $color => $image) {
                 $optionColor = $color;
