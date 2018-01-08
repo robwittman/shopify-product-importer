@@ -62,7 +62,7 @@ while (true) {
                 case 'wholesale_apparel':
                     $res = createWholesaleApparel($queue);
                     break;
-                case 'wholsale_tumbler':
+                case 'wholesale_tumbler':
                     $res = createWholesaleTumbler($queue);
                     break;
                 case 'hats':

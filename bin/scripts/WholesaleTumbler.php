@@ -24,7 +24,6 @@ function createWholesaleTumbler($queue) {
     $data = json_decode($queue->data, true);
 
     $image_data = getImages($s3, $queue->file_name);
-
     $post = $data['post'];
     $variantMap = array();
 
@@ -37,9 +36,19 @@ function createWholesaleTumbler($queue) {
 
         $chunks = explode('/', $name);
         $fileName = $chunks[count($chunks) -1];
+
         $pieces = explode('-', basename($fileName, '.jpg'));
-        $images[str_replace('_', ' ', trim($pieces[1], '_'))] = $name;
+        error_log(json_encode($pieces));
+        $color = trim($pieces[1],'_');
+        $size = trim($pieces[0],'_');
+        if (strpos($size, '30') === true) {
+            $size = '30oz';
+        } else {
+            $size = '20oz';
+        }
+        $images[$size][$color] = $name;
     }
+    error_log(json_encode($images), JSON_PRETTY_PRINT);
     $html = '';
     $tags = explode(',', trim($post['tags']));
     $tags = implode(',', $tags);
@@ -60,8 +69,9 @@ function createWholesaleTumbler($queue) {
         'variants'      => array(),
         'images'        => array()
     );
-    foreach ($images as $color => $sizes) {
-        foreach ($sizes as $size => $price) {
+    foreach ($images as $size => $colors) {
+        foreach ($colors as $color => $url) {
+            $price = $details[$size][$color];
             $varData = array(
                 'title' => "{$color} / {$size}",
                 'price' => $price,
@@ -74,15 +84,34 @@ function createWholesaleTumbler($queue) {
                 'inventory_policy' => 'deny',
                 'sku' => ''
             );
+            $product_data['variants'][] = $varData;
         }
     }
 
-    $res = callShopify($shop, '/admin/products.json', 'POST', array(
-        'product' => $product_data
-    ));
-
+    $res = callShopify($shop, '/admin/products.json', 'POST', array('product' => $product_data));
+    $variantMap = array();
     $imageUpdate = array();
 
+    foreach ($res->product->variants as $variant) {
+        if(!isset($variantMap[$variant->option1])) {
+            $variantMap[$variant->option1] = array();
+        }
+        if (!isset($variantMap[$variant->option1][$variant->option2])) {
+            $variantMap[$variant->option1][$variant->option2] = array();
+        }
+        $variantMap[$variant->option1][$variant->option2][] = $variant->id;
+    }
+
+    foreach ($variantMap as $size => $colors) {
+        foreach ($colors as $color => $ids) {
+            $data = array(
+                'src' => "https://s3.amazonaws.com/shopify-product-importer/".$imageUrls[$size][$colors],
+                'variant_ids' => $ids
+            );
+            $imageUpdate[] = $data;
+        }
+    }
+    
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         'product' => array(
             'id' => $res->product->id,
