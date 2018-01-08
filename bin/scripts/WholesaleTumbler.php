@@ -38,17 +38,16 @@ function createWholesaleTumbler($queue) {
         $fileName = $chunks[count($chunks) -1];
 
         $pieces = explode('-', basename($fileName, '.jpg'));
-        error_log(json_encode($pieces));
         $color = trim($pieces[1],'_');
         $size = trim($pieces[0],'_');
-        if (strpos($size, '30') === true) {
+        if (strpos($size, '30') !== false) {
             $size = '30oz';
         } else {
             $size = '20oz';
         }
         $images[$size][$color] = $name;
     }
-    error_log(json_encode($images), JSON_PRETTY_PRINT);
+
     $html = '';
     $tags = explode(',', trim($post['tags']));
     $tags = implode(',', $tags);
@@ -71,7 +70,7 @@ function createWholesaleTumbler($queue) {
     );
     foreach ($images as $size => $colors) {
         foreach ($colors as $color => $url) {
-            $price = $details[$size][$color];
+            $price = $details['sizes'][$size];
             $varData = array(
                 'title' => "{$color} / {$size}",
                 'price' => $price,
@@ -101,17 +100,16 @@ function createWholesaleTumbler($queue) {
         }
         $variantMap[$variant->option1][$variant->option2][] = $variant->id;
     }
-
     foreach ($variantMap as $size => $colors) {
         foreach ($colors as $color => $ids) {
+            $color = str_replace(' ', '_', $color);
             $data = array(
-                'src' => "https://s3.amazonaws.com/shopify-product-importer/".$imageUrls[$size][$colors],
+                'src' => "https://s3.amazonaws.com/shopify-product-importer/".$images[$size][$color],
                 'variant_ids' => $ids
             );
             $imageUpdate[] = $data;
         }
     }
-    
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         'product' => array(
             'id' => $res->product->id,
