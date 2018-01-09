@@ -161,6 +161,7 @@ function createGreyCollection($queue, Google_Client $client)
         'body_html' => $html,
         'tags' => $tags,
         'vendor' => $vendor,
+        'product_type' => 'Apparel',
         'options' => array(
             array(
                 'name' => "Size"

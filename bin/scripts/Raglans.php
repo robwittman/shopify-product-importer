@@ -100,7 +100,7 @@ function createRaglans($queue)
     if ($shop->description) {
         $html = $shop->description;
     }
-    
+
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];
         $specs = explode('_-_', $productData);
@@ -115,6 +115,7 @@ function createRaglans($queue)
         'body_html' => $html,
         'tags' => $tags,
         'vendor' => $vendor,
+        'product_type' => 'Apparel',
         'options' => array(
             array(
                 'name' => "Size"

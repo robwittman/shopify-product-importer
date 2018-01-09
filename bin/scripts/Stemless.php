@@ -56,6 +56,7 @@ function createStemless($queue) {
         'body_html' => $html,
         'tags' => $tags,
         'vendor' => 'ISIKEL',
+        'product_type' => 'Stemless Wine Cup',
         'options' => array(
             array(
                 'name' => "Color"

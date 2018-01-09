@@ -56,7 +56,7 @@ function createWholesaleTumbler($queue) {
         'body_html'     => $html,
         'tags'          => $tags,
         'vendor'        => $vendor,
-        'product_type'  => $details['product_type'],
+        'product_type'  => 'Tumbler',
         'options' => array(
             array(
                 'name' => "Size"

@@ -69,6 +69,7 @@ function createUvWithBottles($queue)
         'body_html' => $html,
         'tags' => $tags,
         'vendor' => 'ISIKEL',
+        'product_type' => 'UV Tumbler',
         'options' => array(
             array(
                 'name' => "Size"

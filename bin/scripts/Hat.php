@@ -71,7 +71,7 @@ function createHats($queue) {
         'body_html' => $html,
         'tags' => $tags,
         'vendor' => 'Edge Promotions',
-        'product_type' => 'hat',
+        'product_type' => 'Headware',
         'options' => array(
             array(
                 'name' => "Style"

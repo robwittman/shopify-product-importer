@@ -99,7 +99,7 @@ function processQueue($queue, Google_Client $client) {
             'body_html'     => $html,
             'tags'          => $tags,
             'vendor'        => $vendor,
-            'product_type'  => $post['product_type'],
+            'product_type'  => 'Apparel',
             'options' => array(
                 array(
                     'name' => "Size"

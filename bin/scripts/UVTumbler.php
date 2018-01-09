@@ -57,7 +57,7 @@ function createUvTumbler($queue)
             'body_html' => $html,
             'tags' => $post['tags'],
             'vendor' => "ISIKEL",
-            'product_type' => $post['product_type'],
+            'product_type' => 'UV Tumbler',
             'options' => array(
                 array(
                     'name' => "Size"

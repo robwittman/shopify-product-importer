@@ -60,6 +60,7 @@ function createFlasks($queue)
         'body_html' => $html,
         'tags' => $tags,
         'vendor' => 'ISIKEL',
+        'product_type' => 'Flasks',
         'options' => array(
             array(
                 'name' => "Szie"
