@@ -4,9 +4,7 @@ function createDrinkware($queue)
 {
     $prices = array(
         '30' => '39.99',
-        '20' => '24.99',
-        'Bottle' => '29.99',
-        'SmallBottle' => '26.99'
+        '20' => '24.99'
     );
 
     global $s3;
@@ -20,9 +18,7 @@ function createDrinkware($queue)
         case 'plcwholesale.myshopify.com':
             $prices = array(
                 '30' => '15',
-                '20' => '14',
-                'Bottle' => '16',
-                'SmallBottle' => '12.50'
+                '20' => '14'
             );
         case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
@@ -94,19 +90,11 @@ function createDrinkware($queue)
             switch ($size) {
                 case '30':
                     $option1 = '30oz Tumbler';
-                    $sku = "TX - T30 - {$sku} - Coated 30oz Tumbler";
+                    $sku = str_replace('.zip', '', $data['file_name']).' - T30 - '.$sku;
                     break;
                 case '20':
                     $option1 = '20oz Tumbler';
-                    $sku = "TX - T20 - {$sku} - Coated 20oz Tumbler";
-                    break;
-                case 'Bottle':
-                    $option1 = '40oz Water Bottle';
-                    $sku = "TX - T40 - {$sku} - Coated 40oz Water Bottle";
-                    break;
-                case 'SmallBottle':
-                    $option1 = '16oz Water Bottle';
-                    $sku = "TX - T16 - {$sku} - Coated 16oz Water Bottle";
+                    $sku = str_replace('.zip', '', $data['file_name']).' - T20 - '.$sku;
                     break;
             }
             $variantData = array(

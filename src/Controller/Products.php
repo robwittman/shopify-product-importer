@@ -58,6 +58,7 @@ class Products
             return $response->withRedirect('/products');
         }
 
+        $passedFileName = $file['name'];
         $tmpName = $file['tmp_name'];
         $fileName = hash('sha256', uniqid(true));
         $credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
@@ -93,7 +94,8 @@ class Products
 
             $data = array(
                 'file' => $hash,
-                'post' => $request->getParsedBody()
+                'post' => $request->getParsedBody(),
+                'file_name' => $passedFileName
             );
             $data['post']['shop'] = $shopId;
             $queue = new Queue();
