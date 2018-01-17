@@ -49,7 +49,6 @@ function createStemless($queue) {
         $imageUrls[$color] = $name;
     }
     $tags = explode(',', trim($post['tags']));
-    $tags[] = 'wine cup';
     $tags = implode(',', $tags);
     $product_data = array(
         'title' => $post['product_title'],
