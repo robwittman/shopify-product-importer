@@ -244,3 +244,9 @@ function compressValues($results, $printType)
     }
     return $return;
 }
+
+function getSkuFromFileName($fileName)
+{
+    $parts = explode('-', $fileName);
+    return implode(array($parts[0], $parts[1]), '-');
+}

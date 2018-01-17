@@ -85,7 +85,7 @@ function createStemless($queue) {
             'requires_shipping' => true,
             'inventory_management' => null,
             'inventory_policy' => 'deny',
-            'sku' => str_replace('.zip', '', $data['file_name']).' - W12 - '.$color
+            'sku' => getSkuFromFileName($data['file_name']).' - W12 - '.$color
         );
         if ($color == 'Black') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);

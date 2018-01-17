@@ -89,18 +89,18 @@ function createDrinkware($queue)
             switch ($size) {
                 case '30':
                     $option1 = '30oz Tumbler';
-                    $sku = str_replace('.zip', '', $data['file_name']).' - T30 - '.$sku;
+                    $sku = getSkuFromFileName($data['file_name']).' - T30 - '.$sku;
                     break;
                 case '20':
                     $option1 = '20oz Tumbler';
-                    $sku = str_replace('.zip', '', $data['file_name']).' - T20 - '.$sku;
+                    $sku = getSkuFromFileName($data['file_name']).' - T20 - '.$sku;
                     break;
             }
             $variantData = array(
-                'title' => $option1. ' / '.$color,
+                'title' => $option1. ' / '.str_replace('_', ' ', $color),
                 'price' => $prices[$size],
                 'option1' => $option1,
-                'option2' => $color,
+                'option2' => str_replace('_', ' ', $color),
                 'weight' => '1.1',
                 'weight_unit' => 'lb',
                 'requires_shipping' => true,
