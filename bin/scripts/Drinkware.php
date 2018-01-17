@@ -3,7 +3,7 @@
 function createDrinkware($queue)
 {
     $prices = array(
-        '30' => '39.99',
+        '30' => '29.99',
         '20' => '24.99'
     );
 
@@ -12,7 +12,7 @@ function createDrinkware($queue)
     $data = json_decode($queue->data, true);
     $post = $data['post'];
     $shop = \App\Model\Shop::find($queue->shop);
-    $image_data = getImages($s3, $queue->file_name);
+    $image_data = array_reverse(getImages($s3, $queue->file_name));
     $imageUrls = [];
     switch($shop->myshopify_domain) {
         case 'plcwholesale.myshopify.com':
@@ -108,7 +108,7 @@ function createDrinkware($queue)
                 'inventory_policy' => 'deny',
                 'sku' => $sku
             );
-            if ($color == 'Navy' && $size == '30') {
+            if ($color == 'Black' && $size == '30') {
                 $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
             } else {
                 $product_data['variants'][] = $variantData;
