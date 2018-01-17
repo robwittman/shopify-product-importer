@@ -24,7 +24,7 @@ function createStemless($queue) {
 <h5>Product Description</h5>
 <p>You are going to <strong>LOVE<span> </span></strong>this stemless wine glass! Perfect addition for to your wine drinking collection! Comes in tons of cute colors and is a must have. </p>
 <ul>
-<li>9 oz. drink capacity</li>
+<li>12 oz. drink capacity</li>
 <li>Double-walled, vacuum insulated</li>
 <li>Keeps beverages cold for 24 hours, hot for 12 hours</li>
 <li>Comes with lid </li>
