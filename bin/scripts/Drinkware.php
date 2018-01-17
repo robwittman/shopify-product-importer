@@ -33,7 +33,6 @@ function createDrinkware($queue)
 <p>You are going to <strong>LOVE<span> </span></strong>this awesome drink ware! Perfect addition for anybody who needs a cold/warm drink on the go. </p>
 <ul>
 <li>Tumblers available in 30oz and 20oz, comes with lid</li>
-<li>Water Bottles available in 40oz and 16oz, comes with twist caps</li>
 <li>Vacuum sealed lid insulates cold drinks for 24 hours and hot drinks for 12 hours. Double wall feature eliminates condensation and retains temperature</li>
 <li>Stainless steel with a powder coat finish provides maximum durability against damages</li>
 <li>Narrow mouth opening is perfect to drink from without spilling and narrow bottom fits standard cupholders. </li>
@@ -129,12 +128,6 @@ function createDrinkware($queue)
                 break;
             case '20oz Tumbler':
                 $size = '20';
-                break;
-            case '40oz Water Bottle':
-                $size = 'Bottle';
-                break;
-            case '16oz Water Bottle':
-                $size = 'SmallBottle';
                 break;
         }
         $image = array(
