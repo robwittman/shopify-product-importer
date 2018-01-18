@@ -55,7 +55,7 @@ function createStemless($queue) {
         'body_html' => $html,
         'tags' => $tags,
         'vendor' => 'Iconic Imprint',
-        'product_type' => 'Stemless Wine Cup',
+        'product_type' => '',
         'options' => array(
             array(
                 'name' => "Color"
