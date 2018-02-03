@@ -58,6 +58,7 @@ function createDrinkware($queue)
         $color = $specs[1];
         $imageUrls[$size][$color] = $name;
     }
+    error_log(json_encode($imageUrls, JSON_PRETTY_PRINT));
     $tags = explode(',', trim($post['tags']));
     $tags[] = 'drinkware';
     $tags = implode(',', $tags);
@@ -85,7 +86,7 @@ function createDrinkware($queue)
             if ($color == 'Cyan') {
                 $sku = 'Seafoam';
             }
-            $sku = str_replace('_', '', $sku);
+            $sku = str_replace('_', ' ', $sku);
             switch ($size) {
                 case '30':
                     $option1 = '30oz Tumbler';
@@ -121,7 +122,7 @@ function createDrinkware($queue)
     $imageUpdate = array();
     foreach ($res->product->variants as $variant) {
         $size = $variant->option1;
-        $color = $variant->option2;
+        $color = str_replace(' ', '_', $variant->option2);
         switch ($size) {
             case '30oz Tumbler':
                 $size = '30';

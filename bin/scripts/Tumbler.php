@@ -25,7 +25,7 @@ function createTumbler($queue)
             $color = $specs[1];
             $imageUrls[$size][$color] = $name;
         }
-
+        error_log(json_encode($imageUrls));
         switch ($shop->myshopify_domain) {
             case 'piper-lou-collection.myshopify.com':
             case 'hopecaregive.myshopify.com':
