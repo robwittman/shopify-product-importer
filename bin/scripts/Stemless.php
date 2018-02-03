@@ -79,13 +79,13 @@ function createStemless($queue) {
         $variantData = array(
             'title' => $color,
             'price' => $price,
-            'option1' => $color,
+            'option1' => str_replace('_', ' ', $color),
             'weight' => '10',
             'weight_unit' => 'oz',
             'requires_shipping' => true,
             'inventory_management' => null,
             'inventory_policy' => 'deny',
-            'sku' => getSkuFromFileName($data['file_name']).' - W12 - '.$color
+            'sku' => getSkuFromFileName($data['file_name']).' - W12 - '.str_replace('_', ' ', $color)
         );
         if ($color == 'Black') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
@@ -98,7 +98,7 @@ function createStemless($queue) {
     ));
     $imageUpdate = array();
     foreach ($res->product->variants as $variant) {
-        $color = $variant->option1;
+        $color = str_replace(' ', '_', $variant->option1);
         $image = array(
             'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$color]}",
             'variant_ids' => array($variant->id)

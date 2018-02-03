@@ -26,7 +26,7 @@ function createWholesaleTumbler($queue) {
     $image_data = getImages($s3, $queue->file_name);
     $post = $data['post'];
     $variantMap = array();
-
+    error_log(json_encode($image_data, JSON_PRETTY_PRINT));
     $details = $products[$post['tumbler_product_type']];
     $shop = \App\Model\Shop::find($queue->shop);
     foreach ($image_data as $name) {
