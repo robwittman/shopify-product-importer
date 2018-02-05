@@ -146,12 +146,12 @@
         "modifier": "13.50"
     },
     "ladies_jersey_long": {
-        "colors": [],
-        "sizes": [],
+        "colors": ["Black", "Charcoal", "Garnet", "Heather", "Hot Pink", "Jade", "Kelly", "Navy", "Plum", "Purple", "Red", "Royal", "White"],
+        "sizes": ["S", "M", "L", "XL", "2XL"],
         "product_type": "3588 - LADIES PREMIUM JERSEY LONG SLV",
-        "weight": "",
-        "price": "",
+        "weight": "4.5",
+        "price": "15.00",
         "skuModifier": "LAT3588",
-        "modifier": ""
+        "modifier": "2.00"
     }
 }
