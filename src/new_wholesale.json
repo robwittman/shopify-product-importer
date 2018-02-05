@@ -86,7 +86,7 @@
         "product_type" : "3804 - LADIES' CURVY PREMIUM JERSEY TEE",
         "weight" : "5",
         "price": "17.00",
-        "skuModifier": "LAT3804",
+        "skuModifier": "LAT3804"
     },
     "curvy_vneck_premium_jersey_tee": {
         "colors" : ["Carolina Blue", "Granite Heather", "Papaya", "Royal", "Vintage Purple"],
@@ -94,7 +94,7 @@
         "product_type" : "3807 - LADIES' CURVY V-NECK PREMIUM JERSEY TEE",
         "weight" : "5",
         "price": "17.00",
-        "skuModifier": "LAT3807",
+        "skuModifier": "LAT3807"
     },
     "curvy_premium_jersey_tank": {
         "colors" : ["Black", "Carolina Blue", "Chill", "Granite Heather", "Hot Pink", "Navy", "Papaya", "Red", "Vintage Smoke", "White"],
@@ -102,7 +102,7 @@
         "product_type" : "3821 - LADIES' CURVY PREMIUM JERSEY TANK",
         "weight" : "5",
         "price": "17.00",
-        "skuModifier": "LAT3821",
+        "skuModifier": "LAT3821"
     },
     "curvy_baseball_premium_jersey_tee": {
         "colors" : ["Vn Heather/Vn Burgundy", "Vn Heather/Vn Hot Pink", "Vn Heather/Vn Navy", "Vn Heather/Vn Purple", "Vn Heather/Vn Royal", "Vn Heather/Vn Red", "Vn Heather/Vn Smoke"],
@@ -110,7 +110,7 @@
         "product_type" : "3830 - LADIES' CURVY BASEBALL PREMIUM JERSEY TEE",
         "weight" : "5",
         "price": "18.00",
-        "skuModifier": "LAT3830",
+        "skuModifier": "LAT3830"
     },
     "curvy_vneck_soccer_ringer_premium_jersey_tee": {
         "colors" : ["White", "Royal", "Red", "Navy", "Heather", "Green", "Granite", "Black"],
@@ -118,7 +118,7 @@
         "product_type" : "3832 - LADIES' CURVY V-NECK SOCCER RINGER PREMIUM JERSEY TEE",
         "weight" : "5",
         "price": "18.00",
-        "skuModifier": "LAT3832",
+        "skuModifier": "LAT3832"
     },
     "curvy_vneck_football_premium_jersey_tee": {
         "colors" : ["White", "Smoke", "Royal", "Red", "Purple", "Pink", "Navy", "Heather", "Granite", "Black"],
@@ -126,7 +126,7 @@
         "product_type" : "3837 - LADIES' CURVY V-NECK FOOTBALL PREMIUM JERSEY TEE",
         "weight" : "5",
         "price": "18.00",
-        "skuModifier": "LAT3837",
+        "skuModifier": "LAT3837"
     },
     "curvy_slouchy_french_terry_pullover": {
         "colors" : ["Black", "Hot Pink", "Vintage Smoke", "White"],
@@ -134,7 +134,7 @@
         "product_type" : "3862 - LADIES' CURVY SLOUCHY FRENCH TERRY PULLOVER",
         "weight" : "5",
         "price": "24.00",
-        "skuModifier": "LAT3862",
+        "skuModifier": "LAT3862"
     },
     "unisex_fine_jersey_tee": {
         "colors" : ["Aqua", "Black", "Caribbean", "Charcoal", "Chill", "Fuchsia", "Garnet", "Heather", "Hot Pink", "Kelly", "Key Lime", "Lavender", "Light Blue", "Navy", "Papaya", "Pink", "Purple", "Red", "Royal", "White"],
