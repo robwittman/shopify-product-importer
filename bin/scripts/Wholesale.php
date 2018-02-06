@@ -72,6 +72,9 @@ function createWholesaleApparel($queue)
                 'inventory_policy' => "deny",
                 'sku' => "PL - {$designId} - {$details['skuModifier']} - {$size} - {$color}"
             );
+            if ($post['wholesale_product_type'] == 'front_back_unisex_tee') {
+                $varData['sku'] = 'FBP - '.$varData['sku'];
+            }
 
             if($color == $post['default_color'] && $size == 'S') {
                 array_unshift($product_data['variants'], $varData);
