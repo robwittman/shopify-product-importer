@@ -160,7 +160,7 @@
         "product_type" : "6901 - (FRONT/BACK) UNISEX FINE JERSEY TEE",
         "weight" : "4.5",
         "price": "12.50",
-        "skuModifier": "front_back_unisex_tee",
+        "skuModifier": "LAT6901",
         "modifier": "1.00"
     }
 }
