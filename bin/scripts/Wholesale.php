@@ -19,6 +19,7 @@ function createWholesaleApparel($queue)
     $data = json_decode($queue->data, true);
 
     $image_data = getImages($s3, $queue->file_name);
+    $designId = null;
 
     $post = $data['post'];
     $details = $matrix[$post['wholesale_product_type']];
@@ -26,6 +27,10 @@ function createWholesaleApparel($queue)
     foreach ($image_data as $name) {
         if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
             continue;
+        }
+
+        if (is_null($designId)) {
+            $designId = getDesignIdFromFilename($name);
         }
 
         $chunks = explode('/', $name);
@@ -64,7 +69,8 @@ function createWholesaleApparel($queue)
                 'weight_unit' => 'oz',
                 'requires_shipping' => true,
                 'inventory_management' => null,
-                'inventory_policy' => "deny"
+                'inventory_policy' => "deny",
+                'sku' => "PL - {$designId} - {$details['skuModifier']} - {$size} - {$color}"
             );
 
             if($color == $post['default_color'] && $size == 'S') {

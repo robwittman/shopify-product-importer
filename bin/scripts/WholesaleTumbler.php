@@ -26,7 +26,6 @@ function createWholesaleTumbler($queue) {
     $image_data = getImages($s3, $queue->file_name);
     $post = $data['post'];
     $variantMap = array();
-    error_log(json_encode($image_data, JSON_PRETTY_PRINT));
     $details = $products[$post['tumbler_product_type']];
     $shop = \App\Model\Shop::find($queue->shop);
     foreach ($image_data as $name) {
@@ -68,6 +67,10 @@ function createWholesaleTumbler($queue) {
         'variants'      => array(),
         'images'        => array()
     );
+    $skuModifier = '';
+    if ($post['tumbler_product_type'] == 'powder_coated') {
+        $skuModifier = 'P';
+    }
     foreach ($images as $size => $colors) {
         foreach ($colors as $color => $url) {
             $price = $details['sizes'][$size];
@@ -81,7 +84,7 @@ function createWholesaleTumbler($queue) {
                 'requires_shipping' => true,
                 'inventory_management' => null,
                 'inventory_policy' => 'deny',
-                'sku' => getSkuFromFileName($data['file_name']).' - T'.str_replace('oz', '', $size).' - '.str_replace('_', ' ', $color)
+                'sku' => getSkuFromFileName($data['file_name']).' - T'.str_replace('oz', '', $size).$skuModifier.' - '.str_replace('_', ' ', $color)
             );
             $product_data['variants'][] = $varData;
         }

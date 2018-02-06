@@ -13,6 +13,8 @@ function createDrinkware($queue)
     $post = $data['post'];
     $shop = \App\Model\Shop::find($queue->shop);
     $image_data = array_reverse(getImages($s3, $queue->file_name));
+    $designId = null;
+    error_log(json_encode($image_data, JSON_PRETTY_PRINT));
     $imageUrls = [];
     switch($shop->myshopify_domain) {
         case 'plcwholesale.myshopify.com':
@@ -58,7 +60,6 @@ function createDrinkware($queue)
         $color = $specs[1];
         $imageUrls[$size][$color] = $name;
     }
-    error_log(json_encode($imageUrls, JSON_PRETTY_PRINT));
     $tags = explode(',', trim($post['tags']));
     $tags[] = 'drinkware';
     $tags = implode(',', $tags);
