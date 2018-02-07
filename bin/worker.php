@@ -104,6 +104,9 @@ while (true) {
                 case 'grey_collection':
                     $res = createGreyCollection($queue, $client);
                     break;
+                case 'coffee_mug':
+                    $res = createCoffeeMug($queue);
+                    break;
                 default:
                     throw new \Exception("Invalid template {$data['post']['template']} provided");
             }

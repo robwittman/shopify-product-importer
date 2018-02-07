@@ -1,7 +1,7 @@
 <?php
 
-function createStemless($queue) {
-    $price = '24.99';
+function createCoffeeMug($queue) {
+    $price = '19.99';
     global $s3;
     $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
@@ -22,14 +22,11 @@ function createStemless($queue) {
 <li>Please contact us at<span> </span><strong>info@piperloucollection.com</strong><span> </span>with any questions. </li>
 </ul>
 <h5>Product Description</h5>
-<p>You are going to <strong>LOVE<span> </span></strong>this stemless wine glass! Perfect addition for to your wine drinking collection! Comes in tons of cute colors and is a must have. </p>
+<p>You are going to <strong>LOVE<span> </span></strong>this coffee mug! Perfect addition for to your coffee drinking collection! Comes in tons of cute colors and is a must have. </p>
 <ul>
-<li>12 oz. drink capacity</li>
-<li>Double-walled, vacuum insulated</li>
-<li>Keeps beverages cold for 24 hours, hot for 12 hours</li>
-<li>Comes with lid </li>
-<li>Stainless steel exterior</li>
-<li>Hand wash Only</li>
+<li>11 oz. drink capacity</li>
+<li>Material - Ceramic</li>
+<li>Size - 3 3/4''</li>
 </ul>";
             break;
         case 'hopecaregive.myshopify.com':
@@ -54,8 +51,8 @@ function createStemless($queue) {
         'title' => $post['product_title'],
         'body_html' => $html,
         'tags' => $tags,
-        'vendor' => 'Iconic Imprint',
-        'product_type' => 'Stemless Wine Cup',
+        'vendor' => 'ISIKEL',
+        'product_type' => 'Coffee Mug',
         'options' => array(
             array(
                 'name' => "Color"
@@ -85,9 +82,9 @@ function createStemless($queue) {
             'requires_shipping' => true,
             'inventory_management' => null,
             'inventory_policy' => 'deny',
-            'sku' => getSkuFromFileName($data['file_name']).' - W12 - '.str_replace('_', ' ', $color)
+            'sku' => 'PL - '.getSkuFromFileName($data['file_name']).' - C11 - '.$color
         );
-        if ($color == 'Navy') {
+        if ($color == 'Blue') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
         } else {
             $product_data['variants'][] = $variantData;
