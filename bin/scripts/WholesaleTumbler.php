@@ -5,8 +5,8 @@ function createWholesaleTumbler($queue) {
         'etched' => array(
             'colors' => array('Black', 'Blue', 'Light Blue', 'Light Purple', 'Pink', 'Red', 'Teal'),
             'sizes' => array(
-                '20oz' => '13.50',
-                '30oz' => '15.00'
+                '20oz' => '15.00',
+                '30oz' => '16.00'
             )
         ),
         'powder_coated' => array(
