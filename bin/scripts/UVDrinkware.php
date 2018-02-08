@@ -73,11 +73,13 @@ function createUvDrinkware($queue)
             switch ($size) {
                 case '30':
                     $option1 = '30oz Tumbler';
-                    $sku = "TX (UV PRINTED) - T30 - {$sku} - Coated 30oz Tumbler";
+                    // $sku = "TX (UV PRINTED) - T30 - {$sku} - Coated 30oz Tumbler";
+                    $sku = 'PL - '.getSkuFromFileName($data['file_name']).' - UV30 - '.$sku;
                     break;
                 case '20':
                     $option1 = '20oz Tumbler';
-                    $sku = "TX (UV PRINTED) - T20 - {$sku} - Coated 20oz Tumbler";
+                    // $sku = "TX (UV PRINTED) - T20 - {$sku} - Coated 20oz Tumbler";
+                    $sku = 'PL - '.getSkuFromFileName($data['file_name']).' - UV20 - '.$sku;
                     break;
             }
             $variantData = array(
