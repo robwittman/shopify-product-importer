@@ -64,7 +64,6 @@ function createMasculineHats($queue)
     }
 
     $tags = explode(',', trim($post['tags']));
-    $tags[] = 'hat';
     $tags = implode(',', $tags);
     $product_data = array(
         'title' => $post['product_title'],
