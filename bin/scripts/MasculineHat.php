@@ -64,6 +64,9 @@ function createMasculineHats($queue)
     }
 
     $tags = explode(',', trim($post['tags']));
+    if ($shop->myshopify_domain !== 'plcwholesale.myshopify.com') {
+        $tags[] = 'hat';
+    }
     $tags = implode(',', $tags);
     $product_data = array(
         'title' => $post['product_title'],
