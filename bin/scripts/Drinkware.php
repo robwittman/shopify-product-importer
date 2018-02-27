@@ -53,11 +53,15 @@ function createDrinkware($queue)
     if ($shop->description) {
         $html = $shop->description;
     }
+    $hasNavy = false;
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];
         $specs = explode('_-_', $productData);
         $size = $specs[0];
         $color = $specs[1];
+        if ($color == 'Navy') {
+            $hasNavy = true;
+        }
         $imageUrls[$size][$color] = $name;
     }
     $tags = explode(',', trim($post['tags']));
@@ -110,7 +114,7 @@ function createDrinkware($queue)
                 'inventory_policy' => 'deny',
                 'sku' => $sku
             );
-            if ($color == 'Navy' && $size == '30') {
+            if ($color == ($hasNavy ? 'Navy' : 'Black') && $size == '30') {
                 $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
             } else {
                 $product_data['variants'][] = $variantData;
