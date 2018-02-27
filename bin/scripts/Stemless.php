@@ -71,6 +71,11 @@ function createStemless($queue) {
             $store_name = 'Piper Lou - ';
             break;
     }
+    if ($post['stemless_product_type'] && $post['stemless_product_type'] == 'etched') {
+        $slug = 'W12M';
+    } else {
+        $slug = 'W12G';
+    }
     foreach ($imageUrls as $color => $url) {
         $sku = $color;
         if ($color == 'Grey') {
@@ -85,7 +90,7 @@ function createStemless($queue) {
             'requires_shipping' => true,
             'inventory_management' => null,
             'inventory_policy' => 'deny',
-            'sku' => getSkuFromFileName($data['file_name']).' - W12 - '.str_replace('_', ' ', $color)
+            'sku' => getSkuFromFileName($data['file_name']).' - '.$slug.' - '.str_replace('_', ' ', $color)
         );
         if ($color == 'Navy') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);

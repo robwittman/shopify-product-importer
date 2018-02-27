@@ -101,6 +101,14 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="row" style='display:none' id='stemless_product_type'>
+                            <div class="form-group col-sm-6">
+                                <select class="form-control" name="stemless_product_type">
+                                    <option value="etched">Standard Factory Colors (Etched)</option>
+                                    <option value="powder_coated">Custom Powder Coated (Piper Lou)</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
                                 <label class='control-label'>Showcase Color</label>
@@ -256,6 +264,11 @@
                 $('#tumbler_product_type').show();
             } else {
                 $('#tumbler_product_type').hide();
+            }
+            if (option == 'stemless') {
+                $('#stemless_product_type').show();
+            } else {
+                $('#stemless_product_type').hide();
             }
             $('#log_to_google').trigger('change');
         }
