@@ -251,6 +251,9 @@ function compressValues($results, $printType)
 function getSkuFromFileName($fileName)
 {
     $parts = explode('-', str_replace('.zip', '', $fileName));
+    if (count($parts) == 1) {
+        return $parts[0];
+    }
     return implode(array($parts[0], $parts[1]), '-');
 }
 
