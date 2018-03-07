@@ -22,14 +22,7 @@ function createUvDrinkware($queue)
             );
         case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
-            $html = "<meta charset='utf-8' />
-                    <ul>
-                    <li>2x heat &amp; cold retention (compared to plastic tumblers).</li>
-                    <li>Double-walled vacuum insulation - Keeps Hot and Cold. </li>
-                    <li>Fits most cup holders, Clear lid to protect from spills. </li>
-                    <li>Sweat Free Design allows for a Strong Hold. </li>
-                    <li>These tumblers will ship separately from our distributor in Texas. </li>
-                    </ul>";
+            $html = "<meta charset=\"utf-8\">\n<h5>Shipping & Returns<\/h5>\n<p>We want you to<span> <\/span><strong>LOVE<\/strong><span> <\/span>your Piper Lou items! They will ship out within 4-10 days from your order. If you're not 100% satisfied within the first 30 days of receiving your product, let us know and we'll make it right.<\/p>\n<ul>\n<li>Hassle free return\/exchange policy! <\/li>\n<li>Please contact us at<span> <\/span><strong>info@piperloucollection.com<\/strong><span> <\/span>with any questions. <\/li>\n<\/ul>\n<h5>Product Description<\/h5>\n<p>You are going to <strong>LOVE<span> <\/span><\/strong>this awesome drink ware! Perfect addition for anybody who needs a cold\/warm drink on the go. <\/p>\n<ul>\n<li>NOT A DECAL! This tumbler is 3D UV Color Printed. We are one of the only companies in the world physically printing the color and design onto the cup. <\/li>\n<li>Tumblers available in 30oz and 20oz, comes with lid<\/li>\n<li>Vacuum sealed lid insulates cold drinks for 24 hours and hot drinks for 12 hours. Double wall feature eliminates condensation and retains temperature<\/li>\n<li>Stainless steel with a powder coat finish provides maximum durability against damages<\/li>\n<li>Narrow mouth opening is perfect to drink from without spilling and narrow bottom fits standard cupholders. <\/li>\n<li>Hand wash only, do not put in dishwasher<\/li>\n<\/ul>";
             break;
         case 'hopecaregive.myshopify.com':
             $html = '<p><img src="https://cdn.shopify.com/s/files/1/1255/4519/files/16128476_220904601702830_291172195_n.jpg?9775130656601803865"></p><p>Designed, printed, and shipped in the USA!</p>';
