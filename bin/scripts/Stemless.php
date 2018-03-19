@@ -1,7 +1,7 @@
 <?php
 
 function createStemless($queue) {
-    $price = '24.99';
+    $price = '26.99';
     global $s3;
     $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
