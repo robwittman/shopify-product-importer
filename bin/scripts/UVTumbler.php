@@ -71,7 +71,7 @@ function createUvTumbler($queue)
         );
 
         foreach ($imageUrls as $size => $colors) {
-            $price = 34.99;
+            $price = 37.99;
             if ($size == '30') {
                 $price = 39.99;
             }
