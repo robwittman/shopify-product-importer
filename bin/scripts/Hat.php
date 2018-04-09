@@ -12,7 +12,7 @@ function createHats($queue) {
     $html = '<p></p>';
     switch($shop->myshopify_domain) {
         case 'plcwholesale.myshopify.com':
-            $price = '12.50';
+            $price = '14.95';
         case 'piper-lou-collection.myshopify.com':
         case 'importer-testing.myshopify.com':
             $html = "<meta charset='utf-8' /><meta charset='utf-8' />
