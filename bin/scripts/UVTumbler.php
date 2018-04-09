@@ -91,10 +91,9 @@ function createUvTumbler($queue)
                     "requires_shipping" => true,
                     "inventory_management" => null,
                     "inventory_policy" => "deny",
-                    "sku" => "TX (UV PRINTED) - T{$size} - {$skuColor} - Coated {$size}oz Tumbler"
+                    "sku" => "PL - T{$size} - {$skuColor}"
                 );
-                if($color == 'Navy' && $size == '30') {
-                    error_log("Moving $color / $size to front of array");
+                if($color == 'Black' && $size == '30') {
                     $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
                 } else {
                     $product_data['variants'][] = $variantData;
