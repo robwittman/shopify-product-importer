@@ -22,7 +22,8 @@
         "illuminate/database": "^5.3",
         "robmorgan/phinx": "^0.6.5",
         "aws/aws-sdk-php": "^3.20",
-        "google/apiclient": "^2.2"
+        "google/apiclient": "^2.2",
+        "deployer/deployer": "^6.1"
     },
     "autoload" : {
         "psr-4" : {
