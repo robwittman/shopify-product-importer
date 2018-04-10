@@ -9,11 +9,22 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 class Products
 {
+    protected $view;
+    protected $flash;
+    protected $rabbit;
+    protected $s3;
+
     public function __construct($view, $flash, $rabbit)
     {
         $this->view = $view;
         $this->flash = $flash;
         $this->rabbit = $rabbit;
+        $credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
+        $this->s3 = new \Aws\S3\S3Client([
+            'version' => 'latest',
+            'region' => 'us-east-1',
+            'credentials' => $credentials
+        ]);
     }
 
     public function show_form($request, $response, $arguments)
@@ -41,12 +52,7 @@ class Products
 
     public function create($request, $response, $arguments)
     {
-        $start = time();
-        $files = $request->getUploadedFiles();
-
-        $hash = hash('sha256', uniqid(true));
-        $path = "/tmp/{$hash}";
-
+        $body = $request->getParsedBody();
         if (empty($_FILES['zip_file'])) {
             $this->flash->addMessage('error', 'You have to upload a .zip file!');
             return $response->withRedirect('/products');
@@ -57,16 +63,93 @@ class Products
             $this->flash->addMessage('error', "There was an error uploading your .zip file. Code {$file['error']}");
             return $response->withRedirect('/products');
         }
+        error_log(json_encode($body));
+        if ($body['template'] == 'staple_wholesale_apparel') {
+            $this->createBatchProduct($request, $response, $arguments);
+        } else {
+            $this->createSingleProduct($request, $response, $arguments);
+        }
+    }
 
+    protected function createBatchProduct($request, $response, $arguments)
+    {
+        error_log("Batch creating");
+        $file = $_FILES['zip_file'];
+        $passedFileName = $file['name'];
+        $hash = hash('sha256', uniqid(true));
+        $path = "/tmp/{$hash}";
+
+        $zip = new \ZipArchive();
+        $zip->open($file['tmp_name']);
+        $zip->extractTo($path);
+
+        $shopId = reset($_POST['stores']);
+        $shop = Shop::find($shopId);
+
+        if (empty($shop)) {
+            $this->flash->addMessage('error', "We couldnt find that shop");
+            return $response->withRedirect('/products');
+        }
+        $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+        $i = 0;
+        foreach ($objects as $object) {
+            error_log($object->getBaseName());
+            if ($object->getExtension() === 'zip') {
+                $i++;
+                $zip = new \ZipArchive();
+                $zip->open($object->getRealPath());
+                $newPath = $path.'/'.$object->getBasename('zip');
+                error_log($newPath);
+                $zip->extractTo($newPath);
+                $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($newPath));
+                foreach ($files as $name => $file) {
+                    if (!in_array($file->getExtension(), ['jpg', 'png'])) {
+                        continue;
+                    }
+                    $name = str_replace('/tmp/', '', $name);
+                    $this->s3->putObject([
+                        'Bucket' => "shopify-product-importer",
+                        'SourceFile' => $file,
+                        'ACL' => 'public-read',
+                        'Key' => str_replace(' ', '_', $name).'-'.$i,
+                        'Content-Type' => 'application/zip_file'
+                    ]);
+
+                    $data = array(
+                        'file' => $hash,
+                        'post' => $request->getParsedBody(),
+                        'file_name' => $passedFileName
+                    );
+                    $data['post']['shop'] = $shopId;
+                    $queue = new Queue();
+                    $queue->data = json_encode($data);
+                    $queue->status = Queue::PENDING;
+                    $queue->shop = $shopId;
+                    $queue->file_name = $data['file'];
+                    $queue->template = $data['post']['template'];
+                    $queue->log_to_google = (int) $data['post']['log_to_google'];
+                    $queue->save();
+                }
+            }
+        }
+
+        $this->flash->addMessage("message", "Product successfully added to queue.");
+        return $response->withRedirect('products');
+    }
+
+    protected function createSingleProduct($request, $response, $arguments)
+    {
+        $start = time();
+        $files = $request->getUploadedFiles();
+
+        $hash = hash('sha256', uniqid(true));
+        $path = "/tmp/{$hash}";
+
+        $file = $_FILES['zip_file'];
         $passedFileName = $file['name'];
         $tmpName = $file['tmp_name'];
         $fileName = hash('sha256', uniqid(true));
-        $credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
-        $s3 = new \Aws\S3\S3Client([
-            'version' => 'latest',
-            'region' => 'us-east-1',
-            'credentials' => $credentials
-        ]);
+
 
         $zip = new \ZipArchive();
         $zip->open($tmpName);
@@ -76,7 +159,7 @@ class Products
 
         foreach($objects as $name => $object) {
             $name = str_replace('/tmp/','',$name);
-            $s3->putObject([
+            $this->s3->putObject([
                 'Bucket' => "shopify-product-importer",
                 'SourceFile' => $object,
                 'ACL' => "public-read",
