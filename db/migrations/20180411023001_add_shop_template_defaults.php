@@ -36,8 +36,6 @@ class AddShopTemplateDefaults extends AbstractMigration
             ->addColumn('vendor', 'string', array('limit' => 45, 'null' => true, 'default' => null))
             ->addColumn('sku_template', 'string', array('limit' => 45, 'null' => true, 'limit' => 254, 'default' => null))
             ->addcolumn('tags', 'string', array('limit' => 245, 'default' => null, 'null' => true))
-            ->addForeignKey('shop_id', 'shops', 'id', array("delete" => "CASCADE", "update" => "NO_ACTION"))
-            ->addForeignKey('template_id', 'templates', 'id', array("delete" => "CASCADE", "update" => "NO_ACTION"))
             ->create();
     }
 }
