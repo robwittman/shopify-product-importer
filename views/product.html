@@ -50,21 +50,13 @@
                             <div class="form-group col-sm-6">
                                 <label class='control-label'>Template</label>
                                 <select class="form-control" name="template" onchange='selectCallback()'>
-                                    <option value="single_product" selected>Apparel</option>
-                                    <option value='wholesale_apparel'>Wholesale Apparel</option>
-                                    <option value='staple_wholesale_apparel'>Staple Wholesale Apparel</option>
-                                    <option value="wholesale_tumbler">Wholesale Tumbler</option>
-                                    <option value="coffee_mug">Coffee Mug</option>
-                                    <option value="grey_collection">Grey Collection</option>
-                                    <option value="stemless">Stemless Wine Cup</option>
-                                    <option value="hats">Hats - Feminine</option>
-                                    <option value="hats_masculine">Hats - Masculine</option>
-                                    <option value="drinkware">Laser Etched Tumblers</option>
-                                    <option value="uv_drinkware">UV Drinkware</option>
-                                    <option value="baby_body_suit">Baby Body Suit</option>
-                                    <option value="raglans">Raglans</option>
-                                    <option value="front_back_pocket">Front/Back Pocket</option>
-                                    <option value="christmas">Christmas</option>
+                                    {% for template in templates %}
+                                        {% if template.selected %}
+                                            <option value="{{ template.value }}" selected>{{ template.name }}</option>
+                                        {% else %}
+                                            <option value="{{ template.value }}">{{ template.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
