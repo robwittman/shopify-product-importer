@@ -26,6 +26,12 @@ host('product-importer.shopify-services.com')
     ->set('deploy_path', '/var/www');
 
 // Tasks
+set('branch', function () {
+    return input()->getOption('branch') ?: 'master';
+});
+set('release_name', function () {
+    return date('YmdHis');
+});
 
 desc('Deploy your project');
 task('deploy', [
