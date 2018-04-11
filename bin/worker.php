@@ -11,7 +11,7 @@ $dbConfig = parse_url($dbUrl);
 
 $settings = array(
     'db' => array(
-        'driver' => 'pgsql',
+        'driver' => $dbConfig['scheme'] === 'postgres' ? 'pgsql' : 'mysql',
         'host' => $dbConfig['host'],
         'database' => ltrim($dbConfig['path'], '/'),
         'username' => $dbConfig['user'],
