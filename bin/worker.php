@@ -273,7 +273,7 @@ function getDesignIdFromFilename($fileName)
     }
 }
 
-function getProductSettings(Shop $shop, $post, Template $template, Setting $setting)
+function getProductSettings(Shop $shop, $post, Template $template, Setting $setting = null)
 {
     error_log("Creating product settings");
     $tags = implode(',', array_merge(
