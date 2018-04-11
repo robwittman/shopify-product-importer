@@ -282,10 +282,10 @@ function getProductSettings(Shop $shop, $post, Template $template, Setting $sett
     ));
     return array(
         'title' => $post['product_title'],
-        'body_html' => $setting->description ?: $shop->description ?: $template->description,
+        'body_html' => $post['description'] ?: $setting->description ?: $shop->description ?: $template->description,
         'tags' => $tags,
-        'product_type' => $setting->product_type ?: $template->product_Type,
-        'vendor' => $setting->vendor ?: $template->vendor,
+        'product_type' => $post['product_type'] ?: $setting->product_type ?: $template->product_Type,
+        'vendor' => $post['vendor'] ?: $setting->vendor ?: $template->vendor,
         'variants' => array(),
         'images' => array()
     );
