@@ -275,6 +275,7 @@ function getDesignIdFromFilename($fileName)
 
 function getProductSettings(Shop $shop, $post, Template $template, Setting $setting)
 {
+    error_log("Creating product settings");
     $tags = implode(',', array_merge(
         str_getcsv($post['tags']),
         str_getcsv($template->tags),
