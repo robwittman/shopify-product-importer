@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="col-sm-8 col-sm-offset-2">
-    <div class="panel panel-primary">
+    <div class="panel panel-default">
         <form action="/shops/{{ shop.id }}/settings/{{ template.id }}" method="post">
             <div class="panel-heading">
                 Settings for {{ shop.myshopify_domain }}'s {{ template.name }} Template
@@ -10,11 +10,11 @@
             <div class="panel-body">
                 <div class="form-group col-sm-6">
                     <label class='control-label'>Vendor</label>
-                    <input type="text" name="vendor" value="{{ setting.vendor }}" class='form-control'>
+                    <input type="text" name="vendor" value="{{ setting.vendor }}" placeholder="{{ template.vendor }}" class='form-control'>
                 </div>
                 <div class="form-group col-sm-6">
                     <label class='control-label'>Product Type</label>
-                    <input type="text" name="product_type" value="{{ setting.product_type }}" class='form-control'>
+                    <input type="text" name="product_type" value="{{ setting.product_type }}" placeholder="{{ template.product_type }}" class='form-control'>
                 </div>
                 <div class="form-group col-sm-6">
                     <label class='control-label'>Tags</label>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="form-group col-sm-6">
                     <label class='control-label'>SKU Template</label>
-                    <input type="text" name="sku_template" value="{{ setting.sku_template }}" class='form-control'>
+                    <input type="text" name="sku_template" value="{{ setting.sku_template }}" placeholder="{{ template.sku_template }}" class='form-control'>
                 </div>
                 <div class="form-group col-sm-12">
                     <label class='col-sm-3 control-label'>Description</label>
