@@ -68,7 +68,7 @@ while (true) {
             $setting = Setting::where(array(
                 'template_id' => $template->id,
                 'shop_id' => $queue->shop
-            ));
+            ))->first();
             $shop = Shop::find($queue->shop);
             switch ($queue->template) {
                 case 'wholesale_apparel':
