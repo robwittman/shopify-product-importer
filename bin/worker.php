@@ -5,6 +5,8 @@ require_once DIR.'/src/common.php';
 
 use App\Model\Queue;
 use App\Model\Sku;
+use App\Model\Template;
+use App\Model\Setting;
 
 $dbUrl = getenv("DATABASE_URL");
 $dbConfig = parse_url($dbUrl);
@@ -58,45 +60,51 @@ while (true) {
         try {
             $queue->start();
             $data = json_decode($queue->data, true);
+            $template = Template::where('handle', $data['post']['template'])->first();
+            $setting = Setting::where(array(
+                'template_id' => $template->id,
+                'shop_id' => $queue->shop
+            ));
+            $shop = Shop::find($queue->shop);
             switch ($queue->template) {
                 case 'wholesale_apparel':
-                    $res = createWholesaleApparel($queue);
+                    $res = createWholesaleApparel($queue, $shop, $template, $setting);
                     break;
                 case 'wholesale_tumbler':
-                    $res = createWholesaleTumbler($queue);
+                    $res = createWholesaleTumbler($queue, $shop, $template, $setting);
                     break;
                 case 'hats':
-                    $res = createHats($queue);
+                    $res = createHats($queue, $shop, $template, $setting);
                     break;
                 case 'stemless':
-                    $res = createStemless($queue);
+                    $res = createStemless($queue, $shop, $template, $setting);
                     break;
                 case 'single_product':
-                    $res = processQueue($queue, $client);
+                    $res = processQueue($queue, $shop, $template, $setting, $client);
                     break;
                 case 'drinkware':
-                    $res = createDrinkware($queue);
+                    $res = createDrinkware($queue, $shop, $template, $setting);
                     break;
                 case 'uv_drinkware':
-                    $res = createUvDrinkware($queue);
+                    $res = createUvDrinkware($queue, $shop, $template, $setting);
                     break;
                 case 'flasks':
-                    $res = createFlasks($queue);
+                    $res = createFlasks($queue, $shop, $template, $setting);
                     break;
                 case 'baby_body_suit':
-                    $res = createBabyBodySuit($queue, $client);
+                    $res = createBabyBodySuit($queue, $shop, $template, $setting, $client);
                     break;
                 case 'raglans':
-                    $res = createRaglans($queue, $client);
+                    $res = createRaglans($queue, $shop, $template, $setting, $client);
                     break;
                 case 'front_back_pocket':
-                    $res = createFrontBackPocket($queue, $client);
+                    $res = createFrontBackPocket($queue, $shop, $template, $setting, $client);
                     break;
                 case 'christmas':
-                    $res = createChristmas($queue, $client);
+                    $res = createChristmas($queue, $shop, $template, $setting, $client);
                     break;
                 case 'hats_masculine':
-                    $res = createMasculineHats($queue);
+                    $res = createMasculineHats($queue, $shop, $template, $setting);
                     break;
                 case 'grey_collection':
                     $res = createGreyCollection($queue, $client);
@@ -259,4 +267,22 @@ function getDesignIdFromFilename($fileName)
         $pieces = explode('_-_', $fileName);
         return $pieces[1];
     }
+}
+
+function getProductSettings(Shop $shop, $post, Template $template, Setting $setting)
+{
+    $tags = implode(',', array_merge(
+        str_getcsv($post['tags']),
+        str_getcsv($template->tags),
+        str_getcsv($setting->tags)
+    ));
+    return array(
+        'title' => $post['product_title'],
+        'body_html' => $setting->description ?: $shop->description ?: $template->description,
+        'tags' => $tags,
+        'product_type' => $setting->product_type ?: $template->product_Type,
+        'vendor' => $setting->vendor ?: $template->vendor,
+        'variants' => array(),
+        'images' => array()
+    );
 }

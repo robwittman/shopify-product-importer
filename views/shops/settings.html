@@ -1,0 +1,32 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="panel panel-primary">
+        <form action="/shops/{{ shop.id }}" method="post">
+            <div class="panel-heading">
+                {{ shop.myshopify_domain }} Template Settings
+            </div>
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    <select id='template_select' class="form-control" name="template" onchange='selectCallback()'>
+                        <option>Select a Template</option>
+                        {% for template in templates %}
+                            <option value="{{template.handle}}">{{template.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function selectCallback() {
+        var e = document.getElementById("template_select");
+        var template = e.options[e.selectedIndex].value;
+        var url = [location.protocol, '//', location.host, location.pathname].join('');
+        window.location.href = url + '?template='+template
+    }
+</script>
+{% endblock %}

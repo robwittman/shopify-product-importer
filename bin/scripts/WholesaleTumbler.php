@@ -1,6 +1,12 @@
 <?php
 
-function createWholesaleTumbler($queue) {
+use App\Model\Queue;
+use App\Model\Shop;
+use App\Model\Template;
+use App\Model\Setting;
+
+function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Setting $setting)
+{
     $products = array(
         'etched' => array(
             'colors' => array('Black', 'Blue', 'Light Blue', 'Light Purple', 'Pink', 'Red', 'Teal'),
@@ -17,7 +23,6 @@ function createWholesaleTumbler($queue) {
             )
         )
     );
-    $vendor = 'Iconic Imprint';
     global $s3;
     $images = array();
     $queue->started_at = date('Y-m-d H:i:s');
@@ -27,7 +32,6 @@ function createWholesaleTumbler($queue) {
     $post = $data['post'];
     $variantMap = array();
     $details = $products[$post['tumbler_product_type']];
-    $shop = \App\Model\Shop::find($queue->shop);
     foreach ($image_data as $name) {
         if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
             continue;
@@ -47,25 +51,14 @@ function createWholesaleTumbler($queue) {
         $images[$size][$color] = $name;
     }
 
-    $html = '';
-    $tags = explode(',', trim($post['tags']));
-    $tags = implode(',', $tags);
-    $product_data = array(
-        'title'         => $post['product_title'],
-        'body_html'     => $html,
-        'tags'          => $tags,
-        'vendor'        => $vendor,
-        'product_type'  => 'Tumbler',
-        'options' => array(
-            array(
-                'name' => "Size"
-            ),
-            array(
-                'name' => "Color"
-            ),
+    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data['options'] = array(
+        array(
+            'name' => "Size"
         ),
-        'variants'      => array(),
-        'images'        => array()
+        array(
+            'name' => "Color"
+        )
     );
     $skuModifier = '';
     if ($post['tumbler_product_type'] == 'powder_coated') {

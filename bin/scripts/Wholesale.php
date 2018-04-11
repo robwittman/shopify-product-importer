@@ -1,11 +1,13 @@
 <?php
 
 use App\Result\FrontPrint;
+use App\Model\Queue;
+use App\Model\Shop;
+use App\Model\Template;
+use App\Model\Setting;
 
-function createWholesaleApparel($queue)
+function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Setting $setting)
 {
-    $html = '';
-    $vendor = 'Edge Promotions';
     global $s3;
     $matrix = json_decode(file_get_contents(DIR.'/src/new_wholesale.json'), true);
     if (!$matrix) {
@@ -23,7 +25,6 @@ function createWholesaleApparel($queue)
 
     $post = $data['post'];
     $details = $matrix[$post['wholesale_product_type']];
-    $shop = \App\Model\Shop::find($queue->shop);
     foreach ($image_data as $name) {
         if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
             continue;
@@ -38,24 +39,14 @@ function createWholesaleApparel($queue)
         $pieces = explode('-', basename($fileName, '.jpg'));
         $images[str_replace('_', ' ', trim($pieces[1], '_'))] = $name;
     }
-    $tags = explode(',', trim($post['tags']));
-    $tags = implode(',', $tags);
-    $product_data = array(
-        'title'         => $post['product_title'],
-        'body_html'     => $html,
-        'tags'          => $tags,
-        'vendor'        => $vendor,
-        'product_type'  => 'Apparel',
-        'options' => array(
-            array(
-                'name' => "Size"
-            ),
-            array(
-                'name' => "Color"
-            ),
+    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data['options'] = array(
+        array(
+            'name' => "Size"
         ),
-        'variants'      => array(),
-        'images'        => array()
+        array(
+            'name' => "Color"
+        )
     );
 
     foreach ($images as $color => $src) {

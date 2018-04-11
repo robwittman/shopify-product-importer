@@ -46,6 +46,12 @@ $app->group('/auth', function () use ($app) {
     $app->any('/logout', 'AuthController:logout');
 });
 
+$app->group('/templates', function() use ($app) {
+    $app->get('', 'TemplatesController:index');
+    $app->get('/{id}', 'TemplatesController:show');
+    $app->post('/{id}', 'TemplatesController:update');
+});
+
 /*=========================================
     Shop Routes
 =========================================*/
@@ -57,6 +63,8 @@ $app->group('/shops', function () use ($app) {
         $app->get('', "ShopController:show");
         $app->post('', "ShopController:update");
         $app->map(array("GET", "POST"), '/delete', "ShopController:delete");
+        $app->get('/settings', "ShopController:settings");
+        $app->post('/settings/{templateId}', 'ShopController:update_settings');
     });
 })->add(new App\Middleware\Authorization());
 

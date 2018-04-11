@@ -1,11 +1,11 @@
-{% extends "templates/navbar.html" %}
+{% extends "navbar.html" %}
 
 {% block content %}
 <div class="col-sm-8 col-sm-offset-2">
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <form action="/shops/{{ shop.id }}" method="post">
                 <div class="panel-heading">
-                    Edit Shop
+                    Edit Shop <span class='pull-right'><a href="/shops/{{ shop.id }}/settings">Template Settings</a></span>
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
@@ -40,7 +40,7 @@
         </div>
 </div>
 <div class="col-sm-8 col-sm-offset-2">
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
         <div class="panel-heading">
             Google Authentication
         </div>

@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Model\Shop;
 use App\Model\Errors;
 use App\Model\Messages;
+use App\Model\Template;
+use App\Model\Setting;
 
 class Shops
 {
@@ -123,6 +125,52 @@ class Shops
             $this->flash->addMessage('message', 'Shop succesfully deleted');
             return $response->withRedirect('/shops');
         }
+    }
+
+    public function settings($request, $response, $arguments)
+    {
+        $shop = Shop::find($arguments['id']);
+        if ($handle = $request->getQueryParam('template')) {
+            $template = Template::where('handle', $handle)->first();
+            $setting = Setting::where(array(
+                'template_id' => $template->id,
+                'shop_id' => $shop->id
+            ))->first();
+            return $this->view->render($response, 'shops/template.html', array(
+                'shop' => $shop,
+                'template' => $template,
+                'setting' => $setting
+            ));
+        } else {
+            $templates = Template::all();
+            return $this->view->render($response, 'shops/settings.html', array(
+                'shop' => $shop,
+                'templates' => $templates
+            ));
+        }
+    }
+
+    public function update_settings($request, $response, $arguments)
+    {
+        $shop = Shop::find($arguments['id']);
+
+        $body = $request->getParsedBody();
+        $template = Template::find($arguments['templateId']);
+        $setting = Setting::where(array(
+            'template_id' => $template->id,
+            'shop_id' => $shop->id
+        ))->first();
+        if (is_null($setting)) {
+            $setting = new Setting();
+            $setting->template_id = $template->id;
+            $setting->shop_id = $shop->id;
+        }
+        foreach ($body as $key => $value) {
+            $setting->{$key} = $value;
+        }
+        $setting->save();
+        $this->flash->addMessage("message", "Shop Template Settings saved successfully");
+        return $response->withRedirect("/shops/{$shop->id}/settings?template={$template->handle}");
     }
 
     public function setSheet($request, $response)

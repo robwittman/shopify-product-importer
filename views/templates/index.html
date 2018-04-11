@@ -1,0 +1,35 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Templates
+            </div>
+            <div class="panel-body">
+                {% if templates is empty %}
+                    <div class="alert alert-info">
+                        You don't have any templates yet!
+                    </div>
+                {% else %}
+                <table class='table table-bordered table-striped'>
+                    <tr>
+                        <th>ID</th>
+                        <th>Handle</th>
+                        <th>Name</th>
+                    </tr>
+                    {% for template in templates %}
+                        <tr>
+                            <td>
+                                <a href="/templates/{{ template.id }}">{{ template.id }}</a>
+                            </td>
+                            <td>{{ template.handle }}</td>
+                            <td>{{ template.name }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+            </div>
+        </div>
+</div>
+{% endblock %}

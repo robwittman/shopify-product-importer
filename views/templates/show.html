@@ -1,0 +1,49 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="panel panel-primary">
+        <form action="/templates/{{ template.id }}" method="post">
+            <div class="panel-heading">
+                Edit Template
+            </div>
+            <div class="panel-body">
+                <div class="form-group col-sm-6">
+                    <label class='control-label'>Handle</label>
+                    <input type="text"  value="{{ template.handle }}" class='form-control'>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class='control-label'>Name</label>
+                    <input type="text" name="name" value="{{ template.name }}" class='form-control'>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class='control-label'>Vendor</label>
+                    <input type="text" name="vendor" value="{{ template.vendor }}" class='form-control'>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class='control-label'>Product Type</label>
+                    <input type="text" name="product_type" value="{{ template.product_type }}" class='form-control'>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class='control-label'>Tags</label>
+                    <input type="text" name="tags" value="{{ template.tags }}" class='form-control'>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class='control-label'>SKU Template</label>
+                    <input type="text" name="sku_template" value="{{ template.sku_template }}" class='form-control'>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class='col-sm-3 control-label'>Description</label>
+                    <textarea name="description" rows="8" cols="80" class='form-control'>{{template.description}}</textarea>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type='submit' class='btn btn-primary pull-right'>Update Template</button>
+                <div class="clearfix">
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

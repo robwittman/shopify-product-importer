@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Model\User;
 use App\Model\Queue;
 use App\Model\Shop;
+use App\Model\Template;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class Products
@@ -31,28 +32,11 @@ class Products
     {
         $user = User::find($request->getAttribute('user')->id);
         $shops = $user->shops;
-        $templates = array(
-            array('value' => 'single_product', 'name' => 'Apparel', 'selected' => true),
-            array('value' => 'wholesale_apparel', 'name' => 'Wholesale Apparel'),
-            array('value' => 'staple_wholesale_apparel', 'name' => 'Staple Wholesale Apparel'),
-            array('value' => 'wholesale_tumbler', 'name' => 'Wholesale Tumbler'),
-            array('value' => 'grey_collections', 'name' => 'Grey Collection'),
-            array('value' => 'stemless', 'name' => 'Stemless Wine Cup'),
-            array('value' => 'hats', 'name' => 'Hats'),
-            array('value' => 'hats_masculine', 'name' => 'Hats - Masculine'),
-            array('value' => 'drinkware', 'name' => 'Laser Etched Tumblers'),
-            array('value' => 'uv_drinkware', 'name' => 'UV Drinkware'),
-            array('value' => 'baby_body_suit', 'name' => 'Baby Body Suit'),
-            array('value' => 'raglans', 'name' => 'Raglans'),
-            array('value' => 'front_back_pocket', 'name' => 'Front Back Pocket'),
-            array('value' => 'christmas', 'name' => 'Christmas')
-        );
-        usort($templates, function($a, $b) {
-            return strcmp($a['name'], $b['name']);
-        });
+        $templates = Template::all();
+
         return $this->view->render($response, 'product.html', array(
             'shops' => $shops,
-            'templates' => $templates
+            'templates' => $templates->toArray()
         ));
     }
 

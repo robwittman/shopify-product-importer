@@ -53,7 +53,18 @@ $container['ProductController'] = function($c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
     // $rabbit = $c->get('rabbit');
-    return new \App\Controller\Products($view, $flash, $rabbit);
+    return new \App\Controller\Products($view, $flash, null);
+};
+
+$container['TemplatesController'] = function($c) {
+    $view = $c->get('view');
+    $flash = $c->get('flash');
+    return new \App\Controller\Templates($view, $flash);
+};
+$container['SettingsController'] = function($c) {
+    $view = $c->get('view');
+    $flash = $c->get('flash');
+    return new \App\Controller\Settings($view, $flash);
 };
 
 $container['GoogleAuthController'] = function($c) {

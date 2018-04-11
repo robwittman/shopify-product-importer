@@ -1,8 +1,12 @@
 <?php
 
-function createRaglans($queue)
+use App\Model\Queue;
+use App\Model\Shop;
+use App\Model\Template;
+use App\Model\Setting;
+
+function createRaglans(Queue $queue, Shop $shop, Template $template, Setting $setting)
 {
-    $vendor = 'Canvus Print';
     $prices = array(
         'Small' => array(
             'price' => '24.99',
@@ -38,7 +42,6 @@ function createRaglans($queue)
     $queue->started_at = date('Y-m-d H:i:s');
     $data = json_decode($queue->data, true);
     $post = $data['post'];
-    $shop = \App\Model\Shop::find($queue->shop);
     $image_data = getImages($s3, $queue->file_name);
     $imageUrls = [];
 
@@ -74,31 +77,7 @@ function createRaglans($queue)
                     'weight' => '14.0',
                 )
             );
-        case 'piper-lou-collection.myshopify.com':
-        case 'importer-testing.myshopify.com':
-            $html = "<meta charset='utf-8' /><meta charset='utf-8' /><meta charset='utf-8' />
-<h5>Shipping &amp; Returns</h5>
-<p>We want you to<span> </span><strong>LOVE</strong><span> </span>your Piper Lou items! They will ship out within 4-10 days from your order. If you're not 100% satisfied within the first 30 days of receiving your product, let us know and we'll make it right.</p>
-<ul>
-<li>Hassle free return/exchange policy! </li>
-<li>Please contact us at<span> </span><strong>info@piperloucollection.com</strong><span> </span>with any questions. </li>
-</ul>
-<h5>Product Description</h5>
-<p><span>You are going to <strong>LOVE</strong> this design! We offer apparel in Short Sleeve shirts, Long Sleeve Shirts, Tank tops, and Hoodies. If you want information on sizing, please view the sizing chart below. </span></p>
-<p><span>Apparel is designed, printed, and shipped in the USA. 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 🇺🇲 </span></p>
-<p><a href='https://www.piperloucollection.com/pages/sizing-chart'>View our sizing chart</a></p>";
             break;
-        case 'hopecaregive.myshopify.com':
-            $html = '<p><img src="https://cdn.shopify.com/s/files/1/1255/4519/files/16128476_220904601702830_291172195_n.jpg?9775130656601803865"></p><p>Designed, printed, and shipped in the USA!</p>';
-            break;
-        case 'game-slave.myshopify.com':
-            $html = '<p><img src="https://cdn.shopify.com/s/files/1/1066/2470/files/TC_Best_seller.jpg?v=1486047696"></p><p>Designed, printed, and shipped in the USA!</p>';
-            break;
-        default:
-            $html = '<p></p>';
-    }
-    if ($shop->description) {
-        $html = $shop->description;
     }
 
     foreach ($image_data as $name) {
@@ -107,28 +86,17 @@ function createRaglans($queue)
         $color = $specs[1];
         $imageUrls[$color] = $name;
     }
-    $tags = explode(',', trim($post['tags']));
-    $tags[] = '3/4 sleeve raglan';
-    $tags = implode(',', $tags);
-    $product_data = array(
-        'title' => $post['product_title'],
-        'body_html' => $html,
-        'tags' => $tags,
-        'vendor' => $vendor,
-        'product_type' => 'Apparel',
-        'options' => array(
-            array(
-                'name' => "Size"
-            ),
-            array(
-                'name' => "Color"
-            ),
-            array(
-                'name' => "Style"
-            )
+    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data['options'] = array(
+        array(
+            'name' => "Size"
         ),
-        'variants' => array(),
-        'images' => array()
+        array(
+            'name' => "Color"
+        ),
+        array(
+            'name' => "Style"
+        )
     );
 
     foreach ($imageUrls as $color => $url) {
