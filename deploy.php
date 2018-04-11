@@ -58,8 +58,8 @@ task('db:migrate', function() {
 
 task('deploy:supervisor', function() {
     run('crontab {{current_path}}/conf/crontab');
-    run('cp {{current_path}}/conf/supervisor/* /etc/supervisor/conf.d/');
-    run('service supervisor restart');
+    // run('cp {{current_path}}/conf/supervisor/* /etc/supervisor/conf.d/');
+    // run('service supervisor restart');
 });
 // [Optional] If deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
