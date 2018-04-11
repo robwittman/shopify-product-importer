@@ -51,7 +51,7 @@
                                 <label class='control-label'>Template</label>
                                 <select class="form-control" name="template" onchange='selectCallback()'>
                                     {% for template in templates %}
-                                        <option value="{{ template.value }}">{{ template.name }}</option>
+                                        <option value="{{ template.handle }}">{{ template.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>

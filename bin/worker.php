@@ -7,6 +7,7 @@ use App\Model\Queue;
 use App\Model\Sku;
 use App\Model\Template;
 use App\Model\Setting;
+use App\Model\Shop;
 
 $dbUrl = getenv("DATABASE_URL");
 $dbConfig = parse_url($dbUrl);
@@ -61,6 +62,9 @@ while (true) {
             $queue->start();
             $data = json_decode($queue->data, true);
             $template = Template::where('handle', $data['post']['template'])->first();
+            if (is_null($template)) {
+                throw new \Exception("Unsupported template '{$data['post']['template']}'");
+            }
             $setting = Setting::where(array(
                 'template_id' => $template->id,
                 'shop_id' => $queue->shop
