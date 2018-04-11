@@ -3,11 +3,11 @@
 $dbString = getenv("DATABASE_URL");
 $dbConfig = parse_url($dbString);
 
-return array(
+$creds = array(
     'environments' => array(
         'default_database' => 'development',
         'development' => array(
-            'adapter' => 'pgsql',
+            'adapter' => $dbConfig['scheme'] === 'postgres' ? 'pgsql' : 'mysql',
             'host' => $dbConfig['host'],
             'name' => ltrim($dbConfig['path'], '/'),
             'user' => $dbConfig['user'],
@@ -20,3 +20,5 @@ return array(
         "seeds" => "db/seeds"
     ),
 );
+echo json_encode($creds);
+return $creds;

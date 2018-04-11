@@ -7,24 +7,23 @@ require 'recipe/common.php';
 set('application', 'my_project');
 
 // Project repository
-set('repository', 'github.com/robwittman/shopify-product-importer');
+set('repository', 'git@github.com:robwittman/shopify-product-importer');
 
 // [Optional] Allocate tty for git clone. Default value is false.
-set('git_tty', true); 
+set('git_tty', true);
 
-// Shared files/dirs between deploys 
+// Shared files/dirs between deploys
 set('shared_files', []);
 set('shared_dirs', []);
 
-// Writable dirs by web server 
+// Writable dirs by web server
 set('writable_dirs', []);
 
 
 // Hosts
-
-host('project.com')
-    ->set('deploy_path', '~/{{application}}');    
-    
+host('product-importer.shopify-services.com')
+    ->user('deployer')
+    ->set('deploy_path', '/var/www');
 
 // Tasks
 
@@ -38,6 +37,8 @@ task('deploy', [
     'deploy:shared',
     'deploy:writable',
     'deploy:vendors',
+    'db:migrate',
+    'deploy:supervisor',
     'deploy:clear_paths',
     'deploy:symlink',
     'deploy:unlock',
@@ -45,5 +46,14 @@ task('deploy', [
     'success'
 ]);
 
+task('db:migrate', function() {
+    run('cd {{current_path}} && vendor/bin/phinx migrate');
+});
+
+task('deploy:supervisor', function() {
+    run('crontab {{current_path}}/conf/crontab');
+    run('cp {{current_path}}/conf/supervisor/* /etc/supervisor/conf.d/');
+    run('service supervisor restart');
+});
 // [Optional] If deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');

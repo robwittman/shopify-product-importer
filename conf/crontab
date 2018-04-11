@@ -1,0 +1,5 @@
+# Refresh our Google Tokens
+*/10 * * * * /usr/bin/php /var/www/current/bin/refresh.php
+
+# Renew Certbot certificates
+52 0,12 * * * root certbot renew --renew-hook 'service nginx reload'
