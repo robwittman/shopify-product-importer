@@ -14,26 +14,19 @@
                 {% else %}
                 <table class='table table-bordered table-striped'>
                     <tr>
-                        <th>
-                            Shop ID
-                        </th>
-                        <th>
-                            Domain
-                        </th>
-                        <th>
-                            API Key
-                        </th>
+                        <th>Domain</th>
+                        <th>API Key</th>
+                        <th></th>
                     </tr>
                     {% for shop in shops %}
                         <tr>
+                            <td>{{ shop.myshopify_domain }}</td>
+                            <td>{{ shop.api_key }}</td>
                             <td>
-                                <a href="/shops/{{ shop.id }}">{{ shop.id }}</a>
-                            </td>
-                            <td>
-                                {{ shop.myshopify_domain }}
-                            </td>
-                            <td>
-                                {{ shop.api_key }}
+                                <div class="btn-group" role="group">
+                                  <a href="/shops/{{ shop.id }}" type="button" class="btn btn-sm btn-default">Edit</a>
+                                  <a href="/shops/{{ shop.id }}/settings" type="button" class="btn btn-sm btn-default">Settings</a>
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}
@@ -41,7 +34,7 @@
                 {% endif %}
             </div>
             <div class="panel-footer">
-                <a href="/shops/create" class='btn btn-primary pull-right'>Create New Shop</a>
+                <a href="/shops/create" class='btn btn-sm btn-primary pull-right'>Create New Shop</a>
                 <div class="clearfix">
 
                 </div>

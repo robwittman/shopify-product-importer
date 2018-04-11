@@ -14,17 +14,17 @@
                 {% else %}
                 <table class='table table-bordered table-striped'>
                     <tr>
-                        <th>ID</th>
                         <th>Handle</th>
                         <th>Name</th>
+                        <th></th>
                     </tr>
                     {% for template in templates %}
                         <tr>
-                            <td>
-                                <a href="/templates/{{ template.id }}">{{ template.id }}</a>
-                            </td>
                             <td>{{ template.handle }}</td>
                             <td>{{ template.name }}</td>
+                            <td>
+                                <a class='btn btn-sm btn-default' href="/templates/{{ template.id }}">Edit</a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

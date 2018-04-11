@@ -14,26 +14,23 @@
                 {% else %}
                 <table class='table table-bordered table-striped'>
                     <tr>
-                        <th>
-                            User ID
-                        </th>
-                        <th>
-                            Email
-                        </th>
-                        <th>
-                            Role
-                        </th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th></th>
                     </tr>
                     {% for user in users %}
                         <tr>
-                            <td>
-                                <a href="/users/{{ user.id }}">{{ user.id }}</a>
-                            </td>
                             <td>
                                 {{ user.email }}
                             </td>
                             <td>
                                 {{ user.role }}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                  <a href="/users/{{ user.id }}" type="button" class="btn btn-sm btn-default">Edit</a>
+                                  <a href="/users/{{ user.id }}/access" type="button" class="btn btn-sm btn-default">Access</a>
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}
@@ -41,7 +38,7 @@
                 {% endif %}
             </div>
             <div class="panel-footer">
-                <a href="/users/create" class='btn btn-primary pull-right'>Create New User</a>
+                <a href="/users/create" class='btn btn-sm btn-primary pull-right'>Create New User</a>
                 <div class="clearfix">
 
                 </div>
