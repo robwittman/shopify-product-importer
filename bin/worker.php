@@ -92,9 +92,6 @@ while (true) {
                 case 'front_back_pocket':
                     $res = createFrontBackPocket($queue, $client);
                     break;
-                case 'uv_with_bottles':
-                    $res = createUvWithBottles($queue);
-                    break;
                 case 'christmas':
                     $res = createChristmas($queue, $client);
                     break;
@@ -103,9 +100,6 @@ while (true) {
                     break;
                 case 'grey_collection':
                     $res = createGreyCollection($queue, $client);
-                    break;
-                case 'coffee_mug':
-                    $res = createCoffeeMug($queue);
                     break;
                 default:
                     throw new \Exception("Invalid template {$data['post']['template']} provided");
