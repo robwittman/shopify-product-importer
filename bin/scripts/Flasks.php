@@ -5,7 +5,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createFlasks(Queue $queue, Shop $shop, Template $template, Setting $setting)
+function createFlasks(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
     $price = '19.99';
     global $s3;

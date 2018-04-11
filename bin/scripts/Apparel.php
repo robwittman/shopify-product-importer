@@ -5,7 +5,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function processQueue(Queue $queue, Shop $shop, Template $template, Setting $setting, Google_Client $client)
+function processQueue(Queue $queue, Shop $shop, Template $template, Setting $setting = null, Google_Client $client)
 {
     global $s3;
     $matrix = json_decode(file_get_contents(DIR.'/src/matrix.json'), true);

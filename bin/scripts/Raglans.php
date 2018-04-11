@@ -5,7 +5,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createRaglans(Queue $queue, Shop $shop, Template $template, Setting $setting)
+function createRaglans(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
     $prices = array(
         'Small' => array(

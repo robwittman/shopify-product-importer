@@ -5,7 +5,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createBabyBodySuit(Queue $queue, Shop $shop, Template $template, Setting $setting)
+function createBabyBodySuit(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
     $price = '14.99';
     $sizes = array(

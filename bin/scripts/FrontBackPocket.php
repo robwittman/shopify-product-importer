@@ -4,7 +4,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createFrontBackPocket(Queue $queue, Shop $shop, Template $template, Setting $setting)
+function createFrontBackPocket(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
     $prices = array(
         'Tee' => array(

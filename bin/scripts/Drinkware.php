@@ -5,7 +5,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $setting)
+function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
     $prices = array(
         '30' => '29.99',

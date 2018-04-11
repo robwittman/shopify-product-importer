@@ -5,7 +5,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createGreyCollection(Queue $queue, Shop $shop, Template $template, Setting $setting, Google_Client $client)
+function createGreyCollection(Queue $queue, Shop $shop, Template $template, Setting $setting = null, Google_Client $client)
 {
     $results = array();
     $variants = array(

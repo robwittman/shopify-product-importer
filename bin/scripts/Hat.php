@@ -5,7 +5,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createHats(Queue $queue, Shop $shop, Template $template, Setting $setting)
+function createHats(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
     $price = '29.99';
     global $s3;

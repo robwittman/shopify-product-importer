@@ -5,7 +5,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createMasculineHats(Queue $queue, Shop $shop, Template $template, Setting $setting)
+function createMasculineHats(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
     $price = '29.99';
     global $s3;

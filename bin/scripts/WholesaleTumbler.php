@@ -5,7 +5,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Setting $setting)
+function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
     $products = array(
         'etched' => array(

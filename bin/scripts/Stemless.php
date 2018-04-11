@@ -4,7 +4,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createStemless(Queue $queue, Shop $shop, Template $template, Setting $setting)
+function createStemless(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
     $price = '26.99';
     global $s3;
