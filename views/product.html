@@ -125,35 +125,29 @@
                                 <option value="Long Sleeve" selected>Long Sleeve</option>
                             </select>
                         </div>
-                        <div class="row">
+                        <div class="form-group col-sm-12">
                             <div class="checkbox">
                                 <label>
                                     <input type='checkbox' id='log_to_google' name="log_to_google" value="1" onchange='setGoogleFieldsVisibility()' checked>Log to Google
                                 </label>
                             </div>
-                            <div id="google-fields">
-                                <div class="form-group">
-                                    <label class='col-sm-3 control-label'>Print Type</label>
-                                    <div class="col-sm-9">
-                                        <select class="form-control" name="print_type" onchange='setPrintType()'>
-                                            <option value="front_print" selected>Front Print</option>
-                                            <option value="back_print">Back Print</option>
-                                            <option value="double_sided">Front &amp; Back</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group" id='front_print_url_field'>
-                                    <label class='col-sm-3 control-label'>Front Print URL</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class='form-control' name="front_print_url" value="">
-                                    </div>
-                                </div>
-                                <div class="form-group" id='back_print_url_field' style='display:none'>
-                                    <label class='col-sm-3 control-label'>Back Print URL</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class='form-control' name="back_print_url" value="">
-                                    </div>
-                                </div>
+                        </div>
+                        <div id="google-fields">
+                            <div class="form-group col-sm-12">
+                                <label class='control-label'>Print Type</label>
+                                <select class="form-control" name="print_type" onchange='setPrintType()'>
+                                    <option value="front_print" selected>Front Print</option>
+                                    <option value="back_print">Back Print</option>
+                                    <option value="double_sided">Front &amp; Back</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-6" id='front_print_url_field'>
+                                <label class='control-label'>Front Print URL</label>
+                                <input type="text" class='form-control' name="front_print_url" value="">
+                            </div>
+                            <div class="form-group col-sm-6" id='back_print_url_field' style='display:none'>
+                                <label class='control-label'>Back Print URL</label>
+                                <input type="text" class='form-control' name="back_print_url" value="">
                             </div>
                         </div>
                     </div>
