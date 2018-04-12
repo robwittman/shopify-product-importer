@@ -88,7 +88,7 @@ class Products
         $zip->open($file['tmp_name']);
         $zip->extractTo($path);
 
-        $shopId = reset($_POST['stores']);
+        $shopId = $_POST['shop'];
         $shop = Shop::find($shopId);
 
         if (empty($shop)) {
@@ -167,29 +167,27 @@ class Products
                 'Content-Type' => 'application/zip_file'
             ]);
         }
-        $stores = $_POST['stores'];
-        foreach ($stores as $shopId) {
-            $shop = Shop::find($shopId);
-            if (empty($shop)) {
-                $this->flash->addMessage('error', "We couldnt find that shop");
-                return $response->withRedirect('/products');
-            }
-
-            $data = array(
-                'file' => $hash,
-                'post' => $request->getParsedBody(),
-                'file_name' => $passedFileName
-            );
-            $data['post']['shop'] = $shopId;
-            $queue = new Queue();
-            $queue->data = $data;
-            $queue->status = Queue::PENDING;
-            $queue->shop = $shopId;
-            $queue->file_name = $data['file'];
-            $queue->template = $data['post']['template'];
-            $queue->log_to_google = (int) $data['post']['log_to_google'];
-            $queue->save();
+        $shopId = $post['shop'];
+        $shop = Shop::find($shopId);
+        if (empty($shop)) {
+            $this->flash->addMessage('error', "We couldnt find that shop");
+            return $response->withRedirect('/products');
         }
+
+        $data = array(
+            'file' => $hash,
+            'post' => $request->getParsedBody(),
+            'file_name' => $passedFileName
+        );
+        $data['post']['shop'] = $shopId;
+        $queue = new Queue();
+        $queue->data = $data;
+        $queue->status = Queue::PENDING;
+        $queue->shop = $shopId;
+        $queue->file_name = $data['file'];
+        $queue->template = $data['post']['template'];
+        $queue->log_to_google = (int) $data['post']['log_to_google'];
+        $queue->save();
 
         $elapsed_time = time() - $start;
         return;

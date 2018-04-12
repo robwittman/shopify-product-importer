@@ -34,7 +34,7 @@
                         </div>
                         <div class="form-group col-lg-6 col-sm-12">
                             <label class='control-label'>Shop</label>
-                            <select class='form-control'>
+                            <select class='form-control' name='shop'>
                                 {% for shop in shops %}
                                     {% if shop.id in user.default_shops %}
                                         <option value="{{ shop.id}}" selected>{{shop.myshopify_domain}}</option>
