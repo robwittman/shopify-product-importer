@@ -56,7 +56,7 @@ while (true) {
         ->orderBy('created_at', 'asc')
         ->first();
     if (!$queue) {
-        sleep(10);
+        sleep(5);
     } else {
         try {
             $queue->start();
