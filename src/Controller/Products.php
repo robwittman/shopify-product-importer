@@ -35,6 +35,7 @@ class Products
         $templates = Template::all();
 
         return $this->view->render($response, 'product.html', array(
+            'user' => $user,
             'shops' => $shops,
             'templates' => $templates->toArray()
         ));

@@ -164,7 +164,7 @@
                         {% for shop in shops %}
                         <div class="checkbox">
                             <label>
-                                {% if shop.id in [1,10] %}
+                                {% if shop.id in user.default_shops %}
                                 <input type="checkbox" name="stores[]" value="{{shop.id}}" checked>{{shop.myshopify_domain}}
                                 {% else %}
                                 <input type="checkbox" name="stores[]" value="{{shop.id}}">{{shop.myshopify_domain}}
