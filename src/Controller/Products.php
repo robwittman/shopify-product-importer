@@ -200,7 +200,7 @@ class Products
         $post = $request->getParsedBody();
         $queue_id = $post['queue_id'];
         $queue = Queue::find($queue_id);
-        $queue->status = Queue::PEDING;
+        $queue->status = Queue::PENDING;
         $queue->save();
         $this->flash->addMessage("message", "Queued product successfully restarted");
         return $response->withRedirect('queue');
