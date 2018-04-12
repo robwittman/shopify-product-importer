@@ -30,7 +30,6 @@ class Products
 
     public function show_form($request, $response, $arguments)
     {
-        error_log("Showing form");
         $user = User::find($request->getAttribute('user')->id);
         $shops = $user->shops;
         $templates = Template::all();
@@ -125,7 +124,7 @@ class Products
                     );
                     $data['post']['shop'] = $shopId;
                     $queue = new Queue();
-                    $queue->data = json_encode($data);
+                    $queue->data = $data;
                     $queue->status = Queue::PENDING;
                     $queue->shop = $shopId;
                     $queue->file_name = $data['file'];
@@ -182,7 +181,7 @@ class Products
             );
             $data['post']['shop'] = $shopId;
             $queue = new Queue();
-            $queue->data = json_encode($data);
+            $queue->data = $data;
             $queue->status = Queue::PENDING;
             $queue->shop = $shopId;
             $queue->file_name = $data['file'];
