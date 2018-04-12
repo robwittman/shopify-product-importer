@@ -40,7 +40,7 @@ function createRaglans(Queue $queue, Shop $shop, Template $template, Setting $se
 
     global $s3;
     $queue->started_at = date('Y-m-d H:i:s');
-    $data = json_decode($queue->data, true);
+    $data = $queue->data;
     $post = $data['post'];
     $image_data = getImages($s3, $queue->file_name);
     $imageUrls = [];

@@ -12,6 +12,10 @@ class Queue extends Elegant
     protected $table = 'queue';
     public $timestamps = false;
 
+    protected $casts = array(
+        'data' => 'json'
+    );
+    
     public function fail($reason = null)
     {
         $this->status = self::FAILED;

@@ -26,7 +26,7 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
     global $s3;
     $images = array();
     $queue->started_at = date('Y-m-d H:i:s');
-    $data = json_decode($queue->data, true);
+    $data = $queue->data;
 
     $image_data = getImages($s3, $queue->file_name);
     $post = $data['post'];

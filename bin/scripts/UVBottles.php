@@ -11,7 +11,7 @@ function createUvWithBottles($queue)
 
     global $s3;
     $queue->started_at = date('Y-m-d H:i:s');
-    $data = json_decode($queue->data, true);
+    $data = $queue->data;
     $post = $data['post'];
     $shop = \App\Model\Shop::find($queue->shop);
     $image_data = getImages($s3, $queue->file_name);

@@ -6,7 +6,7 @@ function createUvTumbler($queue)
     $imageUrls = array();
     global $s3;
     $queue->started_at = date('Y-m-d H:i:s');
-    $data = json_decode($queue->data, true);
+    $data = $queue->data;
 
     if (isset($queue->file_name)) {
         $post = $data['post'];

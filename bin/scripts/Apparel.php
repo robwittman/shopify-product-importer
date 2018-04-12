@@ -17,7 +17,7 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
     $image_data = array();
     $images = array();
     $queue->started_at = date('Y-m-d H:i:s');
-    $data = json_decode($queue->data, true);
+    $data = $queue->data;
 
     $image_data = getImages($s3, $queue->file_name);
     $post = $data['post'];

@@ -46,7 +46,7 @@ class Products
         $queue = Queue::orderBy('created_at', 'desc')->take(50)->get();
         foreach ($queue as $record) {
             // TODO: Move shop_id to table column
-            $data = json_decode($record->data, true);
+            $data = $record->data;
             $shop = Shop::find($record->shop);
             $record->shop = $shop;
         }

@@ -18,7 +18,7 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
     $image_data = array();
     $images = array();
     $queue->started_at = date('Y-m-d H:i:s');
-    $data = json_decode($queue->data, true);
+    $data = $queue->data;
 
     $image_data = getImages($s3, $queue->file_name);
     $designId = null;

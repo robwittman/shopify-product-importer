@@ -60,7 +60,7 @@ while (true) {
     } else {
         try {
             $queue->start();
-            $data = json_decode($queue->data, true);
+            $data = $queue->data;
             $template = Template::where('handle', $data['post']['template'])->first();
             if (is_null($template)) {
                 throw new \Exception("Unsupported template '{$data['post']['template']}'");
@@ -275,7 +275,6 @@ function getDesignIdFromFilename($fileName)
 
 function getProductSettings(Shop $shop, $post, Template $template, Setting $setting = null)
 {
-    error_log("Creating product settings");
     $tags = implode(',', array_merge(
         str_getcsv($post['tags']),
         str_getcsv($template->tags),
