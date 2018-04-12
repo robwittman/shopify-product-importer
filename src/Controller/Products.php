@@ -203,6 +203,6 @@ class Products
         $queue->status = Queue::PENDING;
         $queue->save();
         $this->flash->addMessage("message", "Queued product successfully restarted");
-        return $response->withRedirect('queue');
+        return $response->withRedirect('/queue');
     }
 }
