@@ -40,7 +40,7 @@ function createBabyBodySuit(Queue $queue, Shop $shop, Template $template, Settin
 
         )
     );
-    
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($sizes as $size) {
         $imageUrl = $imageUrls[0];
         $variantData = array(
@@ -52,9 +52,10 @@ function createBabyBodySuit(Queue $queue, Shop $shop, Template $template, Settin
             'weight_unit' => 'lb',
             'requires_shipping' => true,
             'inventory_management' => null,
-            'inventory_policy' => 'deny',
-            'sku' => 'Piper Lou - Baby Body Suit - White - '.$size
+            'inventory_policy' => 'deny'
         );
+        $variantData['sku'] = generateLiquidSku($skuTemplate, $productData, $shop, $variantData);
+        // 'sku' => 'Piper Lou - Baby Body Suit - White - '.$size
         $product_data['variants'][] = $variantData;
     }
     $res = callShopify($shop, '/admin/products.json', 'POST', array(

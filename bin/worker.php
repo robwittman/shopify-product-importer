@@ -293,3 +293,19 @@ function getProductSettings(Shop $shop, $post, Template $template, Setting $sett
         'images' => array()
     );
 }
+
+function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant)
+{
+    $template = new \Liquid\Template();
+    $template->parse($skuTemplate);
+    return $template->render(array(
+        'product' => $product,
+        'shop' => $shop,
+        'variant' => $variant
+    ));
+}
+
+function getSkuTemplate(Template $template, Setting $setting, $post)
+{
+    return $template->sku_template ?: $setting->sku_template ?: $post['sku'];
+}
