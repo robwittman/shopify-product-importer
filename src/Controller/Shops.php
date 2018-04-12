@@ -130,19 +130,20 @@ class Shops
     public function settings($request, $response, $arguments)
     {
         $shop = Shop::find($arguments['id']);
+        $templates = Template::all();
         if ($handle = $request->getQueryParam('template')) {
             $template = Template::where('handle', $handle)->first();
             $setting = Setting::where(array(
                 'template_id' => $template->id,
                 'shop_id' => $shop->id
             ))->first();
-            return $this->view->render($response, 'shops/template.html', array(
+            return $this->view->render($response, 'shops/settings.html', array(
                 'shop' => $shop,
+                'templates' => $templates,
                 'template' => $template,
                 'setting' => $setting
             ));
         } else {
-            $templates = Template::all();
             return $this->view->render($response, 'shops/settings.html', array(
                 'shop' => $shop,
                 'templates' => $templates
