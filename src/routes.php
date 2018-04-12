@@ -30,6 +30,7 @@ $app->group('/users', function () use ($app) {
         $app->map(array("GET", "POST"), '/access', "UserController:access");
         $app->post('', "UserController:update");
         $app->map(array("GET", "POST"), '/delete', "UserController:delete");
+        $app->map(array("GET", "POST"), '/settings', "UserController:settings");
     });
 })->add(new App\Middleware\Authorization());
 

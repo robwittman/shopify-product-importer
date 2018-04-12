@@ -11,6 +11,10 @@ class User extends Elegant
         'password'
     );
 
+    protected $casts = array(
+        'default_shops' => 'array'
+    );
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = password_hash($password, PASSWORD_BCRYPT);

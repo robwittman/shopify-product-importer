@@ -184,4 +184,20 @@ class Users
             return $response->withRedirect("/users/{$arguments['id']}/access");
         }
     }
+
+    public function settings($request, $response, $arguments)
+    {
+        $user = User::find($arguments['id']);
+        if ($request->isPost()) {
+            $body = $request->getParsedBody();
+            $user->default_shops = $body['shops'];
+            $user->save();
+            $this->flash->addMessage('message', "Default shops succesfully updated");
+            return $response->withRedirect("/users/{$arguments['id']}/settings");
+        }
+        return $this->view->render($response, 'users/settings.html', array(
+            'user' => $user,
+            'shops' => Shop::all()
+        ));
+    }
 }
