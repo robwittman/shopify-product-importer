@@ -139,6 +139,7 @@ class Products
 
     protected function createSingleProduct($request, $response, $arguments)
     {
+        $post = $request->getParsedBody();
         $start = time();
         $files = $request->getUploadedFiles();
 
