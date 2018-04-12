@@ -43,7 +43,7 @@ task('deploy', [
     'deploy:shared',
     'deploy:writable',
     'deploy:vendors',
-    // 'db:migrate',
+    'db:migrate',
     'deploy:supervisor',
     'deploy:clear_paths',
     'deploy:symlink',
