@@ -29,6 +29,7 @@ class Products
 
     public function show_form($request, $response, $arguments)
     {
+        error_log("Showing form");
         $user = User::find($request->getAttribute('user')->id);
         $shops = $user->shops;
         $templates = array(
@@ -83,17 +84,17 @@ class Products
             $this->flash->addMessage('error', "There was an error uploading your .zip file. Code {$file['error']}");
             return $response->withRedirect('/products');
         }
-        error_log(json_encode($body));
         if ($body['template'] == 'staple_wholesale_apparel') {
             $this->createBatchProduct($request, $response, $arguments);
         } else {
             $this->createSingleProduct($request, $response, $arguments);
         }
+        $this->flash->addMessage("message", "Product successfully added to queue.");
+        return $response->withRedirect('/products');
     }
 
     protected function createBatchProduct($request, $response, $arguments)
     {
-        error_log("Batch creating");
         $file = $_FILES['zip_file'];
         $passedFileName = $file['name'];
         $hash = hash('sha256', uniqid(true));
@@ -113,13 +114,11 @@ class Products
         $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
         $i = 0;
         foreach ($objects as $object) {
-            error_log($object->getBaseName());
             if ($object->getExtension() === 'zip') {
                 $i++;
                 $zip = new \ZipArchive();
                 $zip->open($object->getRealPath());
                 $newPath = $path.'/'.$object->getBasename('zip');
-                error_log($newPath);
                 $zip->extractTo($newPath);
                 $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($newPath));
                 foreach ($files as $name => $file) {
@@ -152,9 +151,6 @@ class Products
                 }
             }
         }
-
-        $this->flash->addMessage("message", "Product successfully added to queue.");
-        return $response->withRedirect('products');
     }
 
     protected function createSingleProduct($request, $response, $arguments)
@@ -212,8 +208,7 @@ class Products
         }
 
         $elapsed_time = time() - $start;
-        $this->flash->addMessage("message", "Product successfully added to queue. [Process took {$elapsed_time} seconds]");
-        return $response->withRedirect('products');
+        return;
     }
 
     public function restart_queue($request, $response, $args)
