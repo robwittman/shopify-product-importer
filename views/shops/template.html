@@ -6,6 +6,7 @@
         <form action="/shops/{{ shop.id }}/settings/{{ template.id }}" method="post">
             <div class="panel-heading">
                 Settings for {{ shop.myshopify_domain }}'s {{ template.name }} Template
+                <span class='pull-right'><a href="/shops/{{ shop.id }}/settings">Back to Templates</a></span>
             </div>
             <div class="panel-body">
                 <div class="form-group col-sm-6">

@@ -155,6 +155,16 @@ class TemplateSeeder extends AbstractSeed
                 'sku_template' => null,
                 'tags' => 'christmas'
             ),
+            array(
+                'handle' => 'donation_uv_tumbler',
+                'name' => 'UV Tumbler (100% Donation)',
+                'description' => '',
+                'vendor' => 'Canvus Print',
+                'product_type' => 'UV Tumbler',
+                'enabled' => 1,
+                'sku_template' => null,
+                'tags' => 'UV Tumbler, Awareness'
+            ),
         );
         $this->table('templates')->insert($data)->save();
     }

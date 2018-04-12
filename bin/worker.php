@@ -92,6 +92,9 @@ while (true) {
                 case 'uv_tumbler':
                     $res = createUvDrinkware($queue, $shop, $template, $setting);
                     break;
+                case 'donation_uv_tumbler':
+                    $res = createDonationUVTumbler($queue, $shop, $template, $setting);
+                    break;
                 case 'flasks':
                     $res = createFlasks($queue, $shop, $template, $setting);
                     break;
