@@ -70,7 +70,7 @@ function createUvDrinkware(Queue $queue, Shop $shop, Template $template, Setting
                 'inventory_policy' => 'deny',
                 'sku' => $sku
             );
-            if ($color == 'Navy' && $size == '30') {
+            if ($color == 'Black' && $size == '30') {
                 $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
             } else {
                 $product_data['variants'][] = $variantData;
