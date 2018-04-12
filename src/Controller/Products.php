@@ -6,6 +6,7 @@ use App\Model\User;
 use App\Model\Queue;
 use App\Model\Shop;
 use App\Model\Template;
+use App\Model\Batch;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class Products
@@ -79,62 +80,25 @@ class Products
 
     protected function createBatchProduct($request, $response, $arguments)
     {
-        $file = $_FILES['zip_file'];
-        $passedFileName = $file['name'];
         $hash = hash('sha256', uniqid(true));
-        $path = "/tmp/{$hash}";
-
+        $file = $_FILES['zip_file'];
+        $post = $request->getParsedBody();
         $zip = new \ZipArchive();
         $zip->open($file['tmp_name']);
-        $zip->extractTo($path);
+        $zip->extractTo('/var/www/uploads/'.$hash);
 
-        $shopId = $_POST['shop'];
-        $shop = Shop::find($shopId);
-
-        if (empty($shop)) {
-            $this->flash->addMessage('error', "We couldnt find that shop");
-            return $response->withRedirect('/products');
-        }
-        $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
-        $i = 0;
-        foreach ($objects as $object) {
-            if ($object->getExtension() === 'zip') {
-                $i++;
-                $zip = new \ZipArchive();
-                $zip->open($object->getRealPath());
-                $newPath = $path.'/'.$object->getBasename('zip');
-                $zip->extractTo($newPath);
-                $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($newPath));
-                foreach ($files as $name => $file) {
-                    if (!in_array($file->getExtension(), ['jpg', 'png'])) {
-                        continue;
-                    }
-                    $name = str_replace('/tmp/', '', $name);
-                    $this->s3->putObject([
-                        'Bucket' => "shopify-product-importer",
-                        'SourceFile' => $file,
-                        'ACL' => 'public-read',
-                        'Key' => str_replace(' ', '_', $name).'-'.$i,
-                        'Content-Type' => 'application/zip_file'
-                    ]);
-
-                    $data = array(
-                        'file' => $hash,
-                        'post' => $request->getParsedBody(),
-                        'file_name' => $passedFileName
-                    );
-                    $data['post']['shop'] = $shopId;
-                    $queue = new Queue();
-                    $queue->data = $data;
-                    $queue->status = Queue::PENDING;
-                    $queue->shop = $shopId;
-                    $queue->file_name = $data['file'];
-                    $queue->template = $data['post']['template'];
-                    $queue->log_to_google = (int) $data['post']['log_to_google'];
-                    $queue->save();
-                }
-            }
-        }
+        $batch = new Batch();
+        $batch->file_path = '/var/www/uploads/'.$hash;
+        $batch->product_type = $post['product_type'];
+        $batch->vendor = $post['vendor'];
+        $batch->tags = $post['tags'];
+        $batch->status = 'pending';
+        $batch->title = $post['product_title'];
+        $batch->file_name = $file['name'];
+        $batch->template = $post['template'];
+        $batch->shop_id = $post['shop'];
+        $batch->post = $post;
+        $batch->save();
     }
 
     protected function createSingleProduct($request, $response, $arguments)
