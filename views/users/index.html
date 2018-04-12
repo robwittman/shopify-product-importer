@@ -6,7 +6,6 @@
             <div class="panel-heading">
                 Users
             </div>
-            <div class="panel-body">
                 {% if users is empty %}
                     <div class="alert alert-info">
                         You don't have any users yet! Have DB Admin create one!
@@ -37,7 +36,6 @@
                     {% endfor %}
                 </table>
                 {% endif %}
-            </div>
             <div class="panel-footer">
                 <a href="/users/create" class='btn btn-sm btn-primary pull-right'>Create New User</a>
                 <div class="clearfix">

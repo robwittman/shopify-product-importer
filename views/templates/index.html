@@ -6,30 +6,28 @@
             <div class="panel-heading">
                 Templates
             </div>
-            <div class="panel-body">
-                {% if templates is empty %}
-                    <div class="alert alert-info">
-                        You don't have any templates yet!
-                    </div>
-                {% else %}
-                <table class='table table-bordered table-striped'>
+            {% if templates is empty %}
+                <div class="alert alert-info">
+                    You don't have any templates yet!
+                </div>
+            {% else %}
+            <table class='table table-bordered table-striped'>
+                <tr>
+                    <th>Handle</th>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+                {% for template in templates %}
                     <tr>
-                        <th>Handle</th>
-                        <th>Name</th>
-                        <th></th>
+                        <td>{{ template.handle }}</td>
+                        <td>{{ template.name }}</td>
+                        <td>
+                            <a class='btn btn-sm btn-default' href="/templates/{{ template.id }}">Edit</a>
+                        </td>
                     </tr>
-                    {% for template in templates %}
-                        <tr>
-                            <td>{{ template.handle }}</td>
-                            <td>{{ template.name }}</td>
-                            <td>
-                                <a class='btn btn-sm btn-default' href="/templates/{{ template.id }}">Edit</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-                {% endif %}
-            </div>
+                {% endfor %}
+            </table>
+            {% endif %}
         </div>
 </div>
 {% endblock %}

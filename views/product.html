@@ -3,14 +3,14 @@
 {% block content %}
     <div class="row">
         {% if result %}
-            <div class="col-sm-10 col-sm-offset-1 alert alert-success">
+            <div class="col-sm-12 col-sm-offset-1 alert alert-success">
                 Product {{ result }} successfully created! <a href="https://{{store}}/admin/products/{{result}}" target="_blank">Click to review!</a>
             </div>
         {% endif %}
     </div>
     <div class="row">
         <form action="" method="post" enctype='multipart/form-data' id='productForm'>
-            <div class="col-lg-6 col-lg-offset-2 col-sm-12">
+            <div class="col-lg-10 col-lg-offset-1 col-sm-12">
                 {% if shops is empty %}
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -28,6 +28,23 @@
                         Product Details
                     </div>
                     <div class="panel-body">
+                        <div class='form-group col-sm-12'>
+                            <label class='control-label'>ZIP File</label>
+                            <input type="file" name="zip_file" value="">
+                        </div>
+                        <div class="form-group col-lg-6 col-sm-12">
+                            <label class='control-label'>Shop</label>
+                            <select class='form-control'>
+                                {% for shop in shops %}
+                                    {% if shop.id in user.default_shops %}
+                                        <option value="{{ shop.id}}" selected>{{shop.myshopify_domain}}</option>
+                                    {% else %}
+                                        <option value="{{ shop.id }}">{{ shop.myshopify_domain }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
                         <div class='form-group col-lg-6 col-sm-12'>
                             <label class='control-label'>Product Title</label>
                             <input type="text" name="product_title" value="" class='form-control'>
@@ -38,27 +55,19 @@
                         </div>
                         <div class="form-group col-sm-12">
                             <label class='control-label'>Tags</label>
-                            <textarea name="tags" rows="2" cols="40" placeholder='We can default this to whatever you want as well' class='form-control'></textarea>
+                            <input type='text' name="tags" placeholder='We can default this to whatever you want as well' class='form-control'>
                         </div>
-                        <hr>
-                        <div class='form-group col-sm-12'>
-                            <label class='control-label'>ZIP File</label>
-                            <input type="file" name="zip_file" value="">
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-sm-6">
-                                <label class='control-label'>Template</label>
-                                <select class="form-control" name="template" onchange='selectCallback()'>
-                                    {% for template in templates %}
-                                        <option value="{{ template.handle }}">{{ template.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                        <div class="form-group col-sm-12">
+                            <label class='control-label'>Template</label>
+                            <select class="form-control" name="template" onchange='selectCallback()'>
+                                {% for template in templates %}
+                                    <option value="{{ template.handle }}">{{ template.name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
 
-                        <div class="row" style='display:none' id='wholesale_product_type'>
-                            <div class="form-group col-sm-6">
+                        <div style='display:none' id='wholesale_product_type'>
+                            <div class="form-group col-sm-12">
                                 <select class="form-control" name="wholesale_product_type">
                                     <option value="scoop_neck_jersey_tee" selected>3504 - LADIES' SCOOP NECK FINE JERSEY TEE</option>
                                     <option value="vneck_fine_jersey_tee">3507 - LADIES' V-NECK FINE JERSEY TEE</option>
@@ -82,68 +91,68 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row" style='display:none' id='tumbler_product_type'>
-                            <div class="form-group col-sm-6">
+                        <div style='display:none' id='tumbler_product_type'>
+                            <div class="form-group col-sm-12">
                                 <select class="form-control" name="tumbler_product_type">
                                     <option value="etched">Standard Factory Colors (Etched)</option>
                                     <option value="powder_coated">Custom Powder Coated (Piper Lou)</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="row" style='display:none' id='stemless_product_type'>
-                            <div class="form-group col-sm-6">
+                        <div style='display:none' id='stemless_product_type'>
+                            <div class="form-group col-sm-12">
                                 <select class="form-control" name="stemless_product_type">
                                     <option value="etched">Standard Factory Colors (Etched)</option>
                                     <option value="powder_coated">Custom Powder Coated (Piper Lou)</option>
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group col-sm-6">
+                            <label class='control-label'>Showcase Color</label>
+                            <select name='default_color' class='form-control'>
+                                <option value='Navy' selected>Navy</option>
+                                <option value='Black'>Black</option>
+                                <option value='Charcoal'>Charcoal</option>
+                                <option value='Royal'>Royal Blue</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class='control-label'>Showcase Product</label>
+                            <select class='form-control' name="default_product">
+                                <option value="Hoodie">Hoodie</option>
+                                <option value="Tank">Tank</option>
+                                <option value="Tee">Tee</option>
+                                <option value="Long Sleeve" selected>Long Sleeve</option>
+                            </select>
+                        </div>
                         <div class="row">
-                            <div class="form-group col-sm-6">
-                                <label class='control-label'>Showcase Color</label>
-                                <select name='default_color' class='form-control'>
-                                    <option value='Navy' selected>Navy</option>
-                                    <option value='Black'>Black</option>
-                                    <option value='Charcoal'>Charcoal</option>
-                                    <option value='Royal'>Royal Blue</option>
-                                </select>
+                            <div class="checkbox">
+                                <label>
+                                    <input type='checkbox' id='log_to_google' name="log_to_google" value="1" onchange='setGoogleFieldsVisibility()' checked>Log to Google
+                                </label>
                             </div>
-                            <div class="form-group col-sm-6">
-                                <label class='control-label'>Showcase Product</label>
-                                <select class='form-control' name="default_product">
-                                    <option value="Hoodie">Hoodie</option>
-                                    <option value="Tank">Tank</option>
-                                    <option value="Tee">Tee</option>
-                                    <option value="Long Sleeve" selected>Long Sleeve</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>
-                                <input type='checkbox' id='log_to_google' name="log_to_google" value="1" onchange='setGoogleFieldsVisibility()' checked>Log to Google
-                            </label>
-                        </div>
-                        <div id="google-fields">
-                            <div class="form-group">
-                                <label class='col-sm-3 control-label'>Print Type</label>
-                                <div class="col-sm-9">
-                                    <select class="form-control" name="print_type" onchange='setPrintType()'>
-                                        <option value="front_print" selected>Front Print</option>
-                                        <option value="back_print">Back Print</option>
-                                        <option value="double_sided">Front &amp; Back</option>
-                                    </select>
+                            <div id="google-fields">
+                                <div class="form-group">
+                                    <label class='col-sm-3 control-label'>Print Type</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" name="print_type" onchange='setPrintType()'>
+                                            <option value="front_print" selected>Front Print</option>
+                                            <option value="back_print">Back Print</option>
+                                            <option value="double_sided">Front &amp; Back</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group" id='front_print_url_field'>
-                                <label class='col-sm-3 control-label'>Front Print URL</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class='form-control' name="front_print_url" value="">
+                                <div class="form-group" id='front_print_url_field'>
+                                    <label class='col-sm-3 control-label'>Front Print URL</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class='form-control' name="front_print_url" value="">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group" id='back_print_url_field' style='display:none'>
-                                <label class='col-sm-3 control-label'>Back Print URL</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class='form-control' name="back_print_url" value="">
+                                <div class="form-group" id='back_print_url_field' style='display:none'>
+                                    <label class='col-sm-3 control-label'>Back Print URL</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class='form-control' name="back_print_url" value="">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -155,7 +164,7 @@
                 </div>
                 {% endif %}
             </div>
-            <div class="col-lg-2 col-sm-12">
+            <!-- <div class="col-lg-2 col-sm-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         Stores
@@ -174,7 +183,7 @@
                         {% endfor %}
                     </div>
                 </div>
-            </div>
+            </div> -->
         </form>
     </div>
 

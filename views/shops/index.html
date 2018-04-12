@@ -6,7 +6,6 @@
             <div class="panel-heading">
                 Shops
             </div>
-            <div class="panel-body">
                 {% if shops is empty %}
                     <div class="alert alert-info">
                         You don't have any shops yet! <a href="/shops/create">Create one now!</a>
@@ -32,7 +31,6 @@
                     {% endfor %}
                 </table>
                 {% endif %}
-            </div>
             <div class="panel-footer">
                 <a href="/shops/create" class='btn btn-sm btn-primary pull-right'>Create New Shop</a>
                 <div class="clearfix">
