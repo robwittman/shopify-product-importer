@@ -50,7 +50,7 @@ while (true) {
                 case 'drinkware':
                     $res = createDrinkware($queue, $shop, $template, $setting);
                     break;
-                case 'uv_tumbler':
+                case 'uv_drinkware':
                     $res = createUvDrinkware($queue, $shop, $template, $setting);
                     break;
                 case 'donation_uv_tumbler':
