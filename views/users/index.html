@@ -2,46 +2,46 @@
 
 {% block content %}
 <div class="col-sm-8 col-sm-offset-2">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                Users
-            </div>
-                {% if users is empty %}
-                    <div class="alert alert-info">
-                        You don't have any users yet! Have DB Admin create one!
-                    </div>
-                {% else %}
-                <table class='table table-bordered table-striped'>
-                    <tr>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th></th>
-                    </tr>
-                    {% for user in users %}
-                        <tr>
-                            <td>
-                                {{ user.email }}
-                            </td>
-                            <td>
-                                {{ user.role }}
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                  <a href="/users/{{ user.id }}" type="button" class="btn btn-sm btn-default">Edit</a>
-                                  <a href="/users/{{ user.id }}/access" type="button" class="btn btn-sm btn-default">Access</a>
-                                  <a href="/users/{{user.id}}/settings" type="button" class="btn btn-sm btn-default">Settings</a>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-                {% endif %}
-            <div class="panel-footer">
-                <a href="/users/create" class='btn btn-sm btn-primary pull-right'>Create New User</a>
-                <div class="clearfix">
-
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Users
+        </div>
+            {% if users is empty %}
+                <div class="alert alert-info">
+                    You don't have any users yet! Have DB Admin create one!
                 </div>
+            {% else %}
+            <table class='table table-bordered table-striped'>
+                <tr>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th></th>
+                </tr>
+                {% for user in users %}
+                    <tr>
+                        <td>
+                            {{ user.email }}
+                        </td>
+                        <td>
+                            {{ user.role }}
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                              <a href="/users/{{ user.id }}" type="button" class="btn btn-sm btn-default">Edit</a>
+                              <a href="/users/{{ user.id }}/access" type="button" class="btn btn-sm btn-default">Access</a>
+                              <a href="/users/{{user.id}}/settings" type="button" class="btn btn-sm btn-default">Settings</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+        <div class="panel-footer">
+            <a href="/users/create" class='btn btn-sm btn-primary pull-right'>Create New User</a>
+            <div class="clearfix">
+
             </div>
         </div>
+    </div>
 </div>
 {% endblock %}
