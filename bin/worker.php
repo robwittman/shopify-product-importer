@@ -89,7 +89,7 @@ while (true) {
                 case 'drinkware':
                     $res = createDrinkware($queue, $shop, $template, $setting);
                     break;
-                case 'uv_drinkware':
+                case 'uv_tumbler':
                     $res = createUvDrinkware($queue, $shop, $template, $setting);
                     break;
                 case 'flasks':

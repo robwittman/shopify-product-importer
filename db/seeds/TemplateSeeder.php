@@ -106,8 +106,8 @@ class TemplateSeeder extends AbstractSeed
                 'tags' => 'drinkware'
             ),
             array(
-                'handle' => 'uv_drinkware',
-                'name' => 'UV Drinkware',
+                'handle' => 'uv_tumbler',
+                'name' => 'UV Tumbler',
                 'description' => '',
                 'vendor' => 'ISIKEL',
                 'product_type' => 'UV Tumbler',
