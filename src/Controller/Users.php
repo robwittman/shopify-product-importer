@@ -190,7 +190,7 @@ class Users
         $user = User::find($arguments['id']);
         if ($request->isPost()) {
             $body = $request->getParsedBody();
-            $user->default_shops = $body['shops'];
+            $user->default_shops = $body['default_shop'];
             $user->save();
             $this->flash->addMessage('message', "Default shops succesfully updated");
             return $response->withRedirect("/users/{$arguments['id']}/settings");

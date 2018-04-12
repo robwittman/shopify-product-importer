@@ -8,18 +8,18 @@
                 Settings
             </div>
             <div class="panel-body">
-                {% for shop in shops %}
-                    <div class="checkbox">
-                        <label>
-                            {% if shop.id in user.default_shops %}
-                                <input type="checkbox" name="shops[]" value="{{ shop.id }}" checked>
+                <div class="form-group">
+                    <label class='control-label'>Default Store</label>
+                    <select class="form-control" name="default_shop">
+                        {% for shop in shops %}
+                            {% if shop.id == user.default_shops %}
+                                <option value="{{ shop.id }}" selected>{{ shop.myshopify_domain }}</option>
                             {% else %}
-                                <input type="checkbox" name="shops[]" value="{{ shop.id }}">
+                                <option value="{{ shop.id }}">{{ shop.myshopify_domain }}</option>
                             {% endif %}
-                            {{ shop.myshopify_domain }}
-                        </label>
-                    </div>
-                {% endfor %}
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
             <div class="panel-footer">
                 <button type='submit' class='btn btn-sm btn-primary pull-right'>Update Settings</button>
