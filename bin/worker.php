@@ -216,25 +216,6 @@ function compressValues($results, $printType)
     return $return;
 }
 
-function getSkuFromFileName($fileName)
-{
-    $parts = explode('-', str_replace('.zip', '', $fileName));
-    if (count($parts) == 1) {
-        return $parts[0];
-    }
-    return implode(array($parts[0], $parts[1]), '-');
-}
-
-function getDesignIdFromFilename($fileName)
-{
-    if (is_null($designId)) {
-        $chunks = explode('/', $name);
-        $fileName = $chunks[count($chunks) - 2];
-        $pieces = explode('_-_', $fileName);
-        return $pieces[1];
-    }
-}
-
 function getProductSettings(Shop $shop, Queue $queue, Template $template, Setting $setting = null)
 {
     $tags = implode(',', array_merge(

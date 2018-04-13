@@ -30,9 +30,6 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
             continue;
         }
 
-        if (is_null($designId)) {
-            $designId = getDesignIdFromFilename($name);
-        }
 
         $chunks = explode('/', $name);
         $fileName = $chunks[count($chunks) -1];
@@ -61,7 +58,6 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
                 'requires_shipping' => true,
                 'inventory_management' => null,
                 'inventory_policy' => "deny"
-                // 'sku' => "PL - {$designId} - {$details['skuModifier']} - {$size} - {$color}"
             );
 
             $variantData['size'] = $size;
