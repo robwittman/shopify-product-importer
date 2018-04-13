@@ -34,7 +34,7 @@ class AddShopTemplateDefaults extends AbstractMigration
             ->addColumn('description', 'text', array('null' => true, 'default' => null))
             ->addColumn('product_type', 'string', array('null' => true, 'default' => null))
             ->addColumn('vendor', 'string', array('limit' => 45, 'null' => true, 'default' => null))
-            ->addColumn('sku_template', 'string', array('limit' => 45, 'null' => true, 'limit' => 254, 'default' => null))
+            ->addColumn('sku_template', 'text', array('null' => true, 'default' => null))
             ->addcolumn('tags', 'string', array('limit' => 245, 'default' => null, 'null' => true))
             ->create();
     }

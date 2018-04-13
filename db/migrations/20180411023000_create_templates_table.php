@@ -35,7 +35,7 @@ class CreateTemplatesTable extends AbstractMigration
             ->addColumn('vendor', 'string', array('limit' => 45, 'null' => true, 'default' => null))
             ->addColumn('product_type', 'string', array('limit' => 45, 'null' => true, 'default' => null))
             ->addColumn('enabled', 'boolean', array('default' => true))
-            ->addColumn('sku_template', 'string', array('null' => true, 'limit' => 254, 'default' => null))
+            ->addColumn('sku_template', 'text', array('null' => true, 'default' => null))
             ->addcolumn('tags', 'string', array('limit' => 245, 'default' => null, 'null' => true))
             ->create();
     }
