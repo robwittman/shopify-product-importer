@@ -49,7 +49,7 @@ function createDonationUVTumbler(Queue $queue, Shop $shop, Template $template, S
             $variantData = array(
                 'title' => $option1. ' / '.$color,
                 'price' => $prices[$size],
-                'option1' => $option1.'oz Tumbler',
+                'option1' => $size.'oz Tumbler',
                 'option2' => $color,
                 'weight' => '1.1',
                 'weight_unit' => 'lb',
