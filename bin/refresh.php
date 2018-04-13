@@ -2,6 +2,8 @@
 
 require_once 'bootstrap.php';
 
+use App\Model\Shop;
+
 $shops = Shop::all();
 
 foreach ($shops as $shop) {
