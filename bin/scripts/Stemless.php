@@ -32,6 +32,7 @@ function createStemless(Queue $queue, Shop $shop, Template $template, Setting $s
             'name' => "Color"
         )
     );
+    var_dump($product_data);
     $store_name = '';
     switch ($shop->myshopify_domain) {
         case 'piper-lou-collection.myshopify.com':
@@ -44,6 +45,7 @@ function createStemless(Queue $queue, Shop $shop, Template $template, Setting $s
     } else {
         $slug = 'W12G';
     }
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($imageUrls as $color => $url) {
         $sku = $color;
         if ($color == 'Grey') {
@@ -57,8 +59,7 @@ function createStemless(Queue $queue, Shop $shop, Template $template, Setting $s
             'weight_unit' => 'oz',
             'requires_shipping' => true,
             'inventory_management' => null,
-            'inventory_policy' => 'deny',
-            'sku' => getSkuFromFileName($data['file_name']).' - '.$slug.' - '.str_replace('_', ' ', $color)
+            'inventory_policy' => 'deny'
         );
         $variantData['size'] = $size;
         $variantData['color'] = str_replace('_', ' ', $color);
