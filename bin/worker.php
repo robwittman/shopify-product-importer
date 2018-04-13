@@ -83,6 +83,7 @@ while (true) {
             error_log("Queue {$queue->id} finished. ".json_encode($res));
         } catch(\Exception $e) {
             error_log($e->getMessage());
+            var_dump($e);
             if ($message = json_decode($e->getMessage())) {
                 $queue->fail($message->error->message);
             } else {
