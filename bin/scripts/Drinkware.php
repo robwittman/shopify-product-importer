@@ -48,36 +48,41 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
         )
     );
 
-
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($imageUrls as $size => $colors) {
         foreach ($colors as $color => $url) {
             $sku = $color;
             if ($color == 'Cyan') {
                 $sku = 'Seafoam';
             }
-            $sku = str_replace('_', ' ', $sku);
-            switch ($size) {
-                case '30':
-                    $option1 = '30oz Tumbler';
-                    $sku = getSkuFromFileName($data['file_name']).' - T30 - '.$sku;
-                    break;
-                case '20':
-                    $option1 = '20oz Tumbler';
-                    $sku = getSkuFromFileName($data['file_name']).' - T20 - '.$sku;
-                    break;
-            }
+            // $sku = str_replace('_', ' ', $sku);
+            // switch ($size) {
+            //     case '30':
+            //         $option1 = '30oz Tumbler';
+            //         $sku = getSkuFromFileName($data['file_name']).' - T30 - '.$sku;
+            //         break;
+            //     case '20':
+            //         $option1 = '20oz Tumbler';
+            //         $sku = getSkuFromFileName($data['file_name']).' - T20 - '.$sku;
+            //         break;
+            // }
+            $color = str_replace('_', ' ', $color);
             $variantData = array(
-                'title' => $option1. ' / '.str_replace('_', ' ', $color),
+                'title' => $option1. ' / '.$color
                 'price' => $prices[$size],
-                'option1' => $option1,
+                'option1' => $size.'oz Tumbler',
                 'option2' => str_replace('_', ' ', $color),
                 'weight' => '1.1',
                 'weight_unit' => 'lb',
                 'requires_shipping' => true,
                 'inventory_management' => null,
                 'inventory_policy' => 'deny',
-                'sku' => $sku
             );
+            $variantData['size'] = $size;
+            $variantData['color'] = $color;
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $productData, $shop, $variantData, $post, $data['file_name']);
+            unset($variantData['size']);
+            unset($variantData['color']);
             if ($color == ($hasNavy ? 'Navy' : 'Black') && $size == '30') {
                 $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
             } else {
