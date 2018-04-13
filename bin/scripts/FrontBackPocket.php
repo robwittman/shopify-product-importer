@@ -98,7 +98,7 @@ function createFrontBackPocket(Queue $queue, Shop $shop, Template $template, Set
                 $variantData['size'] = $size;
                 $variantData['color'] = $color;
                 $variantData['style'] = $style;
-                $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
+                $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post);
                 unset($variantData['size']);
                 unset($variantData['color']);
                 unset($variantData['style']);

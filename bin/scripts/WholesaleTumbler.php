@@ -82,8 +82,8 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
             );
 
             $varData['size'] = $size;
-            $varData['color'] = $color;
-            $varData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $varData);
+            $varData['color'] = str_replace('_', ' ', $color);
+            $varData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $varData, $post);
             unset($varData['size']);
             unset($varData['color']);
             $product_data['variants'][] = $varData;

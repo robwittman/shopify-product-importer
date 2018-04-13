@@ -253,14 +253,16 @@ function getProductSettings(Shop $shop, $post, Template $template, Setting $sett
     );
 }
 
-function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant)
+function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $file, $post)
 {
     $template = new \Liquid\Template();
     $template->parse($skuTemplate);
     $sku = $template->render(array(
         'product' => $product,
         'shop' => $shop,
-        'variant' => $variant
+        'variant' => $variant,
+        'file' => str_replace('.zip', '', $post['file_name']),
+        'data' => $post
     ));
     return $sku;
 }
