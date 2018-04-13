@@ -5,6 +5,7 @@ use App\Model\Queue;
 use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
+use App\Model\Sku;
 
 foreach (glob(DIR."/bin/scripts/*.php") as $file) {
     include_once ($file);
