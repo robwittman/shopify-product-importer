@@ -57,7 +57,7 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
             }
             $color = str_replace('_', ' ', $color);
             $variantData = array(
-                'title' => $option1. ' / '.$color,
+                'title' => $size.'oz Tumbler / '.$color,
                 'price' => $prices[$size],
                 'option1' => $size.'oz Tumbler',
                 'option2' => str_replace('_', ' ', $color),

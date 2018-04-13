@@ -252,5 +252,5 @@ function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, 
 
 function getSkuTemplate(Template $template, Setting $setting = null, Queue $queue)
 {
-    return $queue->sku ?: $estting->sku_template ?: $template->sku_template;
+    return $queue->sku ?: $setting->sku_template ?: $template->sku_template;
 }
