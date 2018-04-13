@@ -253,7 +253,7 @@ function getProductSettings(Shop $shop, $post, Template $template, Setting $sett
     );
 }
 
-function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $file, $post)
+function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post)
 {
     $template = new \Liquid\Template();
     $template->parse($skuTemplate);
