@@ -37,21 +37,6 @@ function createUvTumbler($queue)
             $imageUrls[$size][$color] = $name;
         }
 
-        switch ($shop->myshopify_domain) {
-            case 'piper-lou-collection.myshopify.com':
-            case 'hopecaregive.myshopify.com':
-            case 'game-slave.myshopify.com':
-            default:
-                $html = '<meta charset="utf-8" />'.
-                        "<ul>".
-                            "<li>2x heat &amp; cold retention (compared to plastic tumblers).</li>".
-                            "<li>Double-walled vacuum insulation - Keeps Hot and Cold. </li>".
-                            "<li>Fits most cup holders, Clear lid to protect from spills. </li>".
-                            "<li>Sweat Free Design allows for a Strong Hold. </li>".
-                            "<li>These tumblers will ship separately from our distributor in Texas. </li>".
-                        '</ul>';
-        }
-
         $product_data = array(
             'title' => $post['product_title'],
             'body_html' => $html,

@@ -60,6 +60,11 @@ function createStemless(Queue $queue, Shop $shop, Template $template, Setting $s
             'inventory_policy' => 'deny',
             'sku' => getSkuFromFileName($data['file_name']).' - '.$slug.' - '.str_replace('_', ' ', $color)
         );
+        $variantData['size'] = $size;
+        $variantData['color'] = str_replace('_', ' ', $color);
+        $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name']);
+        unset($variantData['size']);
+        unset($variantData['color']);
         if ($color == 'Navy') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
         } else {

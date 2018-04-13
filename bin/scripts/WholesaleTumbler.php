@@ -78,7 +78,6 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
                 'requires_shipping' => true,
                 'inventory_management' => null,
                 'inventory_policy' => 'deny',
-                // 'sku' => getSkuFromFileName($data['file_name']).' - T'.str_replace('oz', '', $size).$skuModifier.' - '.str_replace('_', ' ', $color)
             );
 
             $varData['size'] = $size;

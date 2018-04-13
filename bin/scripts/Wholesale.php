@@ -63,9 +63,7 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
                 'inventory_policy' => "deny"
                 // 'sku' => "PL - {$designId} - {$details['skuModifier']} - {$size} - {$color}"
             );
-            if ($post['wholesale_product_type'] == 'front_back_unisex_tee') {
-                $varData['sku'] = 'FBP - '.$varData['sku'];
-            }
+
             $variantData['size'] = $size;
             $variantData['color'] = $color;
             $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name']);

@@ -46,24 +46,13 @@ function createUvDrinkware(Queue $queue, Shop $shop, Template $template, Setting
     $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($imageUrls as $size => $colors) {
         foreach ($colors as $color => $url) {
-            $sku = str_replace('_', '', $color);
-            switch ($size) {
-                case '30':
-                    $option1 = '30oz Tumbler';
-                    // $sku = "TX (UV PRINTED) - T30 - {$sku} - Coated 30oz Tumbler";
-                    $sku = 'PL - '.getSkuFromFileName($data['file_name']).' - UV30 - '.$sku;
-                    break;
-                case '20':
-                    $option1 = '20oz Tumbler';
-                    // $sku = "TX (UV PRINTED) - T20 - {$sku} - Coated 20oz Tumbler";
-                    $sku = 'PL - '.getSkuFromFileName($data['file_name']).' - UV20 - '.$sku;
-                    break;
-            }
+            $color = str_replace('_', '', $color);
+
             $variantData = array(
                 'title' => $option1. ' / '.$color,
                 'price' => $prices[$size],
-                'option1' => $option1,
-                'option2' => str_replace('_', ' ', $color),
+                'option1' => $option1.'oz Tumbler',
+                'option2' => $color,
                 'weight' => '1.1',
                 'weight_unit' => 'lb',
                 'requires_shipping' => true,
