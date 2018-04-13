@@ -226,7 +226,7 @@ function getProductSettings(Shop $shop, Queue $queue, Template $template, Settin
         str_getcsv($setting->tags)
     ));
     return array(
-        'title' => $queue->product_title,
+        'title' => $queue->title,
         'body_html' => $queue->description ?: $setting->description ?: $shop->description ?: $template->description,
         'tags' => $tags,
         'product_type' => $queue->product_type ?: $setting->product_type ?: $template->product_Type,
