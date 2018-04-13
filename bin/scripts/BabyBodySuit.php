@@ -54,7 +54,9 @@ function createBabyBodySuit(Queue $queue, Shop $shop, Template $template, Settin
             'inventory_management' => null,
             'inventory_policy' => 'deny'
         );
+        $variantData['size'] = $size;
         $variantData['sku'] = generateLiquidSku($skuTemplate, $productData, $shop, $variantData);
+        unset($variantData['size']);
         // 'sku' => 'Piper Lou - Baby Body Suit - White - '.$size
         $product_data['variants'][] = $variantData;
     }

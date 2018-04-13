@@ -66,7 +66,11 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
             if ($post['wholesale_product_type'] == 'front_back_unisex_tee') {
                 $varData['sku'] = 'FBP - '.$varData['sku'];
             }
-            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $varData);
+            $variantData['size'] = $size;
+            $variantData['color'] = $color;
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
+            unset($variantData['size']);
+            unset($variantData['color']);
             if($color == $post['default_color'] && $size == 'S') {
                 array_unshift($product_data['variants'], $varData);
             } else {

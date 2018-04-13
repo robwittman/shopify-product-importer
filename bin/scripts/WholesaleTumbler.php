@@ -80,7 +80,12 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
                 'inventory_policy' => 'deny',
                 // 'sku' => getSkuFromFileName($data['file_name']).' - T'.str_replace('oz', '', $size).$skuModifier.' - '.str_replace('_', ' ', $color)
             );
-            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
+
+            $varData['size'] = $size;
+            $varData['color'] = $color;
+            $varData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $varData);
+            unset($varData['size']);
+            unset($varData['color']);
             $product_data['variants'][] = $varData;
         }
     }

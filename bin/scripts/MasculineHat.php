@@ -55,7 +55,11 @@ function createMasculineHats(Queue $queue, Shop $shop, Template $template, Setti
             'inventory_management' => null,
             'inventory_policy' => 'deny'
         );
+
+        $variantData['color'] = $color;
         $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
+        unset($variantData['color']);
+
         if ($color == 'Navy' && $style == 'Hat') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
         } else {

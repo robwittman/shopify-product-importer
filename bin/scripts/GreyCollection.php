@@ -182,7 +182,11 @@ function createGreyCollection(Queue $queue, Shop $shop, Template $template, Sett
                 'inventory_management' => null,
                 'inventory_policy' => 'deny'
             );
+            $variantData['size'] = $size;
+            $variantData['style'] = $style;
             $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
+            unset($variantData['size']);
+            unset($variantData['style']);
             $product_data['variants'][] = $variantData;
         }
     }

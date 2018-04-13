@@ -50,7 +50,10 @@ function createFlasks(Queue $queue, Shop $shop, Template $template, Setting $set
             'inventory_management' => null,
             'inventory_policy' => 'deny'
         );
+        $variantData['color'] = $color;
         $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
+        unset($variantData['color']);
+        
         if ($color == 'Blue') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
         } else {
