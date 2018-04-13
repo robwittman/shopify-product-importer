@@ -3,8 +3,8 @@
 {% block content %}
 
 <div class="col-sm-4 col-sm-offset-4">
-    <div class="panel panel-primary">
-        <form action="/auth/login" method="post">
+    <form action="/auth/login" method="post">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 Login
             </div>
@@ -22,8 +22,8 @@
                 <input type="submit" name="submit" value="Login" class='btn btn-sm btn-primary pull-right'>
                 <div class="clearfix"></div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 
 {% endblock %}

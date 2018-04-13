@@ -39,19 +39,19 @@
         <div class="container-fluid">
             <div class="row">
                 {% if flash.getMessage('error') %}
-                    <div class="col-sm-6 col-sm-offset-3 alert alert-danger">
+                    <div class="text-center col-sm-8 col-sm-offset-2 alert alert-danger">
                         {{ flash.getMessage('error')[0] }}
                     </div>
                 {% elseif flash.getMessage('message') %}
-                    <div class="col-sm-6 col-sm-offset-3 alert alert-success">
+                    <div class="text-center col-sm-8 col-sm-offset-2 alert alert-success">
                         {{ flash.getMessage('message')[0] }}
                     </div>
                 {% elseif error %}
-                    <div class="col-sm-6 col-sm-offset-3 alert alert-danger">
+                    <div class="text-center col-sm-8 col-sm-offset-2 alert alert-danger">
                         {{ error }}
                     </div>
                 {% elseif message %}
-                    <div class="col-sm-6 col-sm-offset-3 alert alert-success">
+                    <div class="text-center col-sm-8 col-sm-offset-2 alert alert-success">
                         {{ message }}
                     </div>
                 {% endif %}

@@ -2,40 +2,40 @@
 
 {% block content %}
 <div class="col-sm-8 col-sm-offset-2">
+    <form action="/shops/{{ shop.id }}" method="post">
         <div class="panel panel-primary">
-            <form action="/shops/{{ shop.id }}" method="post">
-                <div class="panel-heading">
-                    Edit Shop <span class='pull-right'><a href="/shops/{{ shop.id }}/settings">Template Settings</a></span>
+            <div class="panel-heading">
+                Edit Shop <span class='pull-right'><a href="/shops/{{ shop.id }}/settings">Template Settings</a></span>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class='control-label'>Domain</label>
+                    <input type="text" name="myshopify_domain" value="{{ shop.myshopify_domain }}" class='form-control'>
                 </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label class='control-label'>Domain</label>
-                        <input type="text" name="myshopify_domain" value="{{ shop.myshopify_domain }}" class='form-control'>
-                    </div>
-                    <div class="form-group">
-                        <label class='control-label'>API Key</label>
-                        <input type="text" name="api_key" value="{{ shop.api_key }}" class='form-control'>
-                    </div>
-                    <div class="form-group">
-                        <label class='control-label'>Password</label>
-                        <input type="password" name="password" value="{{ shop.password }}" class='form-control'>
-                    </div>
-                    <div class="form-group">
-                        <label class='control-label'>Shared Secret</label>
-                        <input type="password" name="shared_secret" value="{{ shop.shared_secret }}" class='form-control'>
-                    </div>
-                    <div class="form-group">
-                        <label class='col-sm-3 control-label'>Default Description</label>
-                        <textarea name="description" rows="8" cols="80" class='form-control'>{{shop.description}}</textarea>
-                    </div>
+                <div class="form-group">
+                    <label class='control-label'>API Key</label>
+                    <input type="text" name="api_key" value="{{ shop.api_key }}" class='form-control'>
                 </div>
-                <div class="panel-footer">
-                    <a href="/shops/{{shop.id}}/delete" class='btn btn-sm btn-danger pull-left'>Delete</a>
-                    <button type='submit' class='btn btn-sm btn-primary pull-right'>Update Shop</button>
-                    <div class="clearfix"></div>
+                <div class="form-group">
+                    <label class='control-label'>Password</label>
+                    <input type="password" name="password" value="{{ shop.password }}" class='form-control'>
                 </div>
-            </form>
+                <div class="form-group">
+                    <label class='control-label'>Shared Secret</label>
+                    <input type="password" name="shared_secret" value="{{ shop.shared_secret }}" class='form-control'>
+                </div>
+                <div class="form-group">
+                    <label class='col-sm-3 control-label'>Default Description</label>
+                    <textarea name="description" rows="8" cols="80" class='form-control'>{{shop.description}}</textarea>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <a href="/shops/{{shop.id}}/delete" class='btn btn-sm btn-danger pull-left'>Delete</a>
+                <button type='submit' class='btn btn-sm btn-primary pull-right'>Update Shop</button>
+                <div class="clearfix"></div>
+            </div>
         </div>
+    </form>
 </div>
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-primary">

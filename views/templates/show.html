@@ -12,8 +12,8 @@
 {% endblock %}
 {% block content %}
 <div class="col-sm-8 col-sm-offset-2">
-    <div class="panel panel-primary">
-        <form action="/templates/{{ template.id }}" method="post">
+    <form action="/templates/{{ template.id }}" method="post">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 Edit Template
             </div>
@@ -52,8 +52,8 @@
                 <button type='submit' class='btn btn-sm btn-primary pull-right'>Update Template</button>
                 <div class="clearfix"></div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 
 {% endblock %}

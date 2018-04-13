@@ -13,8 +13,8 @@
 
 {% block content %}
 <div class="col-sm-8 col-sm-offset-2">
-    <div class="panel panel-primary">
-        <form action="/shops/{{ shop.id }}" method="post">
+    <form action="/shops/{{ shop.id }}" method="post">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 {{ shop.myshopify_domain }} Template Settings
             </div>
@@ -28,14 +28,14 @@
                     </select>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 
 {% if template %}
 <div class="col-sm-8 col-sm-offset-2">
-    <div class="panel panel-primary">
-        <form action="/shops/{{ shop.id }}/settings/{{ template.id }}" method="post">
+    <form action="/shops/{{ shop.id }}/settings/{{ template.id }}" method="post">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 {{ shop.myshopify_domain }} - {{ template.name }}
             </div>
@@ -54,7 +54,7 @@
                 </div>
                 <div class='form-group col-sm-12'>
                     <label class='control-label'>SKU Generation</label>
-                    <div id='sku_template_editor' class='editor' class='form-control'>{{ setting.sku_template }}</div>
+                    <div id='sku_template_editor' class='editor form-control'>{{ setting.sku_template }}</div>
                     <textarea name="sku_template" class='hidden'></textarea>
                 </div>
                 <div class="form-group col-sm-12">
@@ -66,8 +66,8 @@
                 <button type='submit' class='btn btn-sm btn-primary pull-right'>Update Template</button>
                 <div class="clearfix"></div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 {% endif %}
 

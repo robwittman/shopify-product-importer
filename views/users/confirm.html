@@ -2,21 +2,21 @@
 
 {% block content %}
 
-    <div class="col-sm-4 col-sm-offset-4">
+<div class="col-sm-4 col-sm-offset-4">
+    <form action="/users/{{ user.id }}/delete" method="post">
         <div class="panel panel-primary">
-            <form action="/users/{{ user.id }}/delete" method="post">
-                <div class="panel-heading">
-                    Delete {{ user.email }}?
-                </div>
-                <div class="panel-body">
-                    Are you sure you would like to delete {{ user.email }}?
-                    This action cannot be undone.
-                </div>
-                <div class="panel-footer">
-                    <button type="submit" name="button" class='btn btn-sm btn-danger pull-right'>Delete</button>
-                    <div class="clearfix"></div>
-                </div>
-            </form>
+            <div class="panel-heading">
+                Delete {{ user.email }}?
+            </div>
+            <div class="panel-body">
+                Are you sure you would like to delete {{ user.email }}?
+                This action cannot be undone.
+            </div>
+            <div class="panel-footer">
+                <button type="submit" name="button" class='btn btn-sm btn-danger pull-right'>Delete</button>
+                <div class="clearfix"></div>
+            </div>
         </div>
-    </div>
+    </form>
+</div>
 {% endblock %}

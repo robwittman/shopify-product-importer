@@ -2,8 +2,8 @@
 
 {% block content %}
 <div class="col-sm-8 col-sm-offset-2">
-    <div class="panel panel-primary">
-        <form action="/users/{{ user.id }}/settings" method="post">
+    <form action="/users/{{ user.id }}/settings" method="post">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 Settings
             </div>
@@ -25,7 +25,7 @@
                 <button type='submit' class='btn btn-sm btn-primary pull-right'>Update Settings</button>
                 <div class="clearfix"></div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 {% endblock %}
