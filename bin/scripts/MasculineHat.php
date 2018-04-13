@@ -36,7 +36,7 @@ function createMasculineHats(Queue $queue, Shop $shop, Template $template, Setti
             'name' => "Style"
         )
     );
-    $store_name = '';
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     switch ($shop->myshopify_domain) {
         case 'piper-lou-collection.myshopify.com':
         case 'plcwholesale.myshopify.com':
@@ -53,9 +53,9 @@ function createMasculineHats(Queue $queue, Shop $shop, Template $template, Setti
             'weight_unit' => 'oz',
             'requires_shipping' => true,
             'inventory_management' => null,
-            'inventory_policy' => 'deny',
-            'sku' => "{$store_name}Hat"
+            'inventory_policy' => 'deny'
         );
+        $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
         if ($color == 'Navy' && $style == 'Hat') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
         } else {
@@ -69,12 +69,10 @@ function createMasculineHats(Queue $queue, Shop $shop, Template $template, Setti
     $imageUpdate = array();
     foreach ($res->product->variants as $variant) {
         $color = str_replace(' ', '_', $variant->option2);
-        error_log($color);
         $image = array(
             'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$color]}",
             'variant_ids' => [$variant->id]
         );
-        error_log($image['src']);
         $imageUpdate[] = $image;
     };
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(

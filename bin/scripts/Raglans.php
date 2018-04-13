@@ -98,7 +98,7 @@ function createRaglans(Queue $queue, Shop $shop, Template $template, Setting $se
             'name' => "Style"
         )
     );
-
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($imageUrls as $color => $url) {
         $color = str_replace('_', ' ', $color);
         foreach ($prices as $size => $options) {
@@ -112,9 +112,9 @@ function createRaglans(Queue $queue, Shop $shop, Template $template, Setting $se
                 'weight_unit' => 'oz',
                 'requires_shipping' => true,
                 'inventory_management' => null,
-                'inventory_policy' => 'deny',
-                'sku' => "3/4 Sleeve Raglan - {$color} - ".getSku($size)
+                'inventory_policy' => 'deny'
             );
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
             if ($color == 'Navy' && $size == '30') {
                 $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
             } else {

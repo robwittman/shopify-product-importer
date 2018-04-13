@@ -37,13 +37,7 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
             'name' => "Style"
         )
     );
-    $store_name = '';
-    switch ($shop->myshopify_domain) {
-        case 'piper-lou-collection.myshopify.com':
-        case 'plcwholesale.myshopify.com':
-            $store_name = 'Piper Lou - ';
-            break;
-    }
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($imageUrls as $style => $colors) {
         foreach ($colors as $color => $image) {
             $variantData = array(
@@ -55,9 +49,9 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
                 'weight_unit' => 'oz',
                 'requires_shipping' => true,
                 'inventory_management' => null,
-                'inventory_policy' => 'deny',
-                'sku' => "{$store_name}Hat"
+                'inventory_policy' => 'deny'
             );
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
             if ($color == 'Navy' && $style == 'Hat') {
                 $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
             } else {

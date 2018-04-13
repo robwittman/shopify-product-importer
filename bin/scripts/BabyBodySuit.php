@@ -65,7 +65,7 @@ function createBabyBodySuit(Queue $queue, Shop $shop, Template $template, Settin
     foreach ($res->product->variants as $variant) {
         $variantIds[] = $variant->id;
     }
-    error_log($imageUrls[0]);
+
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         "product" => array(
             'id' => $res->product->id,

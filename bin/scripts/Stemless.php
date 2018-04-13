@@ -1,4 +1,5 @@
 <?php
+
 use App\Model\Queue;
 use App\Model\Shop;
 use App\Model\Template;

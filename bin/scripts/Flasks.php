@@ -37,7 +37,7 @@ function createFlasks(Queue $queue, Shop $shop, Template $template, Setting $set
         )
     );
 
-
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($imageUrls as $color => $url) {
         $variantData = array(
             'title' => '6oz / '.$color,
@@ -48,9 +48,9 @@ function createFlasks(Queue $queue, Shop $shop, Template $template, Setting $set
             'weight_unit' => 'lb',
             'requires_shipping' => true,
             'inventory_management' => null,
-            'inventory_policy' => 'deny',
-            'sku' => '6oz - Flask - '.$color
+            'inventory_policy' => 'deny'
         );
+        $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
         if ($color == 'Blue') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
         } else {

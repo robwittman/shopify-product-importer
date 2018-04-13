@@ -141,7 +141,7 @@ function createGreyCollection(Queue $queue, Shop $shop, Template $template, Sett
             'name' => "Style"
         )
     );
-
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($variants as $style => $sizes) {
         switch ($style) {
             case 'Hoodie':
@@ -180,9 +180,9 @@ function createGreyCollection(Queue $queue, Shop $shop, Template $template, Sett
                 'weight_unit' => 'oz',
                 'requires_shipping' => true,
                 'inventory_management' => null,
-                'inventory_policy' => 'deny',
-                'sku' => $variantSku
+                'inventory_policy' => 'deny'
             );
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
             $product_data['variants'][] = $variantData;
         }
     }

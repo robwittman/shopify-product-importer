@@ -64,6 +64,7 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
     if ($post['tumbler_product_type'] == 'powder_coated') {
         $skuModifier = 'P';
     }
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($images as $size => $colors) {
         foreach ($colors as $color => $url) {
             $price = $details['sizes'][$size];
@@ -77,8 +78,9 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
                 'requires_shipping' => true,
                 'inventory_management' => null,
                 'inventory_policy' => 'deny',
-                'sku' => getSkuFromFileName($data['file_name']).' - T'.str_replace('oz', '', $size).$skuModifier.' - '.str_replace('_', ' ', $color)
+                // 'sku' => getSkuFromFileName($data['file_name']).' - T'.str_replace('oz', '', $size).$skuModifier.' - '.str_replace('_', ' ', $color)
             );
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
             $product_data['variants'][] = $varData;
         }
     }

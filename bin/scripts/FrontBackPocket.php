@@ -78,6 +78,7 @@ function createFrontBackPocket(Queue $queue, Shop $shop, Template $template, Set
             'name' => "Style"
         )
     );
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($prices as $style => $sizes) {
         foreach ($sizes as $size => $options) {
             foreach ($imageUrls as $color => $url) {
@@ -92,9 +93,9 @@ function createFrontBackPocket(Queue $queue, Shop $shop, Template $template, Set
                     'weight_unit' => 'oz',
                     'requires_shipping' => true,
                     'inventory_management' => null,
-                    'inventory_policy' => 'deny',
-                    'sku' => ""
+                    'inventory_policy' => 'deny'
                 );
+                $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
                 $product_data['variants'][] = $variantData;
             }
         }

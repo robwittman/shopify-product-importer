@@ -42,7 +42,7 @@ function createDonationUVTumbler(Queue $queue, Shop $shop, Template $template, S
             'name' => "Color"
         )
     );
-
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($imageUrls as $size => $colors) {
         foreach ($colors as $color => $url) {
             $sku = str_replace('_', '', $color);
@@ -67,9 +67,9 @@ function createDonationUVTumbler(Queue $queue, Shop $shop, Template $template, S
                 'weight_unit' => 'lb',
                 'requires_shipping' => true,
                 'inventory_management' => null,
-                'inventory_policy' => 'deny',
-                'sku' => $sku
+                'inventory_policy' => 'deny'
             );
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
             if ($color == 'Black' && $size == '30') {
                 $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
             } else {

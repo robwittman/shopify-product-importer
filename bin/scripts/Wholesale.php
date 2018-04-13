@@ -48,7 +48,7 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
             'name' => "Color"
         )
     );
-
+    $skuTemplate = getSkuTemplate($template, $setting, $post);
     foreach ($images as $color => $src) {
         foreach($details['sizes'] as $size) {
             $varData = array(
@@ -60,13 +60,13 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
                 'weight_unit' => 'oz',
                 'requires_shipping' => true,
                 'inventory_management' => null,
-                'inventory_policy' => "deny",
-                'sku' => "PL - {$designId} - {$details['skuModifier']} - {$size} - {$color}"
+                'inventory_policy' => "deny"
+                // 'sku' => "PL - {$designId} - {$details['skuModifier']} - {$size} - {$color}"
             );
             if ($post['wholesale_product_type'] == 'front_back_unisex_tee') {
                 $varData['sku'] = 'FBP - '.$varData['sku'];
             }
-
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $varData);
             if($color == $post['default_color'] && $size == 'S') {
                 array_unshift($product_data['variants'], $varData);
             } else {
