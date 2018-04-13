@@ -1,5 +1,16 @@
 {% extends "navbar.html" %}
 
+{% block styles %}
+<style media="screen">
+    .editor {
+        height: 150px
+    }
+    .hidden {
+        display: none;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-primary">
@@ -41,9 +52,10 @@
                     <label class='control-label'>Tags</label>
                     <input type="text" name="tags" value="{{ setting.tags }}" class='form-control'>
                 </div>
-                <div class="form-group col-sm-6">
-                    <label class='control-label'>SKU Template</label>
-                    <input type="text" name="sku_template" value="{{ setting.sku_template }}" placeholder="{{ template.sku_template }}" class='form-control'>
+                <<div class='form-group col-sm-12'>
+                    <label class='control-label'>SKU Generation</label>
+                    <div id='sku_template_editor' class='editor' class='form-control'>{{ setting.sku_template }}</div>
+                    <textarea name="sku_template" class='hidden'></textarea>
                 </div>
                 <div class="form-group col-sm-12">
                     <label class='col-sm-3 control-label'>Description</label>
@@ -58,7 +70,19 @@
     </div>
 </div>
 {% endif %}
-<script type="text/javascript">
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var editor = ace.edit('sku_template_editor');
+    editor.setTheme("ace/theme/chrome");
+    editor.session.setMode(`ace/mode/liquid`);
+    var textarea = $(`textarea[name="sku_template"]`);
+    editor.getSession().on("change", function () {
+        textarea.html(editor.getSession().getValue());
+    });
+
     function selectCallback() {
         var e = document.getElementById("template_select");
         var template = e.options[e.selectedIndex].value;

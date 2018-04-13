@@ -29,6 +29,7 @@ class Templates
     public function update($request, $response, $arguments)
     {
         $template = Template::find($arguments['id']);
+
         foreach ($request->getParsedBody() as $key => $value) {
             $template->{$key} = $value;
         }
