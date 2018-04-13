@@ -267,7 +267,7 @@ function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $file, 
     return $sku;
 }
 
-function getSkuTemplate(Template $template, Setting $setting, $post)
+function getSkuTemplate(Template $template, Setting $setting = null, $post)
 {
     return $template->sku_template ?: $setting->sku_template ?: $post['sku'];
 }
