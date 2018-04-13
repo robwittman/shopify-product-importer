@@ -29,7 +29,6 @@ while (true) {
                 'shop_id' => $queue->shop
             ))->first();
             $shop = Shop::find($queue->shop);
-            var_dump($queue->template);
             switch ($queue->template) {
                 case 'wholesale_apparel':
                     $res = createWholesaleApparel($queue, $shop, $template, $setting);
