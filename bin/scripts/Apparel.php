@@ -67,6 +67,8 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
     $results['back_print_file_url'] = $post['back_print_url'];
 
     $product_data = getProductSettings($shop, $queue, $template, $setting);
+    $skuTemplate = getSkuTemplate($template, $setting, $queue);
+    
     $product_data['options'] = array(
         array(
             'name' => "Size"
@@ -170,10 +172,15 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
                     'weight_unit' => $sizeSettings['weight_unit'],
                     'requires_shipping' => true,
                     'inventory_management' => null,
-                    'inventory_policy' => "deny",
-                    'sku' => $variantSku
+                    'inventory_policy' => "deny"
                 );
-
+                $varData['size'] = $size;
+                $varData['style'] = $garment;
+                $varData['color'] = $color;
+                $varData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $varData, $post, $data['file_name']);
+                unset($varData['size']);
+                unset($varData['color']);
+                unset($varData['style']);
                 if($garment == $post['default_product'] && $color == $post['default_color'] && $size == 'Small') {
                     array_unshift($product_data['variants'], $varData);
                 } else {

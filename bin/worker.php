@@ -83,7 +83,6 @@ while (true) {
             error_log("Queue {$queue->id} finished. ".json_encode($res));
         } catch(\Exception $e) {
             error_log($e->getMessage());
-            var_dump($e);
             if ($message = json_decode($e->getMessage())) {
                 $queue->fail($message->error->message);
             } else {
@@ -238,6 +237,8 @@ function getProductSettings(Shop $shop, Queue $queue, Template $template, Settin
 
 function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, $fileName)
 {
+    error_log($skuTemplate);
+    error_log(str_replace('.zip', '', $fileName));
     $template = new \Liquid\Template();
     $template->parse($skuTemplate);
     $sku = $template->render(array(
@@ -247,6 +248,7 @@ function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, 
         'file' => str_replace('.zip', '', $fileName),
         'data' => $post
     ));
+    error_log($sku);
     return $sku;
 }
 
