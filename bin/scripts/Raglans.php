@@ -86,7 +86,7 @@ function createRaglans(Queue $queue, Shop $shop, Template $template, Setting $se
         $color = $specs[1];
         $imageUrls[$color] = $name;
     }
-    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
             'name' => "Size"
@@ -98,7 +98,7 @@ function createRaglans(Queue $queue, Shop $shop, Template $template, Setting $se
             'name' => "Style"
         )
     );
-    $skuTemplate = getSkuTemplate($template, $setting, $post);
+    $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($imageUrls as $color => $url) {
         $color = str_replace('_', ' ', $color);
         foreach ($prices as $size => $options) {

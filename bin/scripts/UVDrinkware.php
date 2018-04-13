@@ -33,7 +33,7 @@ function createUvDrinkware(Queue $queue, Shop $shop, Template $template, Setting
         $color = $specs[1];
         $imageUrls[$size][$color] = $name;
     }
-    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
             'name' => "Size"
@@ -43,7 +43,7 @@ function createUvDrinkware(Queue $queue, Shop $shop, Template $template, Setting
         )
     );
 
-    $skuTemplate = getSkuTemplate($template, $setting, $post);
+    $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($imageUrls as $size => $colors) {
         foreach ($colors as $color => $url) {
             $color = str_replace('_', '', $color);

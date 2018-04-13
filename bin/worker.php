@@ -236,19 +236,19 @@ function getDesignIdFromFilename($fileName)
     }
 }
 
-function getProductSettings(Shop $shop, $post, Template $template, Setting $setting = null)
+function getProductSettings(Shop $shop, Queue $queue, Template $template, Setting $setting = null)
 {
     $tags = implode(',', array_merge(
-        str_getcsv($post['tags']),
+        str_getcsv($queue->tags),
         str_getcsv($template->tags),
         str_getcsv($setting->tags)
     ));
     return array(
-        'title' => $post['product_title'],
-        'body_html' => $post['description'] ?: $setting->description ?: $shop->description ?: $template->description,
+        'title' => $queue->product_title,
+        'body_html' => $queue->description ?: $setting->description ?: $shop->description ?: $template->description,
         'tags' => $tags,
-        'product_type' => $post['product_type'] ?: $setting->product_type ?: $template->product_Type,
-        'vendor' => $post['vendor'] ?: $setting->vendor ?: $template->vendor,
+        'product_type' => $queue->product_type ?: $setting->product_type ?: $template->product_Type,
+        'vendor' => $queue->vendor ?: $setting->vendor ?: $template->vendor,
         'variants' => array(),
         'images' => array()
     );
@@ -268,7 +268,7 @@ function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, 
     return $sku;
 }
 
-function getSkuTemplate(Template $template, Setting $setting = null, $post)
+function getSkuTemplate(Template $template, Setting $setting = null, Queue $queue)
 {
-    return $template->sku_template ?: $setting->sku_template ?: $post['sku'];
+    return $queue->sku ?: $estting->sku_template ?: $template->sku_template;
 }

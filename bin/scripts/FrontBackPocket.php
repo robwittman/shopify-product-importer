@@ -66,7 +66,7 @@ function createFrontBackPocket(Queue $queue, Shop $shop, Template $template, Set
         $color = $specs[1];
         $imageUrls[$color] = $name;
     }
-    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
             'name' => "Size"
@@ -78,7 +78,7 @@ function createFrontBackPocket(Queue $queue, Shop $shop, Template $template, Set
             'name' => "Style"
         )
     );
-    $skuTemplate = getSkuTemplate($template, $setting, $post);
+    $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($prices as $style => $sizes) {
         foreach ($sizes as $size => $options) {
             foreach ($imageUrls as $color => $url) {

@@ -33,7 +33,7 @@ function createDonationUVTumbler(Queue $queue, Shop $shop, Template $template, S
         $color = $specs[1];
         $imageUrls[$size][$color] = $name;
     }
-    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
             'name' => "Size"
@@ -42,27 +42,15 @@ function createDonationUVTumbler(Queue $queue, Shop $shop, Template $template, S
             'name' => "Color"
         )
     );
-    $skuTemplate = getSkuTemplate($template, $setting, $post);
+    $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($imageUrls as $size => $colors) {
         foreach ($colors as $color => $url) {
-            $sku = str_replace('_', '', $color);
-            switch ($size) {
-                case '30':
-                    $option1 = '30oz Tumbler';
-                    // $sku = "TX (UV PRINTED) - T30 - {$sku} - Coated 30oz Tumbler";
-                    $sku = 'PL - '.getSkuFromFileName($data['file_name']).' - UV30 - '.$sku;
-                    break;
-                case '20':
-                    $option1 = '20oz Tumbler';
-                    // $sku = "TX (UV PRINTED) - T20 - {$sku} - Coated 20oz Tumbler";
-                    $sku = 'PL - '.getSkuFromFileName($data['file_name']).' - UV20 - '.$sku;
-                    break;
-            }
+            $color = str_replace('_', '', $color);
             $variantData = array(
                 'title' => $option1. ' / '.$color,
                 'price' => $prices[$size],
-                'option1' => $option1,
-                'option2' => str_replace('_', ' ', $color),
+                'option1' => $option1.'oz Tumbler',
+                'option2' => $color,
                 'weight' => '1.1',
                 'weight_unit' => 'lb',
                 'requires_shipping' => true,

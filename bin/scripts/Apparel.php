@@ -66,7 +66,7 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
     $results['front_print_file_url'] = $post['front_print_url'];
     $results['back_print_file_url'] = $post['back_print_url'];
 
-    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
             'name' => "Size"

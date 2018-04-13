@@ -28,7 +28,7 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
         $imageUrls[$style][$color] = $name;
     }
 
-    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
             'name' => "Color"
@@ -37,7 +37,7 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
             'name' => "Style"
         )
     );
-    $skuTemplate = getSkuTemplate($template, $setting, $post);
+    $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($imageUrls as $style => $colors) {
         foreach ($colors as $color => $image) {
             $variantData = array(

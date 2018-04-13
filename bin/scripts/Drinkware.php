@@ -38,7 +38,7 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
         }
         $imageUrls[$size][$color] = $name;
     }
-    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
             'name' => "Size"
@@ -48,24 +48,13 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
         )
     );
 
-    $skuTemplate = getSkuTemplate($template, $setting, $post);
+    $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($imageUrls as $size => $colors) {
         foreach ($colors as $color => $url) {
             $sku = $color;
             if ($color == 'Cyan') {
                 $sku = 'Seafoam';
             }
-            // $sku = str_replace('_', ' ', $sku);
-            // switch ($size) {
-            //     case '30':
-            //         $option1 = '30oz Tumbler';
-            //         $sku = getSkuFromFileName($data['file_name']).' - T30 - '.$sku;
-            //         break;
-            //     case '20':
-            //         $option1 = '20oz Tumbler';
-            //         $sku = getSkuFromFileName($data['file_name']).' - T20 - '.$sku;
-            //         break;
-            // }
             $color = str_replace('_', ' ', $color);
             $variantData = array(
                 'title' => $option1. ' / '.$color,

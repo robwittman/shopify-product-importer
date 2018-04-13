@@ -30,7 +30,7 @@ function createBabyBodySuit(Queue $queue, Shop $shop, Template $template, Settin
         $imageUrls[] = $name;
     }
 
-    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
             'name' => "Size"
@@ -40,7 +40,7 @@ function createBabyBodySuit(Queue $queue, Shop $shop, Template $template, Settin
 
         )
     );
-    $skuTemplate = getSkuTemplate($template, $setting, $post);
+    $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($sizes as $size) {
         $imageUrl = $imageUrls[0];
         $variantData = array(

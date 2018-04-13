@@ -51,7 +51,7 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
         $images[$size][$color] = $name;
     }
 
-    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
             'name' => "Size"
@@ -64,7 +64,7 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
     if ($post['tumbler_product_type'] == 'powder_coated') {
         $skuModifier = 'P';
     }
-    $skuTemplate = getSkuTemplate($template, $setting, $post);
+    $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($images as $size => $colors) {
         foreach ($colors as $color => $url) {
             $price = $details['sizes'][$size];

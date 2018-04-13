@@ -188,6 +188,14 @@ class Products
         $queue->file_name = $data['file'];
         $queue->template = $data['post']['template'];
         $queue->log_to_google = (int) $data['post']['log_to_google'];
+        $queue->vendor = $post['vendor'];
+        $queue->product_type = $post['product_type'];
+        $queue->title = $post['product_title'];
+        $queue->file = $data['file_name'];
+        $queue->tags = $post['tags'];
+        $queue->showcase_color = $post['default_color'];
+        $queue->showcase_product = $post['default_product'];
+        $queue->print_type = $post['print_type'];
         $queue->save();
 
         $elapsed_time = time() - $start;

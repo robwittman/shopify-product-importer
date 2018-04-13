@@ -39,7 +39,7 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
         $pieces = explode('-', basename($fileName, '.jpg'));
         $images[str_replace('_', ' ', trim($pieces[1], '_'))] = $name;
     }
-    $product_data = getProductSettings($shop, $post, $template, $setting, $post['file_name']);
+    $product_data = getProductSettings($shop, $queue, $template, $setting, $post['file_name']);
     $product_data['options'] = array(
         array(
             'name' => "Size"
@@ -48,7 +48,7 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
             'name' => "Color"
         )
     );
-    $skuTemplate = getSkuTemplate($template, $setting, $post);
+    $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($images as $color => $src) {
         foreach($details['sizes'] as $size) {
             $varData = array(

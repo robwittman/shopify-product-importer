@@ -27,7 +27,7 @@ function createMasculineHats(Queue $queue, Shop $shop, Template $template, Setti
         $imageUrls[trim($color, '_')] = $name;
     }
 
-    $product_data = getProductSettings($shop, $post, $template, $setting);
+    $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
             'name' => "Color"
@@ -36,7 +36,7 @@ function createMasculineHats(Queue $queue, Shop $shop, Template $template, Setti
             'name' => "Style"
         )
     );
-    $skuTemplate = getSkuTemplate($template, $setting, $post);
+    $skuTemplate = getSkuTemplate($template, $setting, $queue);
     switch ($shop->myshopify_domain) {
         case 'piper-lou-collection.myshopify.com':
         case 'plcwholesale.myshopify.com':
