@@ -45,9 +45,9 @@ function createDonationUVTumbler(Queue $queue, Shop $shop, Template $template, S
     $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($imageUrls as $size => $colors) {
         foreach ($colors as $color => $url) {
-            $color = str_replace('_', '', $color);
+            $color = str_replace('_', ' ', $color);
             $variantData = array(
-                'title' => $option1. ' / '.$color,
+                'title' => $size. ' / '.$color,
                 'price' => $prices[$size],
                 'option1' => $size.'oz Tumbler',
                 'option2' => $color,
@@ -57,7 +57,7 @@ function createDonationUVTumbler(Queue $queue, Shop $shop, Template $template, S
                 'inventory_management' => null,
                 'inventory_policy' => 'deny'
             );
-            $variantData['size'] = $option1;
+            $variantData['size'] = $size;
             $variantData['color'] = $color;
             $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name']);
             unset($variantData['size']);

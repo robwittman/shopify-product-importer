@@ -46,12 +46,12 @@ function createUvDrinkware(Queue $queue, Shop $shop, Template $template, Setting
     $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($imageUrls as $size => $colors) {
         foreach ($colors as $color => $url) {
-            $color = str_replace('_', '', $color);
+            $color = str_replace('_', ' ', $color);
 
             $variantData = array(
-                'title' => $option1. ' / '.$color,
+                'title' => $size. ' / '.$color,
                 'price' => $prices[$size],
-                'option1' => $option1.'oz Tumbler',
+                'option1' => $size.'oz Tumbler',
                 'option2' => $color,
                 'weight' => '1.1',
                 'weight_unit' => 'lb',
@@ -61,7 +61,7 @@ function createUvDrinkware(Queue $queue, Shop $shop, Template $template, Setting
             );
             $variantData['size'] = $size;
             $variantData['color'] = $color;
-            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData);
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name']);
             unset($variantData['size']);
             unset($variantData['color']);
             if ($color == 'Black' && $size == '30') {

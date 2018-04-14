@@ -51,16 +51,17 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
     $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($imageUrls as $size => $colors) {
         foreach ($colors as $color => $url) {
+            $color = str_replace('_', ' ', $color);
             $sku = $color;
             if ($color == 'Cyan') {
                 $sku = 'Seafoam';
             }
-            $color = str_replace('_', ' ', $color);
+            $color = $color;
             $variantData = array(
                 'title' => $size.'oz Tumbler / '.$color,
                 'price' => $prices[$size],
                 'option1' => $size.'oz Tumbler',
-                'option2' => str_replace('_', ' ', $color),
+                'option2' => $color,
                 'weight' => '1.1',
                 'weight_unit' => 'lb',
                 'requires_shipping' => true,
