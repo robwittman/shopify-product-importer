@@ -65,8 +65,8 @@ class QueueProcessor
             ->pipe(new Product\SetVariants($strategy))
             ->pipe(new Product\SetDefaultVariant)
             ->pipe(new AddSku)
-            ->pipe(new Product\CreateProduct($service)
-            ->pipe(new Product\MapImages($service);
+            ->pipe(new Product\CreateProduct($service))
+            ->pipe(new Product\MapImages($service));
 
         try {
             $res = $pipeline->process($metaContainer);
