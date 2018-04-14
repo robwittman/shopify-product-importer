@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c1363b6d09d83d0ef791e97a7496e8f",
+    "content-hash": "8dbcc1570e6b5cdb909ce31bb3ceaa65",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -857,6 +857,53 @@
             "time": "2017-02-15T19:29:24+00:00"
         },
         {
+            "name": "league/pipeline",
+            "version": "0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/pipeline.git",
+                "reference": "27dc18166c30d6429c75d1320f41e8238c59c3d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/pipeline/zipball/27dc18166c30d6429c75d1320f41e8238c59c3d4",
+                "reference": "27dc18166c30d6429c75d1320f41e8238c59c3d4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "henrikbjorn/phpspec-code-coverage": "^1.0",
+                "phpspec/phpspec": "^2.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\Pipeline\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "A plug and play pipeline implementation.",
+            "keywords": [
+                "composition",
+                "design pattern",
+                "pattern",
+                "pipeline",
+                "sequential"
+            ],
+            "time": "2016-10-13T20:53:39+00:00"
+        },
+        {
             "name": "liquid/liquid",
             "version": "1.4.8",
             "source": {
@@ -1670,6 +1717,56 @@
                 "phinx"
             ],
             "time": "2017-01-23T08:53:20+00:00"
+        },
+        {
+            "name": "robwittman/shopify-php-sdk",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/robwittman/shopify-php-sdk.git",
+                "reference": "02f64e81df86918f2b7c480909ff581acc1ab8c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/robwittman/shopify-php-sdk/zipball/02f64e81df86918f2b7c480909ff581acc1ab8c2",
+                "reference": "02f64e81df86918f2b7c480909ff581acc1ab8c2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^6.2",
+                "php": ">=5.3.3",
+                "psr/log": "^1.0"
+            },
+            "require-dev": {
+                "overtrue/phplint": "^0.2.4",
+                "phpunit/phpunit": "^6.1",
+                "squizlabs/php_codesniffer": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Shopify\\": "lib/",
+                    "Shopify\\Test\\": "test/"
+                },
+                "files": [
+                    "lib/includes.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP SDK for Shopify API",
+            "homepage": "http://github.com/robwittman/shopify-php-sdk",
+            "keywords": [
+                "api",
+                "ecommerce",
+                "php",
+                "shopify"
+            ],
+            "time": "2017-12-12T03:37:28+00:00"
         },
         {
             "name": "slim/flash",

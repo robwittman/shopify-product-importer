@@ -24,7 +24,9 @@
         "aws/aws-sdk-php": "^3.20",
         "google/apiclient": "^2.2",
         "deployer/deployer": "^6.1",
-        "liquid/liquid": "^1.4"
+        "liquid/liquid": "^1.4",
+        "league/pipeline": "^0.3.0",
+        "robwittman/shopify-php-sdk": "^2.1"
     },
     "autoload" : {
         "psr-4" : {
