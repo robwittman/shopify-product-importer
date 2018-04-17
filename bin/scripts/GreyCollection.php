@@ -184,7 +184,7 @@ function createGreyCollection(Queue $queue, Shop $shop, Template $template, Sett
             );
             $variantData['size'] = $size;
             $variantData['style'] = $style;
-            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name']);
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
             unset($variantData['size']);
             unset($variantData['style']);
             $product_data['variants'][] = $variantData;

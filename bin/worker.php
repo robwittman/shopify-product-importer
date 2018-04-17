@@ -235,10 +235,8 @@ function getProductSettings(Shop $shop, Queue $queue, Template $template, Settin
     );
 }
 
-function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, $fileName)
+function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, $fileName, Queue $queue = null)
 {
-    error_log($skuTemplate);
-    error_log(str_replace('.zip', '', $fileName));
     $template = new \Liquid\Template();
     $template->parse($skuTemplate);
     $sku = $template->render(array(
@@ -246,9 +244,9 @@ function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, 
         'shop' => $shop,
         'variant' => $variant,
         'file' => str_replace('.zip', '', $fileName),
-        'data' => $post
+        'data' => $post,
+        'queue' => $queue
     ));
-    error_log($sku);
     return $sku;
 }
 

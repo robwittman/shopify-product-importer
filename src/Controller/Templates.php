@@ -14,22 +14,24 @@ class Templates
 
     public function index($request, $response, $arguments)
     {
+        $templates = Template::with('sub_templates')->get();
+        var_dump($templates);
+        exit;
         return $this->view->render($response, 'templates/index.html', array(
-            'templates' => Template::all()
+            'templates' => $templates
         ));
     }
 
     public function show($request, $response, $arguments)
     {
         return $this->view->render($response, 'templates/show.html', array(
-            'template' => Template::find($arguments['id'])
+            'template' => Template::with('sub_templates')->find($arguments['id'])
         ));
     }
 
     public function update($request, $response, $arguments)
     {
         $template = Template::find($arguments['id']);
-
         foreach ($request->getParsedBody() as $key => $value) {
             $template->{$key} = $value;
         }
@@ -37,4 +39,10 @@ class Templates
         $this->flash->addMessage("message", "Template saved successfully.");
         return $response->withRedirect("/templates/{$template->id}");
     }
+
+    // public function subTemplates($request, $response, $arguments)
+    // {
+    //     $templates = Template::find($arguments['id']);
+    //
+    // }
 }

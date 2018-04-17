@@ -70,7 +70,7 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
             );
             $variantData['size'] = $size;
             $variantData['color'] = $color;
-            $variantData['sku'] = generateLiquidSku($skuTemplate, $productData, $shop, $variantData, $post, $data['file_name']);
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $productData, $shop, $variantData, $post, $data['file_name'], $queue);
             unset($variantData['size']);
             unset($variantData['color']);
             if ($color == ($hasNavy ? 'Navy' : 'Black') && $size == '30') {

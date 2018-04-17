@@ -54,6 +54,32 @@
             </div>
         </div>
     </form>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Sub Templates
+        </div>
+        {% if template.sub_templates is empty %}
+        <div class="panel-body">
+            <div class="alert alert-info">
+                This template doesn't have any sub templates
+            </div>
+        </div>
+        {% else %}
+        <table class='table table-condensed'>
+            <tr>
+                <th>Name</th>
+                <th>Value</th>
+            </tr>
+            {% for child in template.sub_templates %}
+            <tr>
+                <td>{{ child.name }}</td>
+                <td>{{ child.value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
 </div>
 
 {% endblock %}

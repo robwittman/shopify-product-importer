@@ -59,7 +59,7 @@ function createDonationUVTumbler(Queue $queue, Shop $shop, Template $template, S
             );
             $variantData['size'] = $size;
             $variantData['color'] = $color;
-            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name']);
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
             unset($variantData['size']);
             unset($variantData['color']);
             if ($color == 'Black' && $size == '30') {

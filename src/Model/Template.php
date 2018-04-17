@@ -10,4 +10,9 @@ class Template extends Elegant
     {
         return $this->hasMany(Setting::class);
     }
+
+    public function sub_templates()
+    {
+        return $this->hasMany(SubTemplate::class);
+    }
 }

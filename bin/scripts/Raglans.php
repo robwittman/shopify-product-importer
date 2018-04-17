@@ -116,7 +116,7 @@ function createRaglans(Queue $queue, Shop $shop, Template $template, Setting $se
             );
             $variantData['size'] = $size;
             $variantData['color'] = $color;
-            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name']);
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
             unset($variantData['size']);
             unset($variantData['color']);
             if ($color == 'Navy' && $size == '30') {

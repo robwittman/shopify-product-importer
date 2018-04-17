@@ -68,7 +68,7 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
 
     $product_data = getProductSettings($shop, $queue, $template, $setting);
     $skuTemplate = getSkuTemplate($template, $setting, $queue);
-    
+
     $product_data['options'] = array(
         array(
             'name' => "Size"
@@ -177,7 +177,7 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
                 $varData['size'] = $size;
                 $varData['style'] = $garment;
                 $varData['color'] = $color;
-                $varData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $varData, $post, $data['file_name']);
+                $varData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $varData, $post, $data['file_name'], $queue);
                 unset($varData['size']);
                 unset($varData['color']);
                 unset($varData['style']);

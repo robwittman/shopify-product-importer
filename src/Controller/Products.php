@@ -32,12 +32,12 @@ class Products
     {
         $user = User::find($request->getAttribute('user')->id);
         $shops = $user->shops;
-        $templates = Template::all();
+        $templates = Template::with('sub_templates')->get();
 
         return $this->view->render($response, 'product.html', array(
             'user' => $user,
             'shops' => $shops,
-            'templates' => $templates->toArray()
+            'templates' => $templates
         ));
     }
 
@@ -196,6 +196,7 @@ class Products
         $queue->showcase_color = $post['default_color'];
         $queue->showcase_product = $post['default_product'];
         $queue->print_type = $post['print_type'];
+        $queue->sub_template = $post['sub_template'];
         $queue->save();
 
         $elapsed_time = time() - $start;
