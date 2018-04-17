@@ -241,7 +241,7 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
         )
     ));
     if (isset($queue->log_to_google) && $queue->log_to_google && $shop->google_access_token) {
-        logResults($client, $shop->google_sheet_slug, $post['print_type'], $results);
+        logResults($client, $shop->google_sheet_slug, $post['print_type'], $results, $shop->id);
     } else {
         error_log("No google sync...");
     }

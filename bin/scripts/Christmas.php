@@ -227,7 +227,7 @@ function createChristmas(Queue $queue, Shop $shop, Template $template, Setting $
         if ($shop->google_access_token) {
             $client->setAccessToken($shop->google_access_token);
         }
-        logResults($client, $shop->google_sheet_slug, $post['print_type'], $results);
+        logResults($client, $shop->google_sheet_slug, $post['print_type'], $results, $shop->id);
     } else {
         error_log("No google sync...");
     }

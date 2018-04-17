@@ -6,6 +6,7 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 use App\Model\Sku;
+use App\Model\GoogleQueue;
 
 foreach (glob(DIR."/bin/scripts/*.php") as $file) {
     include_once ($file);
@@ -127,8 +128,9 @@ function getSku($size)
     return $size;
 }
 
-function logResults(Google_Client $client, $sheet, $printType, array $results)
+function logResults(Google_Client $client, $sheet, $printType, array $results, $shopId)
 {
+    error_log("Storing stuffs");
     if ($printType == 'front_print') {
         $sheetName = 'Front Print';
     } elseif ($printType == 'back_print') {
@@ -140,12 +142,29 @@ function logResults(Google_Client $client, $sheet, $printType, array $results)
     $range = $sheetName.'!A:J';
     $values = compressValues($results, $printType);
     foreach ($values as $value) {
-        $valueRange = new Google_Service_Sheets_ValueRange();
-        $valueRange->setValues(array('values' => $value));
-        // $valueRange->setValues(array(
-        //     'values' => ["a", "b"]
-        // ));
-        $service->spreadsheets_values->append($sheet, $range, $valueRange, array('valueInputOption' => "RAW"));
+        // $valueRange = new Google_Service_Sheets_ValueRange();
+        // $valueRange->setValues(array('values' => $value));
+        // // $valueRange->setValues(array(
+        // //     'values' => ["a", "b"]
+        // // ));
+        // $service->spreadsheets_values->append($sheet, $range, $valueRange, array('valueInputOption' => "RAW"));
+    }
+    foreach ($results['variants'] as $result) {
+        $googleQueue = new GoogleQueue();
+        $googleQueue->print_type = $printType;
+        $googleQueue->product_name = $results['product_name'];
+        $googleQueue->garment_name = '';
+        $googleQueue->product_fulfiller_code = $result['product_fulfiller_code'];
+        $googleQueue->shopify_product_admin_url = $results['shopify_product_admin_url'];
+        $googleQueue->front_print_file_url = $results['front_print_file_url'];
+        $googleQueue->back_print_file_url = $results['back_print_file_url'];
+        $googleQueue->garment_color = $result['garment_color'];
+        $googleQueue->product_sku = $result['product_sku'];
+        $googleQueue->integration_status = '';
+        $googleQueue->date = date('Y/m/d');
+        $googleQueue->status = 'pending';
+        $googleQueue->shop_id = $shopId;
+        $googleQueue->save();
     }
 }
 
