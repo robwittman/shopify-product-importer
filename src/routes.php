@@ -84,5 +84,6 @@ $app->get('/products', 'ProductController:show_form')->add(new \App\Middleware\A
 $app->post('/products', 'ProductController:create')->add(new \App\Middleware\Authorization());
 $app->group('/queue', function() use ($app) {
     $app->get('', 'QueuesController:index');
+    $app->get('/{id}', 'QueuesController:show');
     $app->post('/restart', 'ProductController:restart_queue');
 })->add(new \App\Middleware\Authorization());

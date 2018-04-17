@@ -26,7 +26,10 @@ class Queues
 
     public function show($request, $response, $arguments)
     {
-
+        $queue = Queue::with('shop', 'template', 'sub_template')->find($arguments['id']);
+        return $this->view->render($response, 'queue/show.html', array(
+            'queue' => $queue
+        ));
     }
 
     public function retry($request, $response, $arguments)

@@ -12,7 +12,8 @@ foreach (glob(DIR."/bin/scripts/*.php") as $file) {
 }
 
 while (true) {
-    $queue = Queue::where('status', Queue::PENDING)
+    $queue = Queue::with('template', 'sub_template', 'shop')
+        ->where('status', Queue::PENDING)
         ->orderBy('created_at', 'asc')
         ->first();
     if (!$queue) {

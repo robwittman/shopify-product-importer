@@ -17,6 +17,7 @@
                         <th>Status</th>
                         <th>Results</th>
                         <th>Error</th>
+                        <th></th>
                     </tr>
                     {% for q in queue %}
                     <tr>
@@ -31,8 +32,8 @@
                             {% else %}
                             {% endif %}
                         </td>
-                        <td>{{ q.shop | json_encode() }}</td>
-                        <td>{{ q.template | json_encode() }}</td>
+                        <td>{{ q.shop.myshopify_domain }}</td>
+                        <td>{{ q.template.name }}</td>
                         <td>{{ q.sub_template.name }}</td>
                         <td>{{ q.created_at | date('Y-m-d H:i') }}</td>
                         <td>
@@ -54,6 +55,9 @@
                             </ul>
                         </td>
                         <td>{{q.error}}</td>
+                        <td>
+                            <a href="/queue/{{ q.id }}" class='btn btn-primary btn-sm'>Edit</a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </table>

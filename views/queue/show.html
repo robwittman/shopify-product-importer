@@ -1,0 +1,21 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+    <form action="/queue/{{ queue.id }}" method="post">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Edit Queue <span class='pull-right'><a href="#">Download .zip</a></span>
+            </div>
+            <div class="panel-body">
+
+            </div>
+            <div class="panel-footer">
+                <button type='submit' class='btn btn-sm btn-primary pull-right'>Update Queue</button>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
