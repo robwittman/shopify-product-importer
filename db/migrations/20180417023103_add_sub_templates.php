@@ -35,6 +35,7 @@ class AddSubTemplates extends AbstractMigration
             ->addColumn('template_id', 'integer')
             ->addColumn('default', 'integer', array('default' => 0))
             ->addForeignKey('template_id', 'templates', 'id', array('delete' => 'CASCADE', 'update' => 'NO_ACTION'))
+            ->addIndex(array('value', 'template_id'), array('unique' => true))
             ->create();
     }
 }
