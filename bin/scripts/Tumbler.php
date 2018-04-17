@@ -11,7 +11,7 @@ function createTumbler($queue)
     if (isset($data['file'])) {
         $post = $data['post'];
         $image_data = getImages($s3, $queue->file_name);
-        $shop = \App\Model\Shop::find($queue->shop);
+        $shop = \App\Model\Shop::find($queue->shop_id);
 
         $shopReq = [];
 

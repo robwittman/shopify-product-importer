@@ -13,7 +13,7 @@ function createUvWithBottles($queue)
     $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
     $post = $data['post'];
-    $shop = \App\Model\Shop::find($queue->shop);
+    $shop = \App\Model\Shop::find($queue->shop_id);
     $image_data = getImages($s3, $queue->file_name);
     $imageUrls = [];
     switch($shop->myshopify_domain) {

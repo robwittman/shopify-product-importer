@@ -24,7 +24,7 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
     $designId = null;
 
     $post = $data['post'];
-    $details = $matrix[$queue->sub_template];
+    $details = $matrix[$queue->sub_template_id];
     foreach ($image_data as $name) {
         if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
             continue;

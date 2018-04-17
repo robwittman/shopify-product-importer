@@ -22,7 +22,7 @@ function createUvTumbler($queue)
             }
             $image_data[] = $object["Key"];
         }
-        $shop = \App\Model\Shop::find($queue->shop);
+        $shop = \App\Model\Shop::find($queue->shop_id);
 
         $shopReq = [];
 

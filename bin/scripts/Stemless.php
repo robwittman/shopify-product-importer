@@ -40,7 +40,7 @@ function createStemless(Queue $queue, Shop $shop, Template $template, Setting $s
             $store_name = 'Piper Lou - ';
             break;
     }
-    if ($queue->sub_template == 'etched') {
+    if ($queue->sub_template_id == 'etched') {
         $slug = 'W12M';
     } else {
         $slug = 'W12G';
