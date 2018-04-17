@@ -49,8 +49,15 @@ $app->group('/auth', function () use ($app) {
 
 $app->group('/templates', function() use ($app) {
     $app->get('', 'TemplatesController:index');
-    $app->get('/{id}', 'TemplatesController:show');
-    $app->post('/{id}', 'TemplatesController:update');
+
+    $app->post('/children/update', 'SubTemplatesController:update');
+
+    $app->group('/{id}', function() use ($app) {
+        $app->get('', 'TemplatesController:show');
+        $app->post('', 'TemplatesController:update');
+        $app->post('/children', 'SubTemplatesController:create');
+        $app->post('/children/{subId}/delete', 'SubTemplatesController:delete');
+    });
 });
 
 /*=========================================

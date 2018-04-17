@@ -61,6 +61,11 @@ $container['TemplatesController'] = function($c) {
     $flash = $c->get('flash');
     return new \App\Controller\Templates($view, $flash);
 };
+$container['SubTemplatesController'] = function($c) {
+    $view = $c->get('view');
+    $flash = $c->get('flash');
+    return new \App\Controller\SubTemplates($view, $flash);
+};
 $container['SettingsController'] = function($c) {
     $view = $c->get('view');
     $flash = $c->get('flash');

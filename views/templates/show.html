@@ -70,18 +70,89 @@
             <tr>
                 <th>Name</th>
                 <th>Value</th>
+                <th></th>
             </tr>
             {% for child in template.sub_templates %}
             <tr>
                 <td>{{ child.name }}</td>
                 <td>{{ child.value }}</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="#" class='btn btn-sm btn-primary' data-name="{{ child.name }}" data-value="{{ child.value }}" data-sub-template-id="{{ child.id }}" data-template-id="{{ template.id }}" data-toggle="modal" data-target="#editModal">Edit</a>
+                        <form action="/templates/{{ template.id }}/children/{{ child.id }}/delete" method="post">
+                            <button type='submit' class='btn btn-sm btn-danger'>Delete</button>
+                        </form>
+
+                    </div>
+                </td>
             </tr>
             {% endfor %}
         </table>
         {% endif %}
+        <div class="panel-footer">
+            <button type="button" class='btn btn-sm btn-primary pull-right' data-toggle='modal' data-target='#newModal'>Add Sub Template</button>
+            <div class="clearfix">
+
+            </div>
+        </div>
     </div>
 </div>
 
+<div id='editModal' class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <form class="" action="/templates/children/update" method="post">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit Sub Template</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class='control-label'>Name</label>
+          <input type="text" class='form-control' name="name" value="">
+        </div>
+        <div class="form-group">
+          <label class='control-label'>Value</label>
+          <input type="text" class='form-control' name="value" value="">
+        </div>
+        <input type='hidden' name='template_id' value="">
+        <input type='hidden' name='sub_template_id' value="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-sm btn-primary">Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+    </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id='newModal' class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <form class="" action="/templates/{{ template.id }}/children" method="post">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">New Sub Template</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class='control-label'>Name</label>
+          <input type="text" class='form-control' name="name" value="">
+        </div>
+        <div class="form-group">
+          <label class='control-label'>Value</label>
+          <input type="text" class='form-control' name="value" value="">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-sm btn-primary">Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+    </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 {% endblock %}
 
 {% block scripts %}
@@ -93,5 +164,23 @@
     editor.getSession().on("change", function () {
         textarea.html(editor.getSession().getValue());
     });
+
+    $('#editModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var modal = $(this)
+      modal.find('input[name="name"]').val(button.data('name'))
+      modal.find('input[name="value"]').val(button.data('value'))
+      modal.find('input[name="sub_template_id"]').val(button.data('sub-template-id'))
+      modal.find('input[name="template_id"]').val(button.data('template-id'))
+    })
+
+    $('#EditModal').on('close.bs.modal', function (event) {
+        var modal = $(this)
+        modal.find('input[name="name"]').val()
+        modal.find('input[name="value"]').val()
+        modal.find('input[name="sub_template_id"]').val()
+        modal.find('input[name="template_id"]').val()
+    })
+
 </script>
 {% endblock %}
