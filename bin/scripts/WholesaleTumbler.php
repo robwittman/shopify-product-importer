@@ -31,7 +31,7 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
     $image_data = getImages($s3, $queue->file_name);
     $post = $data['post'];
     $variantMap = array();
-    $details = $products[$post['tumbler_product_type']];
+    $details = $products[$queue->sub_template];
     foreach ($image_data as $name) {
         if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
             continue;

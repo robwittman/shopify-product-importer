@@ -15,8 +15,6 @@ class Templates
     public function index($request, $response, $arguments)
     {
         $templates = Template::with('sub_templates')->get();
-        var_dump($templates);
-        exit;
         return $this->view->render($response, 'templates/index.html', array(
             'templates' => $templates
         ));
