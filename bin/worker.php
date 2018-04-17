@@ -31,7 +31,7 @@ while (true) {
                 'shop_id' => $queue->shop_id
             ))->first();
             $shop = Shop::find($queue->shop_id);
-            switch ($queue->template) {
+            switch ($queue->template_id) {
                 case 'wholesale_apparel':
                     $res = createWholesaleApparel($queue, $shop, $template, $setting);
                     break;
