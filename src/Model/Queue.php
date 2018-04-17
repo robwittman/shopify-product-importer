@@ -15,7 +15,22 @@ class Queue extends Elegant
     protected $casts = array(
         'data' => 'json'
     );
-    
+
+    public function template()
+    {
+        return $this->belongsTo(Template::class, 'template_id', 'handle');
+    }
+
+    public function sub_template()
+    {
+        return $this->belongsTo(SubTemplate::class, 'sub_template_id', 'value');
+    }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class, 'shop_id', 'id');
+    }
+
     public function fail($reason = null)
     {
         $this->status = self::FAILED;

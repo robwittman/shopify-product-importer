@@ -184,9 +184,9 @@ class Products
         $queue = new Queue();
         $queue->data = $data;
         $queue->status = Queue::PENDING;
-        $queue->shop = $shopId;
+        $queue->shop_id = $shopId;
         $queue->file_name = $data['file'];
-        $queue->template = $data['post']['template'];
+        $queue->template_id = $data['post']['template'];
         $queue->log_to_google = (int) $data['post']['log_to_google'];
         $queue->vendor = $post['vendor'];
         $queue->product_type = $post['product_type'];
@@ -196,7 +196,7 @@ class Products
         $queue->showcase_color = $post['default_color'];
         $queue->showcase_product = $post['default_product'];
         $queue->print_type = $post['print_type'];
-        $queue->sub_template = $post['sub_template'];
+        $queue->sub_template_id = $post['sub_template'];
         $queue->save();
 
         $elapsed_time = time() - $start;

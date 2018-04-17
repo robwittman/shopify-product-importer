@@ -61,6 +61,11 @@ $container['TemplatesController'] = function($c) {
     $flash = $c->get('flash');
     return new \App\Controller\Templates($view, $flash);
 };
+$container['QueuesController'] = function($c) {
+    $view = $c->get('view');
+    $flash = $c->get('flash');
+    return new \App\Controller\Queues($view, $flash);
+};
 $container['SubTemplatesController'] = function($c) {
     $view = $c->get('view');
     $flash = $c->get('flash');

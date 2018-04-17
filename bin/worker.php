@@ -21,15 +21,15 @@ while (true) {
         try {
             $queue->start();
             $data = $queue->data;
-            $template = Template::where('handle', $data['post']['template'])->first();
+            $template = Template::where('handle', $queue->template_id)->first();
             if (is_null($template)) {
-                throw new \Exception("Unsupported template '{$data['post']['template']}'");
+                throw new \Exception("Unsupported template '{$queue->template_id}'");
             }
             $setting = Setting::where(array(
                 'template_id' => $template->id,
-                'shop_id' => $queue->shop
+                'shop_id' => $queue->shop_id
             ))->first();
-            $shop = Shop::find($queue->shop);
+            $shop = Shop::find($queue->shop_id);
             switch ($queue->template) {
                 case 'wholesale_apparel':
                     $res = createWholesaleApparel($queue, $shop, $template, $setting);
@@ -77,7 +77,7 @@ while (true) {
                     $res = createGreyCollection($queue, $client);
                     break;
                 default:
-                    throw new \Exception("Invalid template {$data['post']['template']} provided");
+                    throw new \Exception("Invalid template {$queue->template_id} provided");
             }
             $queue->finish($res);
             error_log("Queue {$queue->id} finished. ".json_encode($res));

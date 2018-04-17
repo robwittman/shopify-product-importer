@@ -1,0 +1,63 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1 col-sm-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Queue
+                </div>
+                <table class='table table-striped table-condensed'>
+                    <tr>
+                        <th></th>
+                        <th>Shop</th>
+                        <th>Template</th>
+                        <th>Sub Template</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                        <th>Results</th>
+                        <th>Error</th>
+                    </tr>
+                    {% for q in queue %}
+                    <tr>
+                        <td>
+                            {% if q.status == 'pending' %}
+                            {% elseif q.status == 'failed' %}
+                                <form action="/queue/restart" method="post">
+                                    <input type="hidden" name="queue_id" value="{{q.id}}">
+                                    <button type="submit" class='btn btn-default btn-sm'>Restart</button>
+                                </form>
+                            {% elseif q.status == 'finished' %}
+                            {% else %}
+                            {% endif %}
+                        </td>
+                        <td>{{ q.shop | json_encode() }}</td>
+                        <td>{{ q.template | json_encode() }}</td>
+                        <td>{{ q.sub_template.name }}</td>
+                        <td>{{ q.created_at | date('Y-m-d H:i') }}</td>
+                        <td>
+                            {% if q.status == 'pending' %}
+                                    <span class='glyphicon glyphicon-minus'></span>
+                            {% elseif q.status == 'failed' %}
+                                    <span class='glyphicon glyphicon-remove'></span>
+                            {% elseif q.status == 'finished' %}
+                                    <span class='glyphicon glyphicon-ok'></span>
+                            {% else %}
+                                {{q.status}}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <ul>
+                                {% for product in q.product_id %}
+                                    <li><a href="https://{{q.shop.myshopify_domain}}/admin/products/{{product}}">{{product}}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>{{q.error}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
