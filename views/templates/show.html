@@ -164,6 +164,7 @@
     editor.getSession().on("change", function () {
         textarea.html(editor.getSession().getValue());
     });
+    textarea.html(editor.getSession().getValue());
 
     $('#editModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget)
