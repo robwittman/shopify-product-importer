@@ -19,18 +19,13 @@ $settings = array(
     )
 );
 
-$credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
-$s3 = new \Aws\S3\S3Client([
-    'version' => 'latest',
-    'region' => 'us-east-1',
-    'credentials' => $credentials
-]);
-
 $app = new Slim\App(['settings' => $settings]);
 
 require_once DIR.'/src/container.php';
 
 $container = $app->getContainer();
+
+$s3 = $container->get('Filesystem');
 
 $client = $container->get('GoogleDrive');
 

@@ -2,6 +2,9 @@
 
 use PhpAmqpLib\Connection\AMQPConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\Filesystem;
+use League\Flysystem\AdapterInterface;
 
 $container = $app->getContainer();
 $container['view'] = function ($c) {
@@ -52,8 +55,9 @@ $container['ShopController'] = function ($c) {
 $container['ProductController'] = function($c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
+    $filesystem = $c->get('Filesystem');
     // $rabbit = $c->get('rabbit');
-    return new \App\Controller\Products($view, $flash, null);
+    return new \App\Controller\Products($view, $flash, $filesystem);
 };
 
 $container['TemplatesController'] = function($c) {
@@ -95,4 +99,21 @@ $container['GoogleDrive'] = function($c) {
     )));
     $client->setAccessType('offline');
     return $client;
+};
+
+$container['S3'] = function($c) {
+    $credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
+    return new \Aws\S3\S3Client([
+        'version' => 'latest',
+        'region' => 'us-east-1',
+        'credentials' => $credentials
+    ]);
+};
+
+$container['Filesystem'] = function($c) {
+    $client = $c->get('S3');
+    $adapter = new AwsS3Adapter($client, 'shopify-product-importer');
+    return new Filesystem($adapter, array(
+        'visibility' => AdapterInterface::VISIBILITY_PRIVATE
+    ));
 };

@@ -95,24 +95,31 @@ while (true) {
 }
 
 function getImages($s3, $prefix) {
-    $objects = $s3->getIterator('ListObjects', array(
-        "Bucket" => "shopify-product-importer",
-        "Prefix" => $prefix
-    ));
-    $res = array();
-    foreach ($objects as $object) {
-        $key = $object["Key"];
-        if (strpos($key, "MACOSX") || strpos($key, "Icon^M")) {
-            continue;
-        }
-        if (!in_array(pathinfo($key, PATHINFO_EXTENSION), array('jpg', 'png', 'jpeg'))) {
-            continue;
-        }
-        $res[] = $object;
-    }
-    return array_map(function($object) {
-        return $object["Key"];
-    }, $res);
+    $contents = $s3->listContents($prefix, true);
+    $files = array_map(function($file) {
+        return $file['path'];
+    }, array_filter($contents, function($content) {
+        return $content['type'] === 'file';
+    }));
+    return $files;
+    // $objects = $s3->getIterator('ListObjects', array(
+    //     "Bucket" => "shopify-product-importer",
+    //     "Prefix" => $prefix
+    // ));
+    // $res = array();
+    // foreach ($objects as $object) {
+    //     $key = $object["Key"];
+    //     if (strpos($key, "MACOSX") || strpos($key, "Icon^M")) {
+    //         continue;
+    //     }
+    //     if (!in_array(pathinfo($key, PATHINFO_EXTENSION), array('jpg', 'png', 'jpeg'))) {
+    //         continue;
+    //     }
+    //     $res[] = $object;
+    // }
+    // return array_map(function($object) {
+    //     return $object["Key"];
+    // }, $res);
 }
 
 function getSku($size)
@@ -274,3 +281,22 @@ function getSkuTemplate(Template $template, Setting $setting = null, Queue $queu
 {
     return $queue->sku ?: $setting->sku_template ?: $template->sku_template;
 }
+
+/*
+<!--{% assign fulfillerCode = '' %}-->
+<!--{% assign garmentSku = '' %}-->
+<!--{% if variant.style == 'Tank' %}-->
+<!--    {% assign fulfillerCode = 'NL1533' %}-->
+<!--    {% assign garmentSku = 'tank' %}-->
+<!--{% else if variant.style == 'Tee' %}-->
+<!--    {% assign fulfillerCode = 'NL3600' %}-->
+<!--    {% assign garmentSku = 'tee' %}-->
+<!--{% else if variant.style == 'Long Sleeve' %}-->
+<!--    {% assign fulfillerCode = '2400' %}-->
+<!--    {% assign garmentSku = 'ls' %}-->
+<!--{% else if variant.style == 'Hoodie' %}-->
+<!--    {% assign fulfillerCode = '18500' %}-->
+<!--    {% assign garmentSku = 'hoodie' %}-->
+<!--{% endif %}-->
+<!--{{ file }} - {{ fulfillerCode }} - {{ garmentSku }}-->
+ */

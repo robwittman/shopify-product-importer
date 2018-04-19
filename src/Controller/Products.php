@@ -6,26 +6,29 @@ use App\Model\User;
 use App\Model\Queue;
 use App\Model\Shop;
 use App\Model\Template;
-use PhpAmqpLib\Message\AMQPMessage;
+use League\Flysystem\Filesystem;
 
 class Products
 {
     protected $view;
     protected $flash;
-    protected $rabbit;
     protected $s3;
+    protected $filesystem;
 
-    public function __construct($view, $flash, $rabbit)
+    public static $mimeTypes = ['jpg', 'png', 'jpeg'];
+
+    public function __construct($view, $flash, Filesystem $filesystem)
     {
         $this->view = $view;
         $this->flash = $flash;
         $this->rabbit = $rabbit;
-        $credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
-        $this->s3 = new \Aws\S3\S3Client([
-            'version' => 'latest',
-            'region' => 'us-east-1',
-            'credentials' => $credentials
-        ]);
+        $this->filesystem = $filesystem;
+        // $credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
+        // $this->s3 = new \Aws\S3\S3Client([
+        //     'version' => 'latest',
+        //     'region' => 'us-east-1',
+        //     'credentials' => $credentials
+        // ]);
     }
 
     public function show_form($request, $response, $arguments)
@@ -77,65 +80,65 @@ class Products
         return $response->withRedirect('/products');
     }
 
-    protected function createBatchProduct($request, $response, $arguments)
-    {
-        $file = $_FILES['zip_file'];
-        $passedFileName = $file['name'];
-        $hash = hash('sha256', uniqid(true));
-        $path = "/tmp/{$hash}";
-
-        $zip = new \ZipArchive();
-        $zip->open($file['tmp_name']);
-        $zip->extractTo($path);
-
-        $shopId = $_POST['shop'];
-        $shop = Shop::find($shopId);
-
-        if (empty($shop)) {
-            $this->flash->addMessage('error', "We couldnt find that shop");
-            return $response->withRedirect('/products');
-        }
-        $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
-        $i = 0;
-        foreach ($objects as $object) {
-            if ($object->getExtension() === 'zip') {
-                $i++;
-                $zip = new \ZipArchive();
-                $zip->open($object->getRealPath());
-                $newPath = $path.'/'.$object->getBasename('zip');
-                $zip->extractTo($newPath);
-                $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($newPath));
-                foreach ($files as $name => $file) {
-                    if (!in_array($file->getExtension(), ['jpg', 'png'])) {
-                        continue;
-                    }
-                    $name = str_replace('/tmp/', '', $name);
-                    $this->s3->putObject([
-                        'Bucket' => "shopify-product-importer",
-                        'SourceFile' => $file,
-                        'ACL' => 'public-read',
-                        'Key' => str_replace(' ', '_', $name).'-'.$i,
-                        'Content-Type' => 'application/zip_file'
-                    ]);
-
-                    $data = array(
-                        'file' => $hash,
-                        'post' => $request->getParsedBody(),
-                        'file_name' => $passedFileName
-                    );
-                    $data['post']['shop'] = $shopId;
-                    $queue = new Queue();
-                    $queue->data = $data;
-                    $queue->status = Queue::PENDING;
-                    $queue->shop = $shopId;
-                    $queue->file_name = $data['file'];
-                    $queue->template = $data['post']['template'];
-                    $queue->log_to_google = (int) $data['post']['log_to_google'];
-                    $queue->save();
-                }
-            }
-        }
-    }
+    // protected function createBatchProduct($request, $response, $arguments)
+    // {
+    //     $file = $_FILES['zip_file'];
+    //     $passedFileName = $file['name'];
+    //     $hash = hash('sha256', uniqid(true));
+    //     $path = "/tmp/{$hash}";
+    //
+    //     $zip = new \ZipArchive();
+    //     $zip->open($file['tmp_name']);
+    //     $zip->extractTo($path);
+    //
+    //     $shopId = $_POST['shop'];
+    //     $shop = Shop::find($shopId);
+    //
+    //     if (empty($shop)) {
+    //         $this->flash->addMessage('error', "We couldnt find that shop");
+    //         return $response->withRedirect('/products');
+    //     }
+    //     $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+    //     $i = 0;
+    //     foreach ($objects as $object) {
+    //         if ($object->getExtension() === 'zip') {
+    //             $i++;
+    //             $zip = new \ZipArchive();
+    //             $zip->open($object->getRealPath());
+    //             $newPath = $path.'/'.$object->getBasename('zip');
+    //             $zip->extractTo($newPath);
+    //             $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($newPath));
+    //             foreach ($files as $name => $file) {
+    //                 if (!in_array($file->getExtension(), ['jpg', 'png'])) {
+    //                     continue;
+    //                 }
+    //                 $name = str_replace('/tmp/', '', $name);
+    //                 $this->s3->putObject([
+    //                     'Bucket' => "shopify-product-importer",
+    //                     'SourceFile' => $file,
+    //                     'ACL' => 'public-read',
+    //                     'Key' => str_replace(' ', '_', $name).'-'.$i,
+    //                     'Content-Type' => 'application/zip_file'
+    //                 ]);
+    //
+    //                 $data = array(
+    //                     'file' => $hash,
+    //                     'post' => $request->getParsedBody(),
+    //                     'file_name' => $passedFileName
+    //                 );
+    //                 $data['post']['shop'] = $shopId;
+    //                 $queue = new Queue();
+    //                 $queue->data = $data;
+    //                 $queue->status = Queue::PENDING;
+    //                 $queue->shop = $shopId;
+    //                 $queue->file_name = $data['file'];
+    //                 $queue->template = $data['post']['template'];
+    //                 $queue->log_to_google = (int) $data['post']['log_to_google'];
+    //                 $queue->save();
+    //             }
+    //         }
+    //     }
+    // }
 
     protected function createSingleProduct($request, $response, $arguments)
     {
@@ -159,14 +162,15 @@ class Products
         $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
 
         foreach($objects as $name => $object) {
+            $extension = $object->getExtension();
+            if (!in_array($extension, static::$mimeTypes)) {
+                continue;
+            }
+            if (strpos($object->getPathname(), 'MACOSX') !== false) {
+                continue;
+            }
             $name = str_replace('/tmp/','',$name);
-            $this->s3->putObject([
-                'Bucket' => "shopify-product-importer",
-                'SourceFile' => $object,
-                'ACL' => "public-read",
-                'Key' => str_replace(' ', '_', $name),
-                'Content-Type' => 'application/zip_file'
-            ]);
+            $this->filesystem->put($name, file_get_contents($object->getPathname()));
         }
         $shopId = $post['shop'];
         $shop = Shop::find($shopId);
@@ -201,6 +205,22 @@ class Products
 
         $elapsed_time = time() - $start;
         return;
+    }
+
+    public function batch($request, $response, $arguments)
+    {
+        $user = User::find($request->getAttribute('user')->id);
+        $shops = $user->shops;
+        $templates = Template::with('sub_templates')->get();
+        $message = null;
+        if ($request->isPost()) {
+
+        }
+        return $this->view->render($response, 'batch.html', array(
+            'user' => $user,
+            'shops' => $shops,
+            'templates' => $templates
+        ));
     }
 
     public function restart_queue($request, $response, $args)
