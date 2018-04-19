@@ -12,12 +12,9 @@ foreach (glob(DIR."/bin/scripts/*.php") as $file) {
     include_once ($file);
 }
 
+$queueRepo = $container->get('QueueRepository');
 while (true) {
-    $queue = Queue::with('template', 'sub_template', 'shop')
-        ->where('status', Queue::PENDING)
-        ->orderBy('created_at', 'asc')
-        ->first();
-    if (!$queue) {
+    if ($queue = $queueRepo->getFifoQueue()) {
         sleep(5);
     } else {
         try {

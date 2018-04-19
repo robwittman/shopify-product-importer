@@ -127,3 +127,7 @@ $container['Queue'] = function($c) {
         'credentials' => $credentials
     ));
 };
+
+$container['QueueRepository'] = function($c) {
+    return new \App\Repository\QueueRepostiory();
+};
