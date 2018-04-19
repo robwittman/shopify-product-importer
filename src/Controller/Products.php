@@ -207,12 +207,12 @@ class Products
         $queue->sub_template_id = $post['sub_template'];
         $queue->save();
 
-        $this->queue->sendMessage(array(
-            'QueueUrl'    => getenv("UPLOAD_QUEUE_URL"),
-            'MessageBody' => json_encode($queue),
-            'MessageGroupId' => "shop.{$shop->myshopify_domain}",
-            'MessageDeduplicationId' => "queue.{$queue->id}"
-        ));
+        // $this->queue->sendMessage(array(
+        //     'QueueUrl'    => getenv("UPLOAD_QUEUE_URL"),
+        //     'MessageBody' => json_encode($queue),
+        //     'MessageGroupId' => "shop.{$shop->myshopify_domain}",
+        //     'MessageDeduplicationId' => "queue.{$queue->id}"
+        // ));
 
         $elapsed_time = time() - $start;
         return;

@@ -12,17 +12,14 @@ foreach (glob(DIR."/bin/scripts/*.php") as $file) {
     include_once ($file);
 }
 
-$sqsQueue = $container->get('Queue');
-
 while (true) {
-    $result = $sqsQueue->receiveMessage(array(
-        'QueueUrl'    => getenv("UPLOAD_QUEUE_URL"),
-        'MaxNumberOfMessages' => 1,
-    ));
-    if (count($result->get('Messages')) > 0) {
-        $message = $result->get('Messages')[0];
-        $data = json_decode($message['Body'], true);
-        $queue = Queue::find($data['id']);
+    $queue = Queue::with('template', 'sub_template', 'shop')
+        ->where('status', Queue::PENDING)
+        ->orderBy('created_at', 'asc')
+        ->first();
+    if (!$queue) {
+        sleep(5);
+    } else {
         try {
             $queue->start();
             $data = $queue->data;
@@ -85,10 +82,6 @@ while (true) {
                     throw new \Exception("Invalid template {$queue->template_id} provided");
             }
             $queue->finish($res);
-            $sqsQueue->deleteMessage([
-                'QueueUrl' => getenv("UPLOAD_QUEUE_URL"), // REQUIRED
-                'ReceiptHandle' => $message['ReceiptHandle'] // REQUIRED
-            ]);
             error_log("Queue {$queue->id} finished. ".json_encode($res));
         } catch(\Exception $e) {
             error_log($e->getMessage());
@@ -98,8 +91,6 @@ while (true) {
                 $queue->fail($e->getMessage());
             }
         }
-    } else {
-        sleep(5);
     }
 }
 
