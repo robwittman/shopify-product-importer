@@ -167,7 +167,7 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
                     'grams' => $sizeSettings['grams'],
                     'option1' => getSku($size),
                     'option2' => $color,
-                    'option3' => $garment,
+                    'option3' => (($shop->myshopify_domain == 'forged-blue.myshopify.com' && $garment == 'Tank') ? 'Women\'s Tank' : $garment),
                     'weight' => $sizeSettings['weight'],
                     'weight_unit' => $sizeSettings['weight_unit'],
                     'requires_shipping' => true,
@@ -217,7 +217,7 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
                 $search = "Tees";
             } elseif($garment == "Long Sleeve") {
                 $search = "LS";
-            } elseif($garment == "Tank") {
+            } elseif($garment == "Tank" || $garment == 'Women\'s Tank') {
                 $search = "Tanks";
             } else {
                 $search = $garment;
@@ -233,6 +233,8 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
             $imageUpdate[] = $data;
         }
     }
+
+    error_log(json_encode($imageUpdate, JSON_PRETTY_PRINT));
 
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         'product' => array(
