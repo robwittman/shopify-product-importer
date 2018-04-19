@@ -234,8 +234,6 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
         }
     }
 
-    error_log(json_encode($imageUpdate, JSON_PRETTY_PRINT));
-
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         'product' => array(
             'id' => $res->product->id,
