@@ -56,8 +56,9 @@ $container['ProductController'] = function($c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
     $filesystem = $c->get('Filesystem');
+    $queue = $c->get('Queue');
     // $rabbit = $c->get('rabbit');
-    return new \App\Controller\Products($view, $flash, $filesystem);
+    return new \App\Controller\Products($view, $flash, $filesystem, $queue);
 };
 
 $container['TemplatesController'] = function($c) {
@@ -115,5 +116,14 @@ $container['Filesystem'] = function($c) {
     $adapter = new AwsS3Adapter($client, 'shopify-product-importer');
     return new Filesystem($adapter, array(
         'visibility' => AdapterInterface::VISIBILITY_PRIVATE
+    ));
+};
+
+$container['Queue'] = function($c) {
+    $credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
+    return new Aws\Sqs\SqsClient(array(
+        'version' => 'latest',
+        'region'  => 'us-east-1',
+        'credentials' => $credentials
     ));
 };

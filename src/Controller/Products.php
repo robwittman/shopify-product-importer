@@ -7,6 +7,7 @@ use App\Model\Queue;
 use App\Model\Shop;
 use App\Model\Template;
 use League\Flysystem\Filesystem;
+use Aws\Sqs\SqsClient;
 
 class Products
 {
@@ -14,15 +15,17 @@ class Products
     protected $flash;
     protected $s3;
     protected $filesystem;
+    protected $queue;
 
     public static $mimeTypes = ['jpg', 'png', 'jpeg'];
 
-    public function __construct($view, $flash, Filesystem $filesystem)
+    public function __construct($view, $flash, Filesystem $filesystem, SqsClient $queue)
     {
         $this->view = $view;
         $this->flash = $flash;
         $this->rabbit = $rabbit;
         $this->filesystem = $filesystem;
+        $this->queue = $queue;
         // $credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
         // $this->s3 = new \Aws\S3\S3Client([
         //     'version' => 'latest',
@@ -146,6 +149,13 @@ class Products
         $start = time();
         $files = $request->getUploadedFiles();
 
+        $shopId = $post['shop'];
+        $shop = Shop::find($shopId);
+        if (empty($shop)) {
+            $this->flash->addMessage('error', "We couldnt find that shop");
+            return $response->withRedirect('/products');
+        }
+
         $hash = hash('sha256', uniqid(true));
         $path = "/tmp/{$hash}";
 
@@ -170,13 +180,7 @@ class Products
                 continue;
             }
             $name = str_replace('/tmp/','',$name);
-            $this->filesystem->put($name, file_get_contents($object->getPathname()));
-        }
-        $shopId = $post['shop'];
-        $shop = Shop::find($shopId);
-        if (empty($shop)) {
-            $this->flash->addMessage('error', "We couldnt find that shop");
-            return $response->withRedirect('/products');
+            $this->filesystem->put(str_replace(' ', '_', $name), file_get_contents($object->getPathname()));
         }
 
         $data = array(
@@ -202,6 +206,13 @@ class Products
         $queue->print_type = $post['print_type'];
         $queue->sub_template_id = $post['sub_template'];
         $queue->save();
+
+        $this->queue->sendMessage(array(
+            'QueueUrl'    => getenv("UPLOAD_QUEUE_URL"),
+            'MessageBody' => json_encode($queue),
+            'MessageGroupId' => "shop.{$shop->myshopify_domain}",
+            'MessageDeduplicationId' => "queue.{$queue->id}"
+        ));
 
         $elapsed_time = time() - $start;
         return;

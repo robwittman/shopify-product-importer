@@ -12,14 +12,17 @@ foreach (glob(DIR."/bin/scripts/*.php") as $file) {
     include_once ($file);
 }
 
+$sqsQueue = $container->get('Queue');
+
 while (true) {
-    $queue = Queue::with('template', 'sub_template', 'shop')
-        ->where('status', Queue::PENDING)
-        ->orderBy('created_at', 'asc')
-        ->first();
-    if (!$queue) {
-        sleep(5);
-    } else {
+    $result = $sqsQueue->receiveMessage(array(
+        'QueueUrl'    => getenv("UPLOAD_QUEUE_URL"),
+        'MaxNumberOfMessages' => 1,
+    ));
+    if (count($result->get('Messages')) > 0) {
+        $message = $result->get('Messages')[0];
+        $data = json_decode($message['Body'], true);
+        $queue = Queue::find($data['id']);
         try {
             $queue->start();
             $data = $queue->data;
@@ -82,6 +85,10 @@ while (true) {
                     throw new \Exception("Invalid template {$queue->template_id} provided");
             }
             $queue->finish($res);
+            $sqsQueue->deleteMessage([
+                'QueueUrl' => getenv("UPLOAD_QUEUE_URL"), // REQUIRED
+                'ReceiptHandle' => $message['ReceiptHandle'] // REQUIRED
+            ]);
             error_log("Queue {$queue->id} finished. ".json_encode($res));
         } catch(\Exception $e) {
             error_log($e->getMessage());
@@ -91,6 +98,8 @@ while (true) {
                 $queue->fail($e->getMessage());
             }
         }
+    } else {
+        sleep(5);
     }
 }
 
@@ -102,24 +111,6 @@ function getImages($s3, $prefix) {
         return $content['type'] === 'file';
     }));
     return $files;
-    // $objects = $s3->getIterator('ListObjects', array(
-    //     "Bucket" => "shopify-product-importer",
-    //     "Prefix" => $prefix
-    // ));
-    // $res = array();
-    // foreach ($objects as $object) {
-    //     $key = $object["Key"];
-    //     if (strpos($key, "MACOSX") || strpos($key, "Icon^M")) {
-    //         continue;
-    //     }
-    //     if (!in_array(pathinfo($key, PATHINFO_EXTENSION), array('jpg', 'png', 'jpeg'))) {
-    //         continue;
-    //     }
-    //     $res[] = $object;
-    // }
-    // return array_map(function($object) {
-    //     return $object["Key"];
-    // }, $res);
 }
 
 function getSku($size)
@@ -137,7 +128,6 @@ function getSku($size)
 
 function logResults(Google_Client $client, $sheet, $printType, array $results, $shopId)
 {
-    error_log("Storing stuffs");
     if ($printType == 'front_print') {
         $sheetName = 'Front Print';
     } elseif ($printType == 'back_print') {
