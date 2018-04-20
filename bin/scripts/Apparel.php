@@ -28,7 +28,6 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
         'back_print_file_url' => $post['back_print_url'],
         'variants' => array()
     );
-    var_dump($image_data);
     foreach ($image_data as $name) {
         if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
             continue;
@@ -234,7 +233,6 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
             $imageUpdate[] = $data;
         }
     }
-    var_dump($imageUpdate);
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
         'product' => array(
             'id' => $res->product->id,

@@ -129,5 +129,27 @@ $container['Queue'] = function($c) {
 };
 
 $container['QueueRepository'] = function($c) {
-    return new \App\Repository\QueueRepostiory();
+    return new \App\Repository\QueueRepository();
+};
+
+$container['Logger'] = function($c) {
+    $logger = new \Monolog\Logger("log");
+    $logger->pushHandler(new \Monolog\Handler\ErrorLogHandler());
+    return $logger;
+};
+
+$container['QueueProcessor'] = function($c) {
+    return new \App\Queue\QueueProcessor(
+        $c->get('Filesystem'),
+        $c->get('GoogleDrive'),
+        $c->get('Logger')
+    );
+};
+
+$container['QueueConsumer'] = function($c) {
+    return new \App\Consumer\UploadQueueConsumer(
+        $c->get('QueueRepository'),
+        $c->get('QueueProcessor'),
+        $c->get('Logger')
+    );
 };

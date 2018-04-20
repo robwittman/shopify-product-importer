@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Model\Queue;
+
 class QueueRepository
 {
     public function getFifoQueue($shop = null) {
