@@ -59,6 +59,14 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
                 return "Unable to open matrix file";
             }
             unset($matrix['Crew']);
+            break;
+        case 'forged-blue.myshopify.com':
+            $matrix = json_decode(file_get_contents(DIR.'/src/shield-republic.json'), true);
+            if (!$matrix) {
+                return "Unable to open matrix file";
+            }
+            unset($matrix['Crew']);
+            break;
     }
 
     $sku = generateSku($shop, $post['product_title']);

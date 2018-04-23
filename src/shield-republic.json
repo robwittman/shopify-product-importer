@@ -1,0 +1,270 @@
+{
+    "Tank" : {
+        "body_html" : "<meta charset=\"utf-8\" /><p><strong>Also available in Hoodies, Tees, and Long Sleeves! Use the Search Function : ) </strong></p><p><img src=\"//cdn.shopify.com/s/files/1/1335/7705/files/13403334_10154065892745733_4480761494036514837_o_large.jpg?10673323962259018597\" alt=\"\" /></p>",
+        "sizes" : {
+            "Small" : {
+                "price" : 24.99,
+                "grams" : 74,
+                "weight" : 2.6,
+                "weight_unit" : "oz"
+            },
+            "Medium" : {
+                "price" : 24.99,
+                "grams" : 88,
+                "weight" : 3.1,
+                "weight_unit" : "oz"
+            },
+            "Large" : {
+                "price" : 24.99,
+                "grams" : 91,
+                "weight" : 3.2,
+                "weight_unit" : "oz"
+            },
+            "XL" : {
+                "price" : 24.99,
+                "grams" : 91,
+                "weight" : 3.2,
+                "weight_unit" : "oz"
+            },
+            "2XL" : {
+                "price" : 26.99,
+                "grams" : 102,
+                "weight" : 3.6,
+                "weight_unit" : "oz"
+            }
+        },
+        "colors" : [
+            "Navy",
+            "Pink",
+            "Grey",
+            "Black",
+            "Royal Blue"
+        ],
+        "color_map" : {
+            "Grey" : "Charcoal",
+            "Royal Blue" : "Royal"
+        }
+    },
+    "Tee" : {
+        "body_html" : "<meta charset=\"utf-8\" /><p><strong>Also available in Tanks, Hoodies, and Long Sleeves! Use the Search Function : ) </strong></p><p><img src=\"//cdn.shopify.com/s/files/1/1335/7705/files/13403334_10154065892745733_4480761494036514837_o_large.jpg?10673323962259018597\" alt=\"\" /></p>",
+        "sizes" : {
+            "Small" : {
+                "price" : 27.99,
+                "grams" : 159,
+                "weight" : 5.6,
+                "weight_unit" : "oz"
+            },
+            "Medium" : {
+                "price" : 27.99,
+                "grams" : 179,
+                "weight" : 6.3,
+                "weight_unit" : "oz"
+            },
+            "Large" : {
+                "price" : 27.99,
+                "grams" : 204,
+                "weight" : 7.2,
+                "weight_unit" : "oz"
+            },
+            "XL" : {
+                "price" : 27.99,
+                "grams" : 227,
+                "weight" : 8.0,
+                "weight_unit" : "oz"
+            },
+            "2XL" : {
+                "price" : 29.99,
+                "grams" : 247,
+                "weight" : 8.7,
+                "weight_unit" : "oz"
+            },
+            "3XL" : {
+                "price" : 31.99,
+                "grams" : 278,
+                "weight" : 9.8,
+                "weight_unit" : "oz"
+            },
+            "4XL" : {
+                "price" : 31.99,
+                "grams" : 289,
+                "weight" : 10.2,
+                "weight_unit" : "oz"
+            }
+        },
+        "colors" : [
+            "Navy",
+            "Black",
+            "Royal Blue",
+            "Purple",
+            "Grey"
+        ]
+    },
+    "Hoodie" : {
+        "body_html" : "<meta charset=\"utf-8\" /><p><strong>Also available in Tanks, Tees, and Long Sleeves! Use the Search Function : ) </strong></p><p><img src=\"//cdn.shopify.com/s/files/1/1335/7705/files/13403334_10154065892745733_4480761494036514837_o_large.jpg?10673323962259018597\" alt=\"\" /></p>",
+        "sizes" : {
+            "Small" : {
+                "price" : 39.99,
+                "grams" : 456,
+                "weight" : 16.1,
+                "weight_unit" : "oz"
+            },
+            "Medium" : {
+                "price" : 39.99,
+                "grams" : 496,
+                "weight" : 17.5,
+                "weight_unit" : "oz"
+            },
+            "Large" : {
+                "price" : 39.99,
+                "grams" : 533,
+                "weight" : 18.8,
+                "weight_unit" : "oz"
+            },
+            "XL" : {
+                "price" : 39.99,
+                "grams" : 601,
+                "weight" : 21.2,
+                "weight_unit" : "oz"
+            },
+            "2XL" : {
+                "price" : 41.99,
+                "grams" : 649,
+                "weight" : 22.9,
+                "weight_unit" : "oz"
+            },
+            "3XL" : {
+                "price" : 43.99,
+                "grams" : 683,
+                "weight" : 24.1,
+                "weight_unit" : "oz"
+            },
+            "4XL" : {
+                "price" : 43.99,
+                "grams" : 695,
+                "weight" : 24.5,
+                "weight_unit" : "oz"
+            }
+        },
+        "colors" : [
+            "Navy",
+            "Black",
+            "Royal Blue",
+            "Grey"
+        ],
+        "color_map" : {
+            "Royal Blue" : "Royal",
+            "Grey" : "Charcoal"
+        }
+    },
+    "Long Sleeve" : {
+        "body_html" : "<meta charset=\"utf-8\" /><p><strong>Also available in Tanks, Tees, and Long Sleeves! Use the Search Function : ) </strong></p><p><img src=\"//cdn.shopify.com/s/files/1/1335/7705/files/13403334_10154065892745733_4480761494036514837_o_large.jpg?10673323962259018597\" alt=\"\" /></p><p> </p>",
+        "sizes" : {
+            "Small" : {
+                "price" : 32.99,
+                "grams" : 456,
+                "weight" : 7.6,
+                "weight_unit" : "oz"
+            },
+            "Medium" : {
+                "price" : 32.99,
+                "grams" : 496,
+                "weight" : 8.8,
+                "weight_unit" : "oz"
+            },
+            "Large" : {
+                "price" : 32.99,
+                "grams" : 533,
+                "weight" : 10.0,
+                "weight_unit" : "oz"
+            },
+            "XL" : {
+                "price" : 32.99,
+                "grams" : 601,
+                "weight" : 10.3,
+                "weight_unit" : "oz"
+            },
+            "2XL" : {
+                "price" : 34.99,
+                "grams" : 649,
+                "weight" : 12.4,
+                "weight_unit" : "oz"
+            },
+            "3XL" : {
+                "price" : 36.99,
+                "grams" : 683,
+                "weight" : 12.6,
+                "weight_unit" : "oz"
+            },
+            "4XL" : {
+                "price" : 36.99,
+                "grams" : 695,
+                "weight" : 13.6,
+                "weight_unit" : "oz"
+            }
+        },
+        "colors" : [
+            "Navy",
+            "Black",
+            "Royal Blue",
+            "Purple",
+            "Grey"
+        ],
+        "color_map" : {
+            "Royal Blue" : "Royal",
+            "Grey" : "Charcoal"
+        }
+    },
+    "Crew" : {
+        "body_html" : "<p></p>",
+        "sizes" : {
+            "S" : {
+                "price" : "29.99",
+                "grams" : "159",
+                "weight" : "5.6",
+                "weight_unit" : "oz"
+            },
+            "M" : {
+                "price" : "29.99",
+                "grams" : "179",
+                "weight" : "6.3",
+                "weight_unit" : "oz"
+            },
+            "L" : {
+                "price" : "29.99",
+                "grams" : "204",
+                "weight" : "7.2",
+                "weight_unit" : "oz"
+            },
+            "XL" : {
+                "price" : "29.99",
+                "grams" : "227",
+                "weight" : "8.0",
+                "weight_unit" : "oz"
+            },
+            "2XL" : {
+                "price" : "31.99",
+                "grams" : "247",
+                "weight" : "8.7",
+                "weight_unit" : "oz"
+            },
+            "3XL" : {
+                "price" : "33.99",
+                "grams" : "278",
+                "weight" : "9.8",
+                "weight_unit" : "oz"
+            },
+            "4XL" : {
+                "price" : "35.99",
+                "grams" : "289",
+                "weight" : "10.2",
+                "weight_unit" : "oz"
+            }
+        },
+        "colors" : [
+            "Charcoal"
+        ],
+        "color_map" : {
+
+        }
+    }
+}
