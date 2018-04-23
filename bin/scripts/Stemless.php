@@ -65,7 +65,7 @@ function createStemless(Queue $queue, Shop $shop, Template $template, Setting $s
 
         $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
         unset($variantData['color']);
-        if ($color == 'Navy') {
+        if ($color == 'Black') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
         } else {
             $product_data['variants'][] = $variantData;
