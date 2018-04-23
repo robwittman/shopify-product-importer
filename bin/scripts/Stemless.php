@@ -27,12 +27,12 @@ function createStemless(Queue $queue, Shop $shop, Template $template, Setting $s
         $imageUrls[$color] = $name;
     }
     $product_data = getProductSettings($shop, $queue, $template, $setting);
+    $product_data['product_type'] = 'Stemless Wine Cup';
     $product_data['options'] = array(
         array(
             'name' => "Color"
         )
     );
-    var_dump($product_data);
     $store_name = '';
     switch ($shop->myshopify_domain) {
         case 'piper-lou-collection.myshopify.com':
@@ -61,10 +61,9 @@ function createStemless(Queue $queue, Shop $shop, Template $template, Setting $s
             'inventory_management' => null,
             'inventory_policy' => 'deny'
         );
-        $variantData['size'] = $size;
         $variantData['color'] = str_replace('_', ' ', $color);
+
         $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
-        unset($variantData['size']);
         unset($variantData['color']);
         if ($color == 'Navy') {
             $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
