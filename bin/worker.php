@@ -78,6 +78,9 @@ while (true) {
                 case 'grey_collection':
                     $res = createGreyCollection($queue, $client);
                     break;
+                case 'multistyle_hats':
+                    $res = createMultiHats($queue, $shop, $template, $setting);
+                    break;
                 default:
                     throw new \Exception("Invalid template {$queue->template_id} provided");
             }
