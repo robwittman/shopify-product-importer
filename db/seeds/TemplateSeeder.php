@@ -165,6 +165,16 @@ class TemplateSeeder extends AbstractSeed
                 'sku_template' => null,
                 'tags' => 'UV Tumbler, Awareness'
             ),
+            array(
+                'handle' => 'multistyle_hats',
+                'name' => 'Multi Style Hats',
+                'description' => '',
+                'vendor' => 'Edge Promo',
+                'product_type' => 'Hat',
+                'enabled' => 1,
+                'sku_template' => null,
+                'tags' => ''
+            )
         );
         $this->table('templates')->insert($data)->save();
     }
