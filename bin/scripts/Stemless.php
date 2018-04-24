@@ -26,6 +26,7 @@ function createStemless(Queue $queue, Shop $shop, Template $template, Setting $s
         $color = $specs[1];
         $imageUrls[$color] = $name;
     }
+    var_dump($imageUrls);
     $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['product_type'] = 'Stemless Wine Cup';
     $product_data['options'] = array(
