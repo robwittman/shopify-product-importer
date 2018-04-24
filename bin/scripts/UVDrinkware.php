@@ -25,6 +25,12 @@ function createUvDrinkware(Queue $queue, Shop $shop, Template $template, Setting
                 '20' => '17.50'
             );
             break;
+        case 'shield-republic-wholesale.myshopify.com':
+            $prices = array(
+                '30' => '20',
+                '20' => '17.50'
+            );
+            break;
     }
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];

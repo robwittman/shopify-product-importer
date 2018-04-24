@@ -18,6 +18,9 @@ function createStemless(Queue $queue, Shop $shop, Template $template, Setting $s
         case 'plcwholesale.myshopify.com':
             $price = '12.50';
             break;
+        case 'shield-republic-wholesale.myshopify.com':
+            $price = '13.50';
+            break;
     }
 
     foreach ($image_data as $name) {
