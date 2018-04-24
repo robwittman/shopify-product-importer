@@ -16,11 +16,10 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
     $imageUrls = [];
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];
-        $chunks = explode('/', $name);
-        $color = $chunks[count($chunks)];
-        $imageUrls[$style][str_replace('_',' ',$color)] = $name;
+        $chunks = explode('/', $productData);
+        $color = $chunks[count($chunks) - 1];
+        $imageUrls[$color] = $name;
     }
-
     $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
@@ -28,26 +27,25 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
         )
     );
     $skuTemplate = getSkuTemplate($template, $setting, $queue);
-    foreach ($imageUrls as $style => $colors) {
-        foreach ($colors as $color => $image) {
-            $variantData = array(
-                'title' => $color,
-                'price' => $price,
-                'option1' => $color,
-                'weight' => '5.0',
-                'weight_unit' => 'oz',
-                'requires_shipping' => true,
-                'inventory_management' => null,
-                'inventory_policy' => 'deny'
-            );
-            $variantData['color'] = $color;
-            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
-            unset($variantData['color']);
-            if ($color == 'Black and White') {
-                $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
-            } else {
-                $product_data['variants'][] = $variantData;
-            }
+    foreach ($imageUrls as $color => $url) {
+        $color = str_replace('_', ' ', $color);
+        $variantData = array(
+            'title' => $color,
+            'price' => $price,
+            'option1' => $color,
+            'weight' => '5.0',
+            'weight_unit' => 'oz',
+            'requires_shipping' => true,
+            'inventory_management' => null,
+            'inventory_policy' => 'deny'
+        );
+        $variantData['color'] = $color;
+        $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
+        unset($variantData['color']);
+        if ($color == 'Black and White') {
+            $product_data['variants'] = array_merge(array($variantData), $product_data['variants']);
+        } else {
+            $product_data['variants'][] = $variantData;
         }
     }
     $res = callShopify($shop, '/admin/products.json', 'POST', array(
@@ -55,12 +53,14 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
     ));
     $variantMap = array();
     $imageUpdate = array();
+    error_log(json_encode($imageUrls), JSON_PRETTY_PRINT);
     foreach ($res->product->variants as $variant) {
-        $color = str_replace(' ', '_', $variant->option1);
+        error_log($variant->option1);
         $image = array(
-            'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$color]}",
+            'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[str_replace(' ', '_', $variant->option1)]}",
             'variant_ids' => [$variant->id]
         );
+        error_log(json_encode($image));
         $imageUpdate[] = $image;
     };
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
