@@ -248,7 +248,7 @@ function getProductSettings(Shop $shop, Queue $queue, Template $template, Settin
         'title' => $queue->title,
         'body_html' => $queue->description ?: $setting->description ?: $shop->description ?: $template->description,
         'tags' => $tags,
-        'product_type' => $queue->product_type ?: $setting->product_type ?: $template->product_Type,
+        'product_type' => $queue->product_type ?: $setting->product_type ?: $template->product_type,
         'vendor' => $queue->vendor ?: $setting->vendor ?: $template->vendor,
         'variants' => array(),
         'images' => array()
