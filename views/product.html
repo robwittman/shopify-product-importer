@@ -180,13 +180,13 @@
         $('#advanced').click(function(ev) {
             $('#advanced-wrapper').toggle();
         })
-        $('input[type="checkbox"]').click(function() {
-            if ($('input[type="checkbox"]:checked').length > 0) {
-                $('#submit').prop('disabled', false);
-            } else {
-                $('#submit').prop('disabled', true);
-            }
-        })
+        // $('input[type="checkbox"]').click(function() {
+        //     if ($('input[type="checkbox"]:checked').length > 0) {
+        //         $('#submit').prop('disabled', false);
+        //     } else {
+        //         $('#submit').prop('disabled', true);
+        //     }
+        // })
         function selectAllStores() {
             $('input[type="checkbox"]').each(function() {
                 if (!$(this).prop('checked')) {
