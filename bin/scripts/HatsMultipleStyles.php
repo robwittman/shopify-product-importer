@@ -53,14 +53,11 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
     ));
     $variantMap = array();
     $imageUpdate = array();
-    error_log(json_encode($imageUrls), JSON_PRETTY_PRINT);
     foreach ($res->product->variants as $variant) {
-        error_log($variant->option1);
         $image = array(
             'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[str_replace(' ', '_', $variant->option1)]}",
             'variant_ids' => [$variant->id]
         );
-        error_log(json_encode($image));
         $imageUpdate[] = $image;
     };
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
