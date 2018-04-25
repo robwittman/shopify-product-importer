@@ -172,7 +172,6 @@ function createChristmas(Queue $queue, Shop $shop, Template $template, Setting $
                 unset($variantData['color']);
                 unset($variantData['style']);
                 $product_data['variants'][] = $variantData;
-                error_log(json_encode($variantData));
             }
         }
     }

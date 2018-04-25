@@ -20,6 +20,12 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
     $designId = null;
     $imageUrls = [];
     switch($shop->myshopify_domain) {
+        case 'piper-lou-collection.myshopify.com':
+            $prices = array(
+                '30' => '32.99',
+                '20' => '29.99'
+            );
+            break;
         case 'plcwholesale.myshopify.com':
             $prices = array(
                 '30' => '15',
