@@ -53,7 +53,8 @@ $container['ProductController'] = function($c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
     // $rabbit = $c->get('rabbit');
-    return new \App\Controller\Products($view, $flash, null);
+    $filesystem = $c->get('Filesystem');
+    return new \App\Controller\Products($view, $flash, null, $filesystem);
 };
 
 $container['TemplatesController'] = function($c) {
@@ -95,4 +96,24 @@ $container['GoogleDrive'] = function($c) {
     )));
     $client->setAccessType('offline');
     return $client;
+};
+
+$container['Filesystem'] = function($c) {
+    $client = new \Aws\S3\S3Client([
+    'credentials' => [
+        'key'    => getenv("AWS_ACCESS_KEY"),
+        'secret' => getenv("AWS_ACCESS_SECRET")
+    ],
+    'region' => getenv("AWS_REGION"),
+    'version' => 'latest',
+    ]);
+
+    $adapter = new \League\Flysystem\AwsS3v3\AwsS3Adapter($client, getenv("S3_BUCKET"));
+    $filesystem = new \League\Flysystem\Filesystem($adapter, [
+        'visibility' => \League\Flysystem\AdapterInterface::VISIBILITY_PRIVATE
+    ]);
+};
+
+$container['ShopifySdk'] = function($c) {
+
 };

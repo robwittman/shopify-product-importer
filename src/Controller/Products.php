@@ -7,6 +7,7 @@ use App\Model\Queue;
 use App\Model\Shop;
 use App\Model\Template;
 use PhpAmqpLib\Message\AMQPMessage;
+use League\Flysystem\Filesystem;
 
 class Products
 {
@@ -14,18 +15,20 @@ class Products
     protected $flash;
     protected $rabbit;
     protected $s3;
+    protected $filesystem;
 
-    public function __construct($view, $flash, $rabbit)
+    public function __construct($view, $flash, $rabbit, Filesystem $filesystem)
     {
         $this->view = $view;
         $this->flash = $flash;
         $this->rabbit = $rabbit;
-        $credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
-        $this->s3 = new \Aws\S3\S3Client([
-            'version' => 'latest',
-            'region' => 'us-east-1',
-            'credentials' => $credentials
-        ]);
+        $this->filesystem = $filesystem;
+        // $credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
+        // $this->s3 = new \Aws\S3\S3Client([
+        //     'version' => 'latest',
+        //     'region' => 'us-east-1',
+        //     'credentials' => $credentials
+        // ]);
     }
 
     public function show_form($request, $response, $arguments)
@@ -160,13 +163,7 @@ class Products
 
         foreach($objects as $name => $object) {
             $name = str_replace('/tmp/','',$name);
-            $this->s3->putObject([
-                'Bucket' => "shopify-product-importer",
-                'SourceFile' => $object,
-                'ACL' => "public-read",
-                'Key' => str_replace(' ', '_', $name),
-                'Content-Type' => 'application/zip_file'
-            ]);
+            $this->filesystem->write(str_replace(' ','_',$name), $object);
         }
         $shopId = $post['shop'];
         $shop = Shop::find($shopId);
