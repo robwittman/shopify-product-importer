@@ -27,7 +27,8 @@
         "liquid/liquid": "^1.4",
         "league/flysystem": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "robwittman/shopify-php-sdk": "^2.1"
+        "robwittman/shopify-php-sdk": "^2.1",
+        "league/flysystem-ziparchive": "^1.0"
     },
     "autoload" : {
         "psr-4" : {

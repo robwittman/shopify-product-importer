@@ -101,18 +101,24 @@ $container['GoogleDrive'] = function($c) {
 
 $container['Filesystem'] = function($c) {
     $client = new \Aws\S3\S3Client([
-    'credentials' => [
-        'key'    => getenv("AWS_ACCESS_KEY"),
-        'secret' => getenv("AWS_ACCESS_SECRET")
-    ],
-    'region' => getenv("AWS_REGION"),
-    'version' => 'latest',
+        'credentials' => [
+            'key'    => getenv("AWS_ACCESS_KEY"),
+            'secret' => getenv("AWS_ACCESS_SECRET")
+        ],
+        'region' => getenv("AWS_REGION"),
+        'version' => 'latest',
     ]);
 
     $adapter = new \League\Flysystem\AwsS3v3\AwsS3Adapter($client, getenv("AWS_S3_BUCKET"));
     $filesystem = new \League\Flysystem\Filesystem($adapter, [
         'visibility' => \League\Flysystem\AdapterInterface::VISIBILITY_PRIVATE
     ]);
+    return $filesystem;
+};
+
+$container['LocalFilesystem'] = function($c) {
+    $adapter = new \League\Flysystem\Adapter\Local(DIR.'/uploads');
+    $filesystem = new \League\Flysystem\Filesystem($adapter);
     return $filesystem;
 };
 
@@ -126,4 +132,12 @@ $container['SqsQueue'] = function($c) {
         'version' => '2012-11-05'
     ]);
     return $client;
+};
+
+$container['MountManager'] = function($c) {
+    $manager = new \League\Flysystem\MountManager([
+        's3' => $c->get('Filesystem'),
+        'local' => $c->get('LocalFilesystem'),
+    ]);
+    return $manager;
 };
