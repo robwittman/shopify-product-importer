@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Model\User;
 use App\Model\Queue;
 use App\Model\Shop;
+use App\Model\BatchUpload;
 use App\Model\Template;
 use PhpAmqpLib\Message\AMQPMessage;
 use League\Flysystem\Filesystem;
+use Aws\Sqs\SqsClient;
 
 class Products
 {
@@ -16,19 +18,15 @@ class Products
     protected $rabbit;
     protected $s3;
     protected $filesystem;
+    protected $queue;
 
-    public function __construct($view, $flash, $rabbit, Filesystem $filesystem)
+    public function __construct($view, $flash, $rabbit, Filesystem $filesystem, SqsClient $queue)
     {
         $this->view = $view;
         $this->flash = $flash;
         $this->rabbit = $rabbit;
         $this->filesystem = $filesystem;
-        // $credentials = new \Aws\Credentials\Credentials(getenv("AWS_ACCESS_KEY"),getenv("AWS_ACCESS_SECRET"));
-        // $this->s3 = new \Aws\S3\S3Client([
-        //     'version' => 'latest',
-        //     'region' => 'us-east-1',
-        //     'credentials' => $credentials
-        // ]);
+        $this->queue = $queue;
     }
 
     public function show_form($request, $response, $arguments)
@@ -71,73 +69,11 @@ class Products
             $this->flash->addMessage('error', "There was an error uploading your .zip file. Code {$file['error']}");
             return $response->withRedirect('/products');
         }
-        if ($body['template'] == 'staple_wholesale_apparel') {
-            $this->createBatchProduct($request, $response, $arguments);
-        } else {
-            $this->createSingleProduct($request, $response, $arguments);
-        }
+
+        $this->createSingleProduct($request, $response, $arguments);
+
         $this->flash->addMessage("message", "Product successfully added to queue.");
         return $response->withRedirect('/products');
-    }
-
-    protected function createBatchProduct($request, $response, $arguments)
-    {
-        $file = $_FILES['zip_file'];
-        $passedFileName = $file['name'];
-        $hash = hash('sha256', uniqid(true));
-        $path = "/tmp/{$hash}";
-
-        $zip = new \ZipArchive();
-        $zip->open($file['tmp_name']);
-        $zip->extractTo($path);
-
-        $shopId = $_POST['shop'];
-        $shop = Shop::find($shopId);
-
-        if (empty($shop)) {
-            $this->flash->addMessage('error', "We couldnt find that shop");
-            return $response->withRedirect('/products');
-        }
-        $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
-        $i = 0;
-        foreach ($objects as $object) {
-            if ($object->getExtension() === 'zip') {
-                $i++;
-                $zip = new \ZipArchive();
-                $zip->open($object->getRealPath());
-                $newPath = $path.'/'.$object->getBasename('zip');
-                $zip->extractTo($newPath);
-                $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($newPath));
-                foreach ($files as $name => $file) {
-                    if (!in_array($file->getExtension(), ['jpg', 'png'])) {
-                        continue;
-                    }
-                    $name = str_replace('/tmp/', '', $name);
-                    $this->s3->putObject([
-                        'Bucket' => "shopify-product-importer",
-                        'SourceFile' => $file,
-                        'ACL' => 'public-read',
-                        'Key' => str_replace(' ', '_', $name).'-'.$i,
-                        'Content-Type' => 'application/zip_file'
-                    ]);
-
-                    $data = array(
-                        'file' => $hash,
-                        'post' => $request->getParsedBody(),
-                        'file_name' => $passedFileName
-                    );
-                    $data['post']['shop'] = $shopId;
-                    $queue = new Queue();
-                    $queue->data = $data;
-                    $queue->status = Queue::PENDING;
-                    $queue->shop = $shopId;
-                    $queue->file_name = $data['file'];
-                    $queue->template = $data['post']['template'];
-                    $queue->log_to_google = (int) $data['post']['log_to_google'];
-                    $queue->save();
-                }
-            }
-        }
     }
 
     protected function createSingleProduct($request, $response, $arguments)
@@ -209,5 +145,40 @@ class Products
         $queue->save();
         $this->flash->addMessage("message", "Queued product successfully restarted");
         return $response->withRedirect('/queue');
+    }
+
+    public function batch($request, $response, $args)
+    {
+        $user = User::find($request->getAttribute('user')->id);
+        $shops = $user->shops;
+        $templates = Template::with('sub_templates')->get();
+
+        if ($request->isPost()) {
+            $post = $request->getParsedBody();
+            $file = $_FILES['file'];
+            $hash = hash('sha256', uniqid(true));
+            $this->filesystem->put($hash, file_get_contents($file['tmp_name']));
+            $batch = new BatchUpload();
+            $batch->file_name = $hash;
+            $batch->file = $file['name'];
+            $batch->title = $post['product_title'];
+            $batch->shop_id = $post['shop'];
+            $batch->template_id = $post['template'];
+            $batch->tags = $post['tags'];
+            $batch->showcase_color = $post['showcase_color'];
+            $batch->showcase_product = $post['showcase_product'];
+            $batch->save();
+            $params = [
+                'DelaySeconds' => 10,
+                'MessageBody' => json_encode($batch),
+                'QueueUrl' => getenv('UPLOAD_QUEUE_URL')
+            ];
+            $result = $this->queue->sendMessage($params);
+        }
+        return $this->view->render($response, 'batch.html', array(
+            'user' => $user,
+            'shops' => $shops,
+            'templates' => $templates
+        ));
     }
 }

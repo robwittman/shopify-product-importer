@@ -54,7 +54,8 @@ $container['ProductController'] = function($c) {
     $flash = $c->get('flash');
     // $rabbit = $c->get('rabbit');
     $filesystem = $c->get('Filesystem');
-    return new \App\Controller\Products($view, $flash, null, $filesystem);
+    $queue = $c->get('SqsQueue');
+    return new \App\Controller\Products($view, $flash, null, $filesystem, $queue);
 };
 
 $container['TemplatesController'] = function($c) {
@@ -108,12 +109,21 @@ $container['Filesystem'] = function($c) {
     'version' => 'latest',
     ]);
 
-    $adapter = new \League\Flysystem\AwsS3v3\AwsS3Adapter($client, getenv("S3_BUCKET"));
+    $adapter = new \League\Flysystem\AwsS3v3\AwsS3Adapter($client, getenv("AWS_S3_BUCKET"));
     $filesystem = new \League\Flysystem\Filesystem($adapter, [
         'visibility' => \League\Flysystem\AdapterInterface::VISIBILITY_PRIVATE
     ]);
+    return $filesystem;
 };
 
-$container['ShopifySdk'] = function($c) {
-
+$container['SqsQueue'] = function($c) {
+    $client = new \Aws\Sqs\SqsClient([
+        'credentials' => [
+            'key'    => getenv("AWS_ACCESS_KEY"),
+            'secret' => getenv("AWS_ACCESS_SECRET")
+        ],
+        'region' => getenv("AWS_REGION"),
+        'version' => '2012-11-05'
+    ]);
+    return $client;
 };
