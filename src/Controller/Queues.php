@@ -16,7 +16,7 @@ class Queues
 
     public function index($request, $response, $arguments)
     {
-        $queue = Queue::orderBy('created_at', 'desc')->with('shop', 'template', 'sub_template')->take(50)->get();
+        $queue = Queue::orderBy('created_at', 'desc')->with('shop', 'template', 'sub_template')->take(250)->get();
         // echo json_encode($queue);
         // exit;
         return $this->view->render($response, 'queue/index.html', array(
