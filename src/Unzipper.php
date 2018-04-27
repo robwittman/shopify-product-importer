@@ -4,6 +4,7 @@ namespace App;
 
 use League\Flysystem\MountManager;
 use App\Model\BatchUpload;
+use App\Model\Queue;
 
 class Unzipper
 {
@@ -14,13 +15,13 @@ class Unzipper
     protected $local;
 
     protected $templateMap = array(
-        '/(.*)Unisex Front Back/' => 'Front and Back',
-        '/(.*)Unisex Tee/' => 'Tee',
-        '/(.*)V-Neck Coverup/' => 'Coverup',
-        '/(.*)Womens LS/' => 'Womens Long Sleeve',
-        '/(.*)Womens Tank/' => 'Womens Tank template',
-        '/(.*)Womens Tee/' => 'Teestuff',
-        '/(.*)Womens V-Neck/' => 'VNECKS'
+        '/(.*)Unisex Front Back/' => 'front_back_unisex_tee',
+        '/(.*)Unisex Tee/' => 'unisex_fine_jersey_tee',
+        '/(.*)V-Neck Coverup/' => 'fine_jersey_cover_up',
+        '/(.*)Womens LS/' => 'fine_jersey_cover_up',
+        '/(.*)Womens Tank/' => 'curvy_premium_jersey_tank',
+        '/(.*)Womens Tee/' => 'curvy_premium_jersey_tee',
+        '/(.*)Womens V-Neck/' => 'curvy_vneck_premium_jersey_tee'
     );
 
     protected $file_name;
@@ -34,7 +35,6 @@ class Unzipper
 
     public function process(BatchUpload $batch)
     {
-        var_dump($batch);
         $this->file_name = $batch->file_name;
         if ($this->local->has($this->file_name.'.zip')) {
             error_log("Deleting old file");
@@ -53,9 +53,11 @@ class Unzipper
                         $queue->title = $batch->title;
                         $queue->file = $batch->file;
                         $queue->template_id = 'wholesale_apparel';
-                        $queue->sub_template_id = '';
+                        $queue->sub_template_id = $template;
                         $queue->shop_id = $batch->shop_id;
                         $queue->tags = $batch->tags;
+                        $queue->data = json_encode($batch);
+                        $queue->save();
                     }
                 }
             }
