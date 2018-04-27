@@ -43,7 +43,7 @@ class Products
 
     public function queue($request, $response, $arguments)
     {
-        $queue = Queue::orderBy('created_at', 'desc')->take(50)->get();
+        $queue = Queue::orderBy('created_at', 'desc')->take(250)->get();
         foreach ($queue as $record) {
             // TODO: Move shop_id to table column
             $data = $record->data;
