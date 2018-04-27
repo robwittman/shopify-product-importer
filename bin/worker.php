@@ -260,6 +260,7 @@ function getProductSettings(Shop $shop, Queue $queue, Template $template, Settin
 
 function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, $fileName, Queue $queue = null)
 {
+    error_log(json_encode(func_get_args()));
     $template = new \Liquid\Template();
     $template->parse($skuTemplate);
     $sku = $template->render(array(
