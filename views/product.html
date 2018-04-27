@@ -99,12 +99,13 @@
                         </div>
 
                         <div id='sub_template_selector'>
+                            <input type="hidden" name="sub_template">
                             {% for template in templates %}
                                 {% if template.sub_templates is empty %}
 
                                 {% else %}
                                 <div style='display:none' id='{{ template.handle }}_product_type' class="form-group col-sm-12 select_container">
-                                    <select class="form-control" name="sub_template">
+                                    <select class="form-control" >
                                         <option value="" selected>Select a Sub-Template</option>
                                         {% for child in template.sub_templates %}
                                             {% if child.default %}
@@ -180,13 +181,12 @@
         $('#advanced').click(function(ev) {
             $('#advanced-wrapper').toggle();
         })
-        // $('input[type="checkbox"]').click(function() {
-        //     if ($('input[type="checkbox"]:checked').length > 0) {
-        //         $('#submit').prop('disabled', false);
-        //     } else {
-        //         $('#submit').prop('disabled', true);
-        //     }
-        // })
+        $('#sub_template_selector select').on('change', function() {
+            $('input[name="sub_template"]').val($(this).val());
+        })
+        $('input[name="template"]').on('change', function(event) {
+            $('input[name="sub_template"]').val();
+        })
         function selectAllStores() {
             $('input[type="checkbox"]').each(function() {
                 if (!$(this).prop('checked')) {
@@ -194,6 +194,7 @@
                 }
             })
         }
+
         function deselectAllStores() {
             $('input[type="checkbox"]').each(function() {
                 if ($(this).prop('checked')) {
