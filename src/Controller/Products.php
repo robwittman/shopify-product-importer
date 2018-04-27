@@ -58,6 +58,7 @@ class Products
     public function create($request, $response, $arguments)
     {
         $body = $request->getParsedBody();
+        error_log(json_encode($body));
         if (empty($_FILES['zip_file'])) {
             $this->flash->addMessage('error', 'You have to upload a .zip file!');
             return $response->withRedirect('/products');
