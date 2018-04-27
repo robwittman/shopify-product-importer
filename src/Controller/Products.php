@@ -118,7 +118,8 @@ class Products
         $queue->save();
 
         $elapsed_time = time() - $start;
-        return;
+        $this->flash->addMessage("message", "Product successfully added to queue.");
+        return $response->withRedirect('/products');
     }
 
     protected function createBatchProduct($request, $response, $arguments)
