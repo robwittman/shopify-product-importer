@@ -8,6 +8,9 @@ use App\Model\Setting;
 function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
     $price = '15.00';
+    if ($queue->sub_template_id === 'beach_cap') {
+        $price = '14.95';
+    }
     global $s3;
     $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
