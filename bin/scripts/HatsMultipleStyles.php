@@ -8,7 +8,7 @@ use App\Model\Setting;
 function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
     $price = '15.00';
-    if ($queue->sub_template_id === 'beach_cap') {
+    if ($queue->sub_template_id === 'beach_hat') {
         $price = '14.95';
     }
     global $s3;

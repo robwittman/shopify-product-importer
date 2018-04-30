@@ -133,7 +133,6 @@ function getSku($size)
 
 function logResults(Google_Client $client, $sheet, $printType, array $results, $shopId)
 {
-    error_log("Storing stuffs");
     if ($printType == 'front_print') {
         $sheetName = 'Front Print';
     } elseif ($printType == 'back_print') {
@@ -260,7 +259,6 @@ function getProductSettings(Shop $shop, Queue $queue, Template $template, Settin
 
 function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, $fileName, Queue $queue = null)
 {
-    error_log(json_encode(func_get_args()));
     $template = new \Liquid\Template();
     $template->parse($skuTemplate);
     $sku = $template->render(array(
