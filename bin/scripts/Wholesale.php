@@ -15,7 +15,6 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
     }
     // Ignore crew settings
     unset($matrix['Crew']);
-    $image_data = array();
     $images = array();
     $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
@@ -36,7 +35,7 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
         $pieces = explode('-', basename($fileName, '.jpg'));
         $images[str_replace('_', ' ', trim($pieces[1], '_'))] = $name;
     }
-    $product_data = getProductSettings($shop, $queue, $template, $setting, $post['file_name']);
+    $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
             'name' => "Size"

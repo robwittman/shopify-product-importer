@@ -2,7 +2,9 @@
 
 namespace App;
 
-class CustomException implements \Illuminate\Contracts\Debug\ExceptionHandler
+use Illuminate\Contracts\Debug\ExceptionHandler;
+
+class CustomException implements ExceptionHandler
 {
     public function report(\Exception $e)
     {

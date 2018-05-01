@@ -13,8 +13,6 @@ function createTumbler($queue)
         $image_data = getImages($s3, $queue->file_name);
         $shop = \App\Model\Shop::find($queue->shop_id);
 
-        $shopReq = [];
-
         foreach ($image_data as $name) {
             if (pathinfo($name, PATHINFO_EXTENSION) != 'jpg') {
                 continue;

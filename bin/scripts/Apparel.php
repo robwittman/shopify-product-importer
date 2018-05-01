@@ -14,7 +14,7 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
     }
     // Ignore crew settings
     unset($matrix['Crew']);
-    $image_data = array();
+
     $images = array();
     $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
@@ -34,10 +34,10 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
         }
 
         $chunks = explode('/', $name);
+        $garment = $chunks[2];
         if (strtolower(substr(basename($name, ".jpg"), -4)) == "pink") {
             $images[$garment]["Pink"] = $name;
         } else {
-            $garment = $chunks[2];
             if(!in_array($garment, array(
                 'Hoodie','LS','Tanks','Tees'
             ))) {
