@@ -10,8 +10,14 @@ use Slim\Flash\Messages;
 
 class Google
 {
+    /**
+     * @var Google_Client
+     */
     protected $client;
 
+    /**
+     * @var Messages
+     */
     protected $flash;
 
     public function __construct(Google_Client $client, Messages $flash)

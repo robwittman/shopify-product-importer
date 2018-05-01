@@ -10,8 +10,14 @@ use Slim\Views\Twig;
 
 class Settings
 {
+    /**
+     * @var Twig
+     */
     protected $view;
 
+    /**
+     * @var Messages
+     */
     protected $flash;
 
     public function __construct(Twig $view, Messages $flash)

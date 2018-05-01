@@ -12,8 +12,14 @@ use Slim\Views\Twig;
 
 class Queues
 {
+    /**
+     * @var Twig
+     */
     protected $view;
 
+    /**
+     * @var Messages
+     */
     protected $flash;
 
     public function __construct(Twig $view, Messages $flash)

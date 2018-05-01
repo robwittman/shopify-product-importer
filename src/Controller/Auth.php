@@ -11,8 +11,14 @@ use Slim\Views\Twig;
 
 class Auth
 {
+    /**
+     * @var Twig
+     */
     protected $view;
 
+    /**
+     * @var \Slim\Flash\Messages
+     */
     protected $flash;
 
     public function __construct(Twig $view, \Slim\Flash\Messages $flash)

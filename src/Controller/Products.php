@@ -15,11 +15,24 @@ use Slim\Flash\Messages;
 
 class Products
 {
+    /**
+     * @var Twig
+     */
     protected $view;
+
+    /**
+     * @var Messages
+     */
     protected $flash;
-    protected $rabbit;
-    protected $s3;
+
+    /**
+     * @var Filesystem
+     */
     protected $filesystem;
+
+    /**
+     * @var SqsClient
+     */
     protected $queue;
 
     public function __construct(
