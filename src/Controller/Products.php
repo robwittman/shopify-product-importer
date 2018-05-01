@@ -80,7 +80,6 @@ class Products
     protected function createSingleProduct(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $post = $request->getParsedBody();
-        $start = time();
         $hash = hash('sha256', uniqid(true));
         $path = "/tmp/{$hash}";
         $file = $_FILES['zip_file'];
@@ -89,10 +88,13 @@ class Products
         $zip = new \ZipArchive();
         $zip->open($tmpName);
         $zip->extractTo($path);
-        $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+        $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS));
         foreach($objects as $name => $object) {
-            $name = str_replace('/tmp/','',$name);
-            $this->filesystem->write(str_replace(' ','_',$name), $object);
+            if (strpos($name, 'MACOSX') !== false) {
+                continue;
+            }
+            $name = str_replace('/tmp/','', $object->getRealPath());
+            $this->filesystem->write(str_replace(' ','_',$name), file_get_contents($object));
         }
         $shopId = $post['shop'];
         $shop = Shop::find($shopId);
