@@ -36,24 +36,9 @@ function createStemless(Queue $queue, Shop $shop, Template $template, Setting $s
             'name' => "Color"
         )
     );
-    $store_name = '';
-    switch ($shop->myshopify_domain) {
-        case 'piper-lou-collection.myshopify.com':
-        case 'plcwholesale.myshopify.com':
-            $store_name = 'Piper Lou - ';
-            break;
-    }
-    if ($queue->sub_template_id == 'etched') {
-        $slug = 'W12M';
-    } else {
-        $slug = 'W12G';
-    }
+
     $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($imageUrls as $color => $url) {
-        $sku = $color;
-        if ($color == 'Grey') {
-            $sku = 'Stainless Steel';
-        }
         $variantData = array(
             'title' => $color,
             'price' => $price,

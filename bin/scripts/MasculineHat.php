@@ -37,12 +37,7 @@ function createMasculineHats(Queue $queue, Shop $shop, Template $template, Setti
         )
     );
     $skuTemplate = getSkuTemplate($template, $setting, $queue);
-    switch ($shop->myshopify_domain) {
-        case 'piper-lou-collection.myshopify.com':
-        case 'plcwholesale.myshopify.com':
-            $store_name = 'Piper Lou - ';
-            break;
-    }
+
     foreach ($imageUrls as $color => $image) {
         $variantData = array(
             'title' => "Trucker Hat / ".$color,

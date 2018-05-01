@@ -133,7 +133,6 @@ function getSku($size)
 
 function logResults(Google_Client $client, $sheet, $printType, array $results, $shopId)
 {
-    error_log("Storing stuffs");
     if ($printType == 'front_print') {
         $sheetName = 'Front Print';
     } elseif ($printType == 'back_print') {

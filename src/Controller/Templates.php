@@ -3,16 +3,24 @@
 namespace App\Controller;
 
 use App\Model\Template;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Flash\Messages;
+use Slim\Views\Twig;
 
 class Templates
 {
-    public function __construct($view, $flash)
+    protected $view;
+
+    protected $flash;
+
+    public function __construct(Twig $view, Messages $flash)
     {
         $this->view = $view;
         $this->flash = $flash;
     }
 
-    public function index($request, $response, $arguments)
+    public function index(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $templates = Template::with('sub_templates')->get();
         return $this->view->render($response, 'templates/index.html', array(
@@ -20,14 +28,14 @@ class Templates
         ));
     }
 
-    public function show($request, $response, $arguments)
+    public function show(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         return $this->view->render($response, 'templates/show.html', array(
             'template' => Template::with('sub_templates')->find($arguments['id'])
         ));
     }
 
-    public function update($request, $response, $arguments)
+    public function update(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $template = Template::find($arguments['id']);
         foreach ($request->getParsedBody() as $key => $value) {
@@ -37,10 +45,4 @@ class Templates
         $this->flash->addMessage("message", "Template saved successfully.");
         return $response->withRedirect("/templates/{$template->id}");
     }
-
-    // public function subTemplates($request, $response, $arguments)
-    // {
-    //     $templates = Template::find($arguments['id']);
-    //
-    // }
 }

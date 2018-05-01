@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use Google_Client;
 use App\Model\Shop;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Flash\Messages;
 
 class Google
 {
@@ -11,13 +14,13 @@ class Google
 
     protected $flash;
 
-    public function __construct(Google_Client $client, $flash)
+    public function __construct(Google_Client $client, Messages $flash)
     {
         $this->client = $client;
         $this->flash = $flash;
     }
 
-    public function oauth($request, $response)
+    public function oauth(ServerRequestInterface $request, ResponseInterface $response)
     {
         if (!$request->getQueryParam('code')) {
             $_SESSION['shop'] = $request->getQueryParam('shop_id');

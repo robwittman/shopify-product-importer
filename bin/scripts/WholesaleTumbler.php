@@ -30,7 +30,6 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
 
     $image_data = getImages($s3, $queue->file_name);
     $post = $data['post'];
-    $variantMap = array();
     $details = $products[$queue->sub_template_id];
     foreach ($image_data as $name) {
         if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
@@ -60,10 +59,7 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
             'name' => "Color"
         )
     );
-    $skuModifier = '';
-    if ($post['tumbler_product_type'] == 'powder_coated') {
-        $skuModifier = 'P';
-    }
+
     $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($images as $size => $colors) {
         foreach ($colors as $color => $url) {

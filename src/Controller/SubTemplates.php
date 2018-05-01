@@ -3,16 +3,24 @@
 namespace App\Controller;
 
 use App\Model\SubTemplate;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Flash\Messages;
+use Slim\Views\Twig;
 
 class SubTemplates
 {
-    public function __construct($view, $flash)
+    protected $view;
+
+    protected $flash;
+
+    public function __construct(Twig $view, Messages $flash)
     {
         $this->view = $view;
         $this->flash = $flash;
     }
 
-    public function create($request, $response, $arguments)
+    public function create(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $body = $request->getParsedBody();
         $template = $arguments['id'];
@@ -26,7 +34,7 @@ class SubTemplates
         return $response->withRedirect("/templates/{$template}");
     }
 
-    public function delete($request, $response, $arguments)
+    public function delete(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $template = $arguments['id'];
         $subTemplate = SubTemplate::find($arguments['subId']);
@@ -35,7 +43,7 @@ class SubTemplates
         return $response->withRedirect("/templates/{$template}");
     }
 
-    public function enable($request, $response, $arguments)
+    public function enable(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $template = $arguments['id'];
         $subTemplate = SubTemplate::find($arguments['subId']);
@@ -45,7 +53,7 @@ class SubTemplates
         return $response->withRedirect("/templates/{$template}");
     }
 
-    public function disable($request, $response, $arguments)
+    public function disable(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $template = $arguments['id'];
         $subTemplate = SubTemplate::find($arguments['subId']);
@@ -55,7 +63,7 @@ class SubTemplates
         return $response->withRedirect("/templates/{$template}");
     }
 
-    public function update($request, $response, $arguments)
+    public function update(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $body = $request->getParsedBody();
         $template = $body['template_id'];
@@ -67,7 +75,7 @@ class SubTemplates
         return $response->withRedirect("/templates/{$template}");
     }
 
-    public function default($request, $response, $arguments)
+    public function default(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $template = $arguments['id'];
         SubTemplate::where('template_id', '=', $template)->update(['default' => 0]);

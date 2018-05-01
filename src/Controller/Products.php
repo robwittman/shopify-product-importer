@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Model\User;
 use App\Model\Queue;
 use App\Model\Shop;
-use App\Model\BatchUpload;
 use App\Model\Template;
-use PhpAmqpLib\Message\AMQPMessage;
-use League\Flysystem\Filesystem;
 use Aws\Sqs\SqsClient;
+use League\Flysystem\Filesystem;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Views\Twig;
+use Slim\Flash\Messages;
 
 class Products
 {
@@ -20,16 +22,20 @@ class Products
     protected $filesystem;
     protected $queue;
 
-    public function __construct($view, $flash, $rabbit, Filesystem $filesystem, SqsClient $queue)
-    {
+    public function __construct(
+        Twig $view,
+        Messages $flash,
+        Filesystem $filesystem,
+        SqsClient $queue
+    ) {
         $this->view = $view;
         $this->flash = $flash;
-        $this->rabbit = $rabbit;
         $this->filesystem = $filesystem;
         $this->queue = $queue;
     }
 
-    public function show_form($request, $response, $arguments)
+
+    public function show_form(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $user = User::find($request->getAttribute('user')->id);
         $shops = $user->shops;
@@ -42,61 +48,35 @@ class Products
         ));
     }
 
-    public function queue($request, $response, $arguments)
-    {
-        $queue = Queue::orderBy('created_at', 'desc')->take(50)->get();
-        foreach ($queue as $record) {
-            // TODO: Move shop_id to table column
-            $data = $record->data;
-            $shop = Shop::find($record->shop);
-            $record->shop = $shop;
-        }
-        return $this->view->render($response, 'queue.html', array(
-            'queue' => $queue
-        ));
-    }
-
-    public function create($request, $response, $arguments)
+    public function create(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $body = $request->getParsedBody();
         if (empty($_FILES['zip_file'])) {
             $this->flash->addMessage('error', 'You have to upload a .zip file!');
             return $response->withRedirect('/products');
         }
-
         $file = $_FILES['zip_file'];
         if ($file['error'] !== UPLOAD_ERR_OK) {
             $this->flash->addMessage('error', "There was an error uploading your .zip file. Code {$file['error']}");
             return $response->withRedirect('/products');
         }
-
         $this->createSingleProduct($request, $response, $arguments);
-
         $this->flash->addMessage("message", "Product successfully added to queue.");
         return $response->withRedirect('/products');
     }
-
-    protected function createSingleProduct($request, $response, $arguments)
+    protected function createSingleProduct(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
         $post = $request->getParsedBody();
         $start = time();
-        $files = $request->getUploadedFiles();
-
         $hash = hash('sha256', uniqid(true));
         $path = "/tmp/{$hash}";
-
         $file = $_FILES['zip_file'];
         $passedFileName = $file['name'];
         $tmpName = $file['tmp_name'];
-        $fileName = hash('sha256', uniqid(true));
-
-
         $zip = new \ZipArchive();
         $zip->open($tmpName);
         $zip->extractTo($path);
-
         $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
-
         foreach($objects as $name => $object) {
             $name = str_replace('/tmp/','',$name);
             $this->filesystem->write(str_replace(' ','_',$name), $object);
@@ -107,7 +87,6 @@ class Products
             $this->flash->addMessage('error', "We couldnt find that shop");
             return $response->withRedirect('/products');
         }
-
         $data = array(
             'file' => $hash,
             'post' => $request->getParsedBody(),
@@ -131,12 +110,8 @@ class Products
         $queue->print_type = $post['print_type'];
         $queue->sub_template_id = $post['sub_template'];
         $queue->save();
-
-        $elapsed_time = time() - $start;
-        return;
     }
-
-    public function restart_queue($request, $response, $args)
+    public function restart_queue(ServerRequestInterface $request, ResponseInterface $response)
     {
         $post = $request->getParsedBody();
         $queue_id = $post['queue_id'];
@@ -146,13 +121,11 @@ class Products
         $this->flash->addMessage("message", "Queued product successfully restarted");
         return $response->withRedirect('/queue');
     }
-
-    public function batch($request, $response, $args)
+    public function batch(ServerRequestInterface $request, ResponseInterface $response)
     {
         $user = User::find($request->getAttribute('user')->id);
         $shops = $user->shops;
         $templates = Template::with('sub_templates')->get();
-
         if ($request->isPost()) {
             $post = $request->getParsedBody();
             $file = $_FILES['file'];
@@ -173,7 +146,7 @@ class Products
                 'MessageBody' => json_encode($batch),
                 'QueueUrl' => getenv('UPLOAD_QUEUE_URL')
             ];
-            $result = $this->queue->sendMessage($params);
+            $this->queue->sendMessage($params);
         }
         return $this->view->render($response, 'batch.html', array(
             'user' => $user,

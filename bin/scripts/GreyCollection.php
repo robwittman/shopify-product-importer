@@ -171,7 +171,7 @@ function createGreyCollection(Queue $queue, Shop $shop, Template $template, Sett
                 'product_sku' => $variantSku,
             );
             $variantData = array(
-                'title' => $size . ' / ' . $color . ' / ' . $style,
+                'title' => $size . ' / Grey / ' . $style,
                 'price' => $options['price'],
                 'option1' => $size,
                 'option2' => 'Grey',
@@ -211,7 +211,7 @@ function createGreyCollection(Queue $queue, Shop $shop, Template $template, Sett
         if ($style == 'Long Sleeve') {
             $style = 'LS';
         } else if ($style == 'Tank') {
-            $style == 'Tanks';
+            $style = 'Tanks';
         } elseif ($style == 'Crewneck') {
             $style = 'Crew';
         }

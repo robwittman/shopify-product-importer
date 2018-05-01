@@ -1,7 +1,6 @@
 <?php
 
-use PhpAmqpLib\Connection\AMQPConnection;
-use PhpAmqpLib\Message\AMQPMessage;
+use Slim\Container;
 
 $container = $app->getContainer();
 $container['view'] = function ($c) {
@@ -23,69 +22,69 @@ $capsule->getContainer()->singleton(
     \App\CustomException::class
 );
 
-$container['db'] = function ($c) {
+$container['db'] = function () {
+    global $capsule;
     return $capsule;
 };
 
-$container['flash'] = function ($c) {
+$container['flash'] = function () {
     return new Slim\Flash\Messages();
 };
 
-$container['AuthController'] = function ($c) {
+$container['AuthController'] = function (Container $c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
     return new \App\Controller\Auth($view, $flash);
 };
 
-$container['UserController'] = function ($c) {
+$container['UserController'] = function (Container $c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
     return new \App\Controller\Users($view, $flash);
 };
 
-$container['ShopController'] = function ($c) {
+$container['ShopController'] = function (Container $c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
     return new \App\Controller\Shops($view, $flash);
 };
 
-$container['ProductController'] = function($c) {
+$container['ProductController'] = function(Container $c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
-    // $rabbit = $c->get('rabbit');
     $filesystem = $c->get('Filesystem');
     $queue = $c->get('SqsQueue');
-    return new \App\Controller\Products($view, $flash, null, $filesystem, $queue);
+    return new \App\Controller\Products($view, $flash, $filesystem, $queue);
 };
 
-$container['TemplatesController'] = function($c) {
+$container['TemplatesController'] = function(Container $c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
     return new \App\Controller\Templates($view, $flash);
 };
-$container['QueuesController'] = function($c) {
+$container['QueuesController'] = function(Container $c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
     return new \App\Controller\Queues($view, $flash);
 };
-$container['SubTemplatesController'] = function($c) {
+$container['SubTemplatesController'] = function(Container $c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
     return new \App\Controller\SubTemplates($view, $flash);
 };
-$container['SettingsController'] = function($c) {
+$container['SettingsController'] = function(Container $c) {
     $view = $c->get('view');
     $flash = $c->get('flash');
     return new \App\Controller\Settings($view, $flash);
 };
 
-$container['GoogleAuthController'] = function($c) {
+$container['GoogleAuthController'] = function(Container $c) {
     $client = $c->get('GoogleDrive');
     $flash = $c->get('flash');
     return new \App\Controller\Google($client, $flash);
 };
 
-$container['GoogleDrive'] = function($c) {
+$container['GoogleDrive'] = function(Container $c) {
     $client = new Google_Client(array(
         'client_id' => getenv("GOOGLE_OAUTH_CLIENT_ID"),
         'client_secret' => getenv("GOOGLE_OAUTH_CLIENT_SECRET"),
@@ -99,7 +98,7 @@ $container['GoogleDrive'] = function($c) {
     return $client;
 };
 
-$container['Filesystem'] = function($c) {
+$container['Filesystem'] = function(Container $c) {
     $client = new \Aws\S3\S3Client([
         'credentials' => [
             'key'    => getenv("AWS_ACCESS_KEY"),
@@ -116,13 +115,13 @@ $container['Filesystem'] = function($c) {
     return $filesystem;
 };
 
-$container['LocalFilesystem'] = function($c) {
+$container['LocalFilesystem'] = function(Container $c) {
     $adapter = new \League\Flysystem\Adapter\Local(DIR.'/uploads');
     $filesystem = new \League\Flysystem\Filesystem($adapter);
     return $filesystem;
 };
 
-$container['SqsQueue'] = function($c) {
+$container['SqsQueue'] = function(Container $c) {
     $client = new \Aws\Sqs\SqsClient([
         'credentials' => [
             'key'    => getenv("AWS_ACCESS_KEY"),
@@ -134,7 +133,7 @@ $container['SqsQueue'] = function($c) {
     return $client;
 };
 
-$container['MountManager'] = function($c) {
+$container['MountManager'] = function(Container $c) {
     $manager = new \League\Flysystem\MountManager([
         's3' => $c->get('Filesystem'),
         'local' => $c->get('LocalFilesystem'),

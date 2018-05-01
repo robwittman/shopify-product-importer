@@ -68,7 +68,6 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
             if ($color == 'Cyan') {
                 $sku = 'Seafoam';
             }
-            $color = $color;
             $variantData = array(
                 'title' => $size.'oz Tumbler / '.$color,
                 'price' => $prices[$size],
@@ -82,7 +81,7 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
             );
             $variantData['size'] = $size;
             $variantData['color'] = $color;
-            $variantData['sku'] = generateLiquidSku($skuTemplate, $productData, $shop, $variantData, $post, $data['file_name'], $queue);
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
             unset($variantData['size']);
             unset($variantData['color']);
             if ($color == ($hasNavy ? 'Navy' : 'Black') && $size == '30') {
