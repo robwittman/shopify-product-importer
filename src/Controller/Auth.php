@@ -5,15 +5,29 @@ namespace App\Controller;
 use App\Model\User;
 use App\Model\Errors;
 use App\Model\Messages;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Views\Twig;
+
 class Auth
 {
-    public function __construct($view, $flash)
+    /**
+     * @var Twig
+     */
+    protected $view;
+
+    /**
+     * @var \Slim\Flash\Messages
+     */
+    protected $flash;
+
+    public function __construct(Twig $view, \Slim\Flash\Messages $flash)
     {
         $this->view = $view;
         $this->flash = $flash;
     }
 
-    public function login($request, $response)
+    public function login(ServerRequestInterface $request, ResponseInterface $response)
     {
         if ($request->isGet()) {
             return $this->view->render($response, 'auth/login.html');
@@ -44,7 +58,7 @@ class Auth
         return $response->withRedirect('/products');
     }
 
-    public function logout($request, $response)
+    public function logout(ServerRequestInterface $request, ResponseInterface $response)
     {
         session_destroy();
         return $response->withRedirect('/auth/login');

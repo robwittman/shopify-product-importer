@@ -82,6 +82,8 @@ $app->group('/shops', function () use ($app) {
 ========================================*/
 $app->get('/products', 'ProductController:show_form')->add(new \App\Middleware\Authorization());
 $app->post('/products', 'ProductController:create')->add(new \App\Middleware\Authorization());
+$app->map(['GET', 'POST'], '/products/batch', 'ProductController:batch')->add(new \App\Middleware\Authorization());
+
 $app->group('/queue', function() use ($app) {
     $app->get('', 'QueuesController:index');
     $app->get('/{id}', 'QueuesController:show');

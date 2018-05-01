@@ -3,15 +3,12 @@
 namespace App\Middleware;
 
 use App\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Session
 {
-    public function __construct()
-    {
-
-    }
-
-    public function __invoke($request, $response, $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         if (isset($_SESSION['uid'])) {
             $user = User::find($_SESSION['uid']);

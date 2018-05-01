@@ -1,0 +1,100 @@
+
+
+{% extends "navbar.html" %}
+
+{% block styles %}
+<style media="screen">
+    #advanced {
+        cursor: pointer;
+    }
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        {% if result %}
+            <div class="col-sm-12 col-sm-offset-1 alert alert-success">
+                Product {{ result }} successfully created! <a href="https://{{store}}/admin/products/{{result}}" target="_blank">Click to review!</a>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <form action="/products/batch" method="post" enctype='multipart/form-data'>
+            <div class="col-lg-10 col-lg-offset-1 col-sm-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        New Batch Upload
+                        <span class='pull-right'><a href="/products">Upload Single Product</a></span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group col-lg-6 col-sm-12">
+                            <label class='control-label'>Shop</label>
+                            <select class='form-control' name='shop'>
+                                {% for shop in shops %}
+                                    {% if shop.id in user.default_shops %}
+                                        <option value="{{ shop.id}}" selected>{{shop.myshopify_domain}}</option>
+                                    {% else %}
+                                        <option value="{{ shop.id }}">{{ shop.myshopify_domain }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class='form-group col-sm-12'>
+                            <label class='control-label'>ZIP File</label>
+                            <input type="file" name="file" value="">
+                        </div>
+                        <div class='form-group col-lg-6 col-sm-12'>
+                            <label class='control-label'>Product Title</label>
+                            <input type="text" name="product_title" value="" class='form-control' required>
+                        </div>
+                        <div class='form-group col-lg-6 col-sm-12'>
+                            <label class='control-label'>Vendor</label>
+                            <input type="text" name="vendor" value="" class='form-control'>
+                        </div>
+                        <div class="form-group col-lg-6 col-sm-12">
+                            <label class='control-label'>SKU</label>
+                            <input type="text" name="sku" value="" class='form-control'>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class='control-label'>Tags</label>
+                            <input type='text' name="tags" placeholder='We can default this to whatever you want as well' class='form-control'>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class='control-label'>Template</label>
+                            <select class="form-control" name="template">
+                                {% for template in templates %}
+                                    <option value="{{ template.handle }}">{{ template.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <button class='btn btn-primary btn-sm pull-right' type="submit" name="button">Submit</button>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
