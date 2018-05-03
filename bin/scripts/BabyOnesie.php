@@ -74,8 +74,6 @@ function createBabyOnesie(Queue $queue, Shop $shop, Template $template, Setting 
         }
         $variantMap[$variant->option1][] = $variant->id;
     }
-//    var_dump($imageUrls);
-//    var_dump($variantMap);
     foreach ($variantMap as $color => $variants) {
         $color = str_replace(' ', '_', $color);
         $data = [
