@@ -81,6 +81,9 @@ while (true) {
                 case 'multistyle_hats':
                     $res = createMultiHats($queue, $shop, $template, $setting);
                     break;
+                case 'baby_onesie':
+                    $res = createBabyOnesie($queue, $shop, $template, $setting);
+                    break;
                 default:
                     throw new \Exception("Invalid template {$queue->template_id} provided");
             }
