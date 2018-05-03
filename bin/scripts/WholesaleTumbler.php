@@ -114,4 +114,7 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
             'images' => $imageUpdate
         )
     ));
+
+    $queue->finish(array($res->product->id));
+    return array($res->product->id);
 }
