@@ -52,8 +52,10 @@ class Products
     {
         $user = User::find($request->getAttribute('user')->id);
         $shops = $user->shops;
-        $templates = Template::with('sub_templates')->get();
+        $templates = Template::with(['sub_templates', 'showcase_colors', 'showcase_products'])->get();
 
+        var_dump($templates);
+        exit;
         return $this->view->render($response, 'product.html', array(
             'user' => $user,
             'shops' => $shops,

@@ -15,4 +15,14 @@ class Template extends Elegant
     {
         return $this->hasMany(SubTemplate::class);
     }
+
+    public function showcase_colors()
+    {
+        return $this->hasMany(ShowcaseColor::class);
+    }
+
+    public function showcase_products()
+    {
+        return $this->hasMany(ShowcaseProduct::class);
+    }
 }
