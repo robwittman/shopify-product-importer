@@ -63,7 +63,6 @@ class Products
 
     public function create(ServerRequestInterface $request, ResponseInterface $response, array $arguments = [])
     {
-        $body = $request->getParsedBody();
         if (empty($_FILES['zip_file'])) {
             $this->flash->addMessage('error', 'You have to upload a .zip file!');
             return $response->withRedirect('/products');
@@ -115,8 +114,8 @@ class Products
         $queue->file_name = $data['file'];
         $queue->template_id = $data['post']['template'];
         $queue->log_to_google = (int) $data['post']['log_to_google'];
-        $queue->vendor = $post['vendor'];
-        $queue->product_type = $post['product_type'];
+        $queue->vendor = null;
+        $queue->product_type = null;
         $queue->title = $post['product_title'];
         $queue->file = $data['file_name'];
         $queue->tags = $post['tags'];
