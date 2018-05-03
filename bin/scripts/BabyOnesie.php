@@ -7,7 +7,14 @@ use App\Model\Setting;
 
 function createBabyOnesie(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
-    $price = '';
+    $price = '11.00';
+    $sizes = [
+        'NB',
+        '6M',
+        '12M',
+        '18M',
+        '24M'
+    ];
     global $s3;
     $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
@@ -27,37 +34,55 @@ function createBabyOnesie(Queue $queue, Shop $shop, Template $template, Setting 
     $product_data['options'] = array(
         array(
             'name' => "Color"
+        ),
+        array(
+            'name' => "Size"
         )
     );
 
     $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($imageUrls as $color => $url) {
-        $variantData = array(
-            'title' => $color,
-            'price' => $price,
-            'option1' => str_replace('_', ' ',  $color),
-            'weight' => '10',
-            'weight_unit' => 'oz',
-            'requires_shipping' => true,
-            'inventory_management' => null,
-            'inventory_policy' => 'deny'
-        );
+        foreach ($sizes as $size) {
+            $variantData = array(
+                'title' => $color,
+                'price' => $price,
+                'option1' => str_replace('_', ' ',  $color),
+                'option2' => $size,
+                'weight' => '10',
+                'weight_unit' => 'oz',
+                'requires_shipping' => true,
+                'inventory_management' => null,
+                'inventory_policy' => 'deny'
+            );
+            $variantData['color'] = str_replace('_', ' ', $color);
+            $variantData['size'] = $size;
+            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
+            unset($variantData['color']);
+            unset($variantData['size']);
+            $product_data['variants'][] = $variantData;
+        }
     }
-    $variantData['color'] = str_replace('_', ' ', $color);
-    $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
-    unset($variantData['color']);
 
     $res = callShopify($shop, '/admin/products.json', 'POST', array(
         'product' => $product_data
     ));
+    $variantMap = [];
     $imageUpdate = [];
     foreach ($res->product->variants as $variant) {
-        $color = str_replace(' ', '_', $variant->option1);
-        $image = [
+        if (!isset($variantMap[$variant->option1])) {
+            $variantMap[$variant->option1] = [];
+        }
+        $variantMap[$variant->option1][] = $variant->id;
+    }
+//    var_dump($imageUrls);
+//    var_dump($variantMap);
+    foreach ($variantMap as $color => $variants) {
+        $color = str_replace(' ', '_', $color);
+        $data = [
             'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$color]}",
-            'variant_ids' => [$variant->id]
+            'variant_ids' => $variants
         ];
-        $imageUpdate[] = $image;
+        $imageUpdate[] = $data;
     }
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", [
         'product' => [
