@@ -13,7 +13,6 @@ function createDonationUVTumbler(Queue $queue, Shop $shop, Template $template, S
     );
 
     global $s3;
-    $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
     $post = $data['post'];
     $image_data = getImages($s3, $queue->file_name);
@@ -97,6 +96,5 @@ function createDonationUVTumbler(Queue $queue, Shop $shop, Template $template, S
         )
     ));
 
-    $queue->finish(array($res->product->id));
     return array($res->product->id);
 }

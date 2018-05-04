@@ -13,7 +13,6 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
     );
 
     global $s3;
-    $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
     $post = $data['post'];
     $image_data = array_reverse(getImages($s3, $queue->file_name));
@@ -119,6 +118,5 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
         )
     ));
 
-    $queue->finish(array($res->product->id));
     return array($res->product->id);
 }

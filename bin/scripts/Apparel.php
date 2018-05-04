@@ -16,7 +16,6 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
     unset($matrix['Crew']);
 
     $images = array();
-    $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
 
     $image_data = getImages($s3, $queue->file_name);
@@ -253,6 +252,5 @@ function processQueue(Queue $queue, Shop $shop, Template $template, Setting $set
     } else {
         error_log("No google sync...");
     }
-    $queue->finish(array($res->product->id));
     return array($res->product->id);
 }

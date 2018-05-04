@@ -48,7 +48,6 @@ function createChristmas(Queue $queue, Shop $shop, Template $template, Setting $
     );
 
     global $s3;
-    $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
     $post = $data['post'];
     $image_data = getImages($s3, $queue->file_name);
@@ -230,6 +229,5 @@ function createChristmas(Queue $queue, Shop $shop, Template $template, Setting $
     } else {
         error_log("No google sync...");
     }
-    $queue->finish(array($res->product->id));
     return array($res->product->id);
 }

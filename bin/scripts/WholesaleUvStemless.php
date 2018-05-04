@@ -5,22 +5,14 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createStemless(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
+function createWholesaleUvStemless(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
-    $price = '26.99';
+    $price = '15.00';
     global $s3;
     $data = $queue->data;
     $post = $data['post'];
     $image_data = getImages($s3, $queue->file_name);
     $imageUrls = [];
-    switch($shop->myshopify_domain) {
-        case 'plcwholesale.myshopify.com':
-            $price = '12.50';
-            break;
-        case 'shield-republic-wholesale.myshopify.com':
-            $price = '13.50';
-            break;
-    }
 
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];

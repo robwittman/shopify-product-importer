@@ -5,24 +5,12 @@ use App\Model\Shop;
 use App\Model\Template;
 use App\Model\Setting;
 
-function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
+function createWholesaleUvTumbler(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
-    $products = array(
-        'etched' => array(
-            'colors' => array('Black', 'Blue', 'Light Blue', 'Light Purple', 'Pink', 'Red', 'Teal'),
-            'sizes' => array(
-                '20oz' => '15.00',
-                '30oz' => '16.00'
-            )
-        ),
-        'powder_coated' => array(
-            'colors' => array('Black', 'Navy', 'Pink', 'Teal', 'Purple', 'Red', 'Stainless', 'White'),
-            'sizes' => array(
-                '20oz' => '16.00',
-                '30oz' => '17.50'
-            )
-        )
-    );
+    $prices = [
+        '20oz' => '16.00',
+        '30oz' => '17.50'
+    ];
     global $s3;
     $images = array();
     $data = $queue->data;
@@ -62,7 +50,7 @@ function createWholesaleTumbler(Queue $queue, Shop $shop, Template $template, Se
     $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($images as $size => $colors) {
         foreach ($colors as $color => $url) {
-            $price = $details['sizes'][$size];
+            $price = $details[$size];
             $varData = array(
                 'title' => "{$color} / {$size}",
                 'price' => $price,

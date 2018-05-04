@@ -16,7 +16,6 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
     // Ignore crew settings
     unset($matrix['Crew']);
     $images = array();
-    $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
 
     $image_data = getImages($s3, $queue->file_name);
@@ -98,6 +97,5 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
             'images' => $imageUpdate
         )
     ));
-    $queue->finish(array($res->product->id));
     return array($res->product->id);
 }

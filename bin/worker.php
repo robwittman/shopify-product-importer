@@ -12,6 +12,28 @@ foreach (glob(DIR."/bin/scripts/*.php") as $file) {
     include_once ($file);
 }
 
+$templateMap = [
+    'wholesale_apparel'     => 'createWholesaleApparel',
+    'wholesale_tumbler'     => 'createWholesaleTumbler',
+    'hats'                  => 'createHats',
+    'stemless'              => 'createStemless',
+    'single_product'        => 'processQueue',
+    'drinkware'             => 'createDrinkware',
+    'uv_drinkware'          => 'createUvDrinkware',
+    'donation_uv_tumbler'   => 'createDonationUvTumbler',
+    'flasks'                => 'createFlasks',
+    'baby_body_suit'        => 'createBabyBodySuit',
+    'raglans'               => 'createRaglans',
+    'front_back_pocket'     => 'createFrontBackPocklet',
+    'christmas'             => 'createChristmas',
+    'hats_masculine'        => 'createMasculineHats',
+    'grey_collection'       => 'createGreyCollection',
+    'multistyle_hats'       => 'createMultiHats',
+    'baby_onesie'           => 'createBabyOnesie',
+    'wholesale_uv_tumbler'  => 'createWholesaleUvTumbler',
+    'wholesale_uv_stemless' => 'createWholesaleUvStemless'
+];
+
 while (true) {
     $queue = Queue::with('template', 'sub_template', 'shop')
         ->where('status', Queue::PENDING)
@@ -32,61 +54,11 @@ while (true) {
                 'shop_id' => $queue->shop_id
             ))->first();
             $shop = Shop::find($queue->shop_id);
-            switch ($queue->template_id) {
-                case 'wholesale_apparel':
-                    $res = createWholesaleApparel($queue, $shop, $template, $setting);
-                    break;
-                case 'wholesale_tumbler':
-                    $res = createWholesaleTumbler($queue, $shop, $template, $setting);
-                    break;
-                case 'hats':
-                    $res = createHats($queue, $shop, $template, $setting);
-                    break;
-                case 'stemless':
-                    $res = createStemless($queue, $shop, $template, $setting);
-                    break;
-                case 'single_product':
-                    $res = processQueue($queue, $shop, $template, $setting, $client);
-                    break;
-                case 'drinkware':
-                    $res = createDrinkware($queue, $shop, $template, $setting);
-                    break;
-                case 'uv_drinkware':
-                    $res = createUvDrinkware($queue, $shop, $template, $setting);
-                    break;
-                case 'donation_uv_tumbler':
-                    $res = createDonationUVTumbler($queue, $shop, $template, $setting);
-                    break;
-                case 'flasks':
-                    $res = createFlasks($queue, $shop, $template, $setting);
-                    break;
-                case 'baby_body_suit':
-                    $res = createBabyBodySuit($queue, $shop, $template, $setting, $client);
-                    break;
-                case 'raglans':
-                    $res = createRaglans($queue, $shop, $template, $setting, $client);
-                    break;
-                case 'front_back_pocket':
-                    $res = createFrontBackPocket($queue, $shop, $template, $setting, $client);
-                    break;
-                case 'christmas':
-                    $res = createChristmas($queue, $shop, $template, $setting, $client);
-                    break;
-                case 'hats_masculine':
-                    $res = createMasculineHats($queue, $shop, $template, $setting);
-                    break;
-                case 'grey_collection':
-                    $res = createGreyCollection($queue, $client);
-                    break;
-                case 'multistyle_hats':
-                    $res = createMultiHats($queue, $shop, $template, $setting);
-                    break;
-                case 'baby_onesie':
-                    $res = createBabyOnesie($queue, $shop, $template, $setting);
-                    break;
-                default:
-                    throw new \Exception("Invalid template {$queue->template_id} provided");
+            if (!array_key_exists($queue->template_id, $templateMap)) {
+                throw new \Exception("Invalid template {$queue->template_id} provided");
             }
+            $script = $templateMap[$queue->template_id];
+            $res = call_user_func_array($script, [$queue, $shop, $template, $setting]);
             $queue->finish($res);
             error_log("Queue {$queue->id} finished. ".json_encode($res));
         } catch(\Exception $e) {

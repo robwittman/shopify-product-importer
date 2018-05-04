@@ -5,7 +5,6 @@ function createUvTumbler($queue)
     $image_data = array();
     $imageUrls = array();
     global $s3;
-    $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
 
     if (isset($queue->file_name)) {
@@ -109,7 +108,6 @@ function createUvTumbler($queue)
             )
         ));
 
-        $queue->finish(array($res->product->id));
         return array($res->product->id);
     }
 }

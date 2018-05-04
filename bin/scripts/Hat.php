@@ -9,7 +9,6 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
 {
     $price = '29.99';
     global $s3;
-    $queue->started_at = date('Y-m-d H:i:s');
     $data = $queue->data;
     $post = $data['post'];
     $image_data = getImages($s3, $queue->file_name);
@@ -84,6 +83,5 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
         )
     ));
 
-    $queue->finish(array($res->product->id));
     return array($res->product->id);
 }
