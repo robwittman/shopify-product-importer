@@ -1,0 +1,78 @@
+{
+    "unisex_tee_front_sleeve": {
+        "colors": [],
+        "sizes" : ["S","M","L","XL","2XL"],
+        "weight": "",
+        "price" : "13.50",
+        "modifier": "1.00"
+    },
+    "unisex_long_sleeve_front_sleeve": {
+        "colors": [],
+        "sizes" : ["S","M","L","XL","2XL"],
+        "weight": "",
+        "price" : "14.50",
+        "modifier": "1.00"
+    },
+    "unisex_hoodie_front_sleeve": {
+        "colors": [],
+        "sizes" : ["S","M","L","XL","2XL"],
+        "weight": "",
+        "price" : "24.00",
+        "modifier": "25.00"
+    },
+    "unisex_tee_back": {
+        "colors": [],
+        "sizes" : ["S","M","L","XL","2XL"],
+        "weight": "",
+        "price" : "14.50",
+        "modifier": "1.00"
+    },
+    "unisex_long_sleeve_back": {
+        "colors": [],
+        "sizes" : ["S","M","L","XL","2XL"],
+        "weight": "",
+        "price" : "16.50",
+        "modifier": "1.00"
+    },
+    "unisex_hoodie_back": {
+        "colors": [],
+        "sizes" : ["S","M","L","XL","2XL"],
+        "weight": "",
+        "price" : "24.00",
+        "modifier": "1.00"
+    },
+    "unisex_tee_front": {
+        "colors": [],
+        "sizes" : ["S","M","L","XL","2XL"],
+        "weight": "",
+        "price" : "12.50",
+        "modifier": "1.l00"
+    },
+    "unisex_long_sleeve_front": {
+        "colors": [],
+        "sizes" : ["S","M","L","XL","2XL"],
+        "weight": "",
+        "price" : "14.50",
+        "modifier": "1.00"
+    },
+    "unisex_hoodie_front": {
+        "colors": [],
+        "sizes" : ["S","M","L","XL","2XL"],
+        "weight": "",
+        "price" : "21.50",
+        "modifier": "1.00"
+    },
+    "mens_tank": {
+        "colors": [],
+        "sizes" : ["S","M","L","XL","2XL"],
+        "weight": "",
+        "price" : ""
+    },
+    "womens_tank": {
+        "colors": [],
+        "sizes" : ["S","M","L","XL","2XL"],
+        "weight": "",
+        "price" : "13.50",
+        "modifier": "1.00"
+    }
+}

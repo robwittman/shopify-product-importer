@@ -31,7 +31,8 @@ $templateMap = [
     'multistyle_hats'       => 'createMultiHats',
     'baby_onesie'           => 'createBabyOnesie',
     'wholesale_uv_tumbler'  => 'createWholesaleUvTumbler',
-    'wholesale_uv_stemless' => 'createWholesaleUvStemless'
+    'wholesale_uv_stemless' => 'createWholesaleUvStemless',
+    'shield_republic_wholesale' => 'createShieldRepublicWholesaleApparel'
 ];
 
 while (true) {
