@@ -18,7 +18,6 @@ function createShieldRepublicWholesaleApparel(Queue $queue, Shop $shop, Template
 
     $image_data = getImages($s3, $queue->file_name);
     $designId = null;
-
     $post = $data['post'];
     $details = $matrix[$queue->sub_template_id];
     foreach ($image_data as $name) {
