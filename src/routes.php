@@ -3,8 +3,10 @@
 use App\Model\Shop;
 use App\Model\User;
 
-$app->get('/', function ($request, $response) {
-    return $response->withRedirect('/products');
+$app->get('/', function ($request, $response) use ($app) {
+    $container = $app->getContainer();
+    $twig = $container->get('view');
+    return $this->view->render($response, 'app.html');
 });
 
 #
