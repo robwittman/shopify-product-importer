@@ -7,7 +7,7 @@ use App\Model\Setting;
 
 function createWholesaleUvTumbler(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
-    $prices = [
+    $details = [
         '20oz' => '16.00',
         '30oz' => '17.50'
     ];
@@ -17,7 +17,6 @@ function createWholesaleUvTumbler(Queue $queue, Shop $shop, Template $template, 
 
     $image_data = getImages($s3, $queue->file_name);
     $post = $data['post'];
-    $details = $products[$queue->sub_template_id];
     foreach ($image_data as $name) {
         if (pathinfo($name, PATHINFO_EXTENSION) != "jpg") {
             continue;
