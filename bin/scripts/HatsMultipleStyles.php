@@ -40,6 +40,17 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
     }
 
     $product_data = getProductSettings($shop, $queue, $template, $setting);
+    $product_type = 'Headware';
+    if ($queue->sub_template_id == 'beach_hat') {
+        $product_type = 'Beach Hat';
+    } else if ($queue->sub_template_id == 'beanie') {
+        $product_type = 'Beanie';
+    } else if ($queue->sub_template_id == 'snap_back') {
+        $product_type = 'Snap Back';
+    } else if ($queue->sub_template_id == 'new_era_flex_fit') {
+        $product_type = 'New Era FLex Fit';
+    }
+    $product_data['product_type'] = $product_type;
     $product_data['options'] = array(
         array(
             'name' => "Color"
@@ -98,7 +109,7 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
             }
         }
     }
-    echo json_encode($product_data, JSON_PRETTY_PRINT);
+
     $res = callShopify($shop, '/admin/products.json', 'POST', array(
         'product' => $product_data
     ));
@@ -115,20 +126,17 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
     } else {
         $variantMap = [];
         foreach ($res->product->variants as $variant) {
-            error_log($variant->option1);
             if (!isset($variantMap[$variant->option1])) {
                 $variantMap[$variant->option1] = [];
             }
             $variantMap[$variant->option1][] = $variant->id;
         };
-        error_log(json_encode($variantMap));
         foreach ($variantMap as $color => $variants) {
             $imageUpdate[] = [
                 'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[str_replace(' ', '_', $color)]}",
                 'variant_ids' => $variants
             ];
         }
-        error_log(json_encode($imageUpdate));
     }
 
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
