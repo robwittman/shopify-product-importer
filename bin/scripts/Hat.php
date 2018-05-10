@@ -50,7 +50,7 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
                 'inventory_management' => null,
                 'inventory_policy' => 'deny'
             );
-            $variantData['color'] = $color;
+            $variantData['color'] = str_replace('_', ' ', $color);
             $variantData['style'] = $style;
             $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
             unset($variantData['color']);
