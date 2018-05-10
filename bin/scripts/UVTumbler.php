@@ -23,8 +23,6 @@ function createUvTumbler($queue)
         }
         $shop = \App\Model\Shop::find($queue->shop_id);
 
-        $shopReq = [];
-
         foreach ($image_data as $name) {
             if (pathinfo($name, PATHINFO_EXTENSION) != 'jpg') {
                 continue;

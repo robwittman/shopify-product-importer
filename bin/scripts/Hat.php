@@ -22,7 +22,7 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];
         $specs = explode('_-_', $productData);
-        $style = $specs[0];
+        $style = str_replace('_', ' ', $specs[0]);
         $color = $specs[1];
         $imageUrls[$style][$color] = $name;
     }
@@ -30,19 +30,19 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
     $product_data = getProductSettings($shop, $queue, $template, $setting);
     $product_data['options'] = array(
         array(
-            'name' => "Color"
+            'name' => "Style"
         ),
         array(
-            'name' => "Style"
+            'name' => "Color"
         )
     );
     $skuTemplate = getSkuTemplate($template, $setting, $queue);
     foreach ($imageUrls as $style => $colors) {
         foreach ($colors as $color => $image) {
             $variantData = array(
-                'title' => ($style == "Hat" ? "Trucker Hat" : "Cotton Twill Hat").' / '.$color,
+                'title' => "{$style} / {$color}",
                 'price' => $price,
-                'option1' => ($style == "Hat" ? "Trucker Hat" : "Cotton Twill Hat"),
+                'option1' => $style,
                 'option2' => str_replace('_', ' ', $color),
                 'weight' => '5.0',
                 'weight_unit' => 'oz',
@@ -68,7 +68,7 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
     $variantMap = array();
     $imageUpdate = array();
     foreach ($res->product->variants as $variant) {
-        $style = $variant->option1 == 'Trucker Hat' ? "Hat" : "TwillHat";
+        $style = $variant->option1;
         $color = str_replace(' ', '_', $variant->option2);
         $image = array(
             'src' => "https://s3.amazonaws.com/shopify-product-importer/{$imageUrls[$style][$color]}",
