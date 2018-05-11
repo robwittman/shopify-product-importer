@@ -3,6 +3,8 @@
 use App\Model\Shop;
 use App\Model\User;
 
+
+
 $app->get('/', function ($request, $response) use ($app) {
     $container = $app->getContainer();
     $twig = $container->get('view');
@@ -45,7 +47,7 @@ $app->group('/google', function() use ($app) {
     Auth Routes
 =========================================*/
 $app->group('/auth', function () use ($app) {
-    $app->map(array('GET', 'POST'), '/login', 'AuthController:login');
+    $app->map(array('GET', 'POST'), '/token', 'AuthController:login');
     $app->any('/logout', 'AuthController:logout');
 });
 
@@ -91,3 +93,15 @@ $app->group('/queue', function() use ($app) {
     $app->get('/{id}', 'QueuesController:show');
     $app->post('/restart', 'ProductController:restart_queue');
 })->add(new \App\Middleware\Authorization());
+
+$app->options('/{routes:.+}', function ($request, $response, $args) {
+    return $response;
+});
+
+$app->add(function ($req, $res, $next) {
+    $response = $next($req, $res);
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+});

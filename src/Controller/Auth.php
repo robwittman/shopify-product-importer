@@ -34,7 +34,6 @@ class Auth
         }
 
         $params = $request->getParsedBody();
-
         $user = User::where('email', $params['email'])->first();
         if (empty($user)) {
             return $this->view->render($response, 'auth/login.html', array(
@@ -54,8 +53,9 @@ class Auth
         $_SESSION['expiration'] = strtotime('+2 hours');
         $_SESSION['role'] = $user->role;
 
-        $this->flash->addMessage('message', Messages::LOGIN_SUCCESSFUL);
-        return $response->withRedirect('/products');
+        return $response->withJson([
+            'user' => $user
+        ]);
     }
 
     public function logout(ServerRequestInterface $request, ResponseInterface $response)
