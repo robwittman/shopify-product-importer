@@ -59,7 +59,7 @@ while (true) {
                 throw new \Exception("Invalid template {$queue->template_id} provided");
             }
             $script = $templateMap[$queue->template_id];
-            $res = call_user_func_array($script, [$queue, $shop, $template, $setting]);
+            $res = call_user_func_array($script, [$queue, $shop, $template, $setting, $client]);
             $queue->finish($res);
             error_log("Queue {$queue->id} finished. ".json_encode($res));
         } catch(\Exception $e) {
