@@ -14,7 +14,8 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
             $price = '14.95';
         break;
         case 'new_era_flex_fit':
-            $price = '13.00';
+            $price = '17.00';
+            $sizes = ['S/M', 'M/L', 'L/XL'];
         break;
         case 'snap_back':
             $price = '11.00';
@@ -29,10 +30,16 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
     $post = $data['post'];
     $image_data = getImages($s3, $queue->file_name);
     $imageUrls = [];
+    $rearImages = [];
+
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];
         $chunks = explode('/', $productData);
         $color = $chunks[count($chunks) - 1];
+        if (strpos($name, 'Back') !== false) {
+            $rearImages[] = $name;
+            continue;
+        }
         if (strpos($productData, '-') !== false) {
             $color = explode('_-_', $productData)[1];
         }
@@ -137,6 +144,12 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
                 'variant_ids' => $variants
             ];
         }
+    }
+
+    foreach ($rearImages as $image) {
+        $imageUpdate[] = [
+            'src' => "https://s3.amazonaws.com/shopify-product-importer/{$image}"
+        ];
     }
 
     $res = callShopify($shop, "/admin/products/{$res->product->id}.json", "PUT", array(
