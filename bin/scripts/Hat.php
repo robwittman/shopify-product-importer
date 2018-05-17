@@ -18,7 +18,11 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
         case 'plcwholesale.myshopify.com':
             $price = '14.95';
             break;
+        case 'shield-republic-wholesale.myshopify.com':
+            $price = '15.00';
+            break;
     }
+
     foreach ($image_data as $name) {
         $productData = pathinfo($name)['filename'];
         $specs = explode('_-_', $productData);
