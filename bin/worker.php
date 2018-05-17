@@ -235,9 +235,6 @@ function getProductSettings(Shop $shop, Queue $queue, Template $template, Settin
 
 function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, $fileName, Queue $queue = null)
 {
-    error_log($skuTemplate);
-    error_log(json_encode($queue));
-    error_log(json_encode($variant));
     $template = new \Liquid\Template();
     $template->parse($skuTemplate);
     $sku = $template->render(array(
@@ -248,7 +245,6 @@ function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, 
         'data' => $post,
         'queue' => $queue
     ));
-    error_log(trim($sku));
     return trim($sku);
 }
 

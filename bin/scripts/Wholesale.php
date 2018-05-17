@@ -58,11 +58,11 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
                 'inventory_policy' => "deny"
             );
 
-            $variantData['size'] = $size;
-            $variantData['color'] = $color;
-            $variantData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $variantData, $post, $data['file_name'], $queue);
-            unset($variantData['size']);
-            unset($variantData['color']);
+            $varData['size'] = $size;
+            $varData['color'] = $color;
+            $varData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $varData, $post, $data['file_name'], $queue);
+            unset($varData['size']);
+            unset($varData['color']);
             if($color == $post['default_color'] && $size == 'S') {
                 array_unshift($product_data['variants'], $varData);
             } else {
