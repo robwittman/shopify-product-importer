@@ -22,7 +22,6 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
         break;
         case 'beanie':
             $price = '10.00';
-            $sizes = ['S/M', 'M/L', 'L/XL'];
         break;
     }
     global $s3;
