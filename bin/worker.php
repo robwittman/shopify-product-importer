@@ -245,7 +245,7 @@ function generateLiquidSku($skuTemplate, $product, Shop $shop, $variant, $post, 
         'data' => $post,
         'queue' => $queue
     ));
-    return $sku;
+    return trim($sku);
 }
 
 function getSkuTemplate(Template $template, Setting $setting = null, Queue $queue)
