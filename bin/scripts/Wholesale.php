@@ -60,9 +60,11 @@ function createWholesaleApparel(Queue $queue, Shop $shop, Template $template, Se
 
             $varData['size'] = $size;
             $varData['color'] = $color;
+            $varData['style'] = $details['skuModifier'];
             $varData['sku'] = generateLiquidSku($skuTemplate, $product_data, $shop, $varData, $post, $data['file_name'], $queue);
             unset($varData['size']);
             unset($varData['color']);
+            unset($varData['style']);
             if($color == $post['default_color'] && $size == 'S') {
                 array_unshift($product_data['variants'], $varData);
             } else {
