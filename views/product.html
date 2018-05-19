@@ -123,10 +123,7 @@
                         <div class="form-group col-sm-6">
                             <label class='control-label'>Showcase Color</label>
                             <select name='default_color' class='form-control'>
-                                <option value='Navy' selected>Navy</option>
-                                <option value='Black'>Black</option>
-                                <option value='Charcoal'>Charcoal</option>
-                                <option value='Royal'>Royal Blue</option>
+
                             </select>
                         </div>
                         <div class="form-group col-sm-6">
@@ -248,6 +245,25 @@
         var option = $('select[name="template"] :selected').val();
         var subSelectorId = `#${option}_product_type`;
         showSubTemplates(subSelectorId)
+
+        $('select[name="default_color"]').selectize({
+            closeAfterSelect: true,
+            loadThrottle: 100,
+            create: function(input, callback) {
+                $.post('/colors', {name: input}, function(data) {
+                    console.log(data);
+                    callback({
+                        id: data.color.id,
+                        text: data.color.name
+                    })
+                })
+            },
+            load: function(query, callback) {
+                $.get('/colors/search', {q: query}, function(data) {
+                    callback(data.results);
+                });
+            }
+        });
     })
 </script>
 {% endblock %}

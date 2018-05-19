@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Model\Color;
 use App\Model\User;
 use App\Model\Queue;
 use App\Model\Shop;
@@ -57,7 +58,8 @@ class Products
         return $this->view->render($response, 'product.html', array(
             'user' => $user,
             'shops' => $shops,
-            'templates' => $templates
+            'templates' => $templates,
+            'colors' => Color::all()
         ));
     }
 

@@ -57,6 +57,10 @@ $container['ProductController'] = function(Container $c) {
     return new \App\Controller\Products($view, $flash, $filesystem, $queue);
 };
 
+$container['ColorController'] = function(Container $c) {
+    return new \App\Controller\Colors();
+};
+
 $container['TemplatesController'] = function(Container $c) {
     $view = $c->get('view');
     $flash = $c->get('flash');

@@ -47,6 +47,10 @@ $app->group('/auth', function () use ($app) {
     $app->any('/logout', 'AuthController:logout');
 });
 
+$app->get('/colors', 'ColorController:index');
+$app->post('/colors', 'ColorController:create')->add(new \App\Middleware\Authorization());
+$app->get('/colors/search', 'ColorController:search')->add(new \App\Middleware\Authorization());
+
 $app->group('/templates', function() use ($app) {
     $app->get('', 'TemplatesController:index');
 
