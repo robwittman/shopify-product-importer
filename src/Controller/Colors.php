@@ -11,7 +11,7 @@ class Colors
         $colors = array_map(function($color) {
             return [
                 'id' => $color['id'],
-                'text' => $color['name']
+                'name' => $color['name']
             ];
         }, Color::all()->toArray());
 
@@ -26,7 +26,7 @@ class Colors
         $colors = array_map(function($color) {
             return [
                 'id' => $color['id'],
-                'text' => $color['name']
+                'name' => $color['name']
             ];
         }, $colors->toArray());
         return $response->withJson([
