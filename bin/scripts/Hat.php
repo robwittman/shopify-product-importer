@@ -16,7 +16,7 @@ function createHats(Queue $queue, Shop $shop, Template $template, Setting $setti
     $html = '<p></p>';
     switch($shop->myshopify_domain) {
         case 'plcwholesale.myshopify.com':
-            $price = '14.95';
+            $price = '13.95';
             break;
         case 'shield-republic-wholesale.myshopify.com':
             $price = '15.00';
