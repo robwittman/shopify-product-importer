@@ -7,22 +7,27 @@ use App\Model\Setting;
 
 function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $setting = null)
 {
-    $price = '15.00';
+    switch ($shop->myshopify_domain) {
+        case 'forged-blue.myshopify.com':
+            $prices = [
+              'beach_hat' => '0.00',
+              'new_era_flex_fit' => '',
+              'snap_back' => '',
+              'beanie' => ''
+            ];
+            break;
+        default:
+            $prices = [
+                'beach_hat' => '14.95',
+                'new_era_flex_fit' => '17.00',
+                'snap_back' => '11.00',
+                'beanie' => '14.00'
+            ];
+    }
     $sizes = [];
-    switch ($queue->sub_template_id) {
-        case 'beach_hat':
-            $price = '14.95';
-        break;
-        case 'new_era_flex_fit':
-            $price = '17.00';
-            $sizes = ['S/M', 'M/L', 'L/XL'];
-        break;
-        case 'snap_back':
-            $price = '11.00';
-        break;
-        case 'beanie':
-            $price = '14.00';
-        break;
+    $price = $prices[$queue->sub_template_id];
+    if ($queue->sub_template_id == 'new_era_flex_fit') {
+        $sizes = ['S/M', 'M/L', 'L/XL'];
     }
     global $s3;
     $data = $queue->data;
