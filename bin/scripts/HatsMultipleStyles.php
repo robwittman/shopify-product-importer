@@ -11,9 +11,9 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
         case 'forged-blue.myshopify.com':
             $prices = [
               'beach_hat' => '0.00',
-              'new_era_flex_fit' => '',
-              'snap_back' => '',
-              'beanie' => ''
+              'new_era_flex_fit' => '32.99',
+              'snap_back' => '29.99',
+              'beanie' => '24.99'
             ];
             break;
         default:
