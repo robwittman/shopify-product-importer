@@ -9,6 +9,7 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
 {
     switch ($shop->myshopify_domain) {
         case 'forged-blue.myshopify.com':
+        case 'importer-testing.myshopify.com':
             $prices = [
               'beach_hat' => '0.00',
               'new_era_flex_fit' => '32.99',
