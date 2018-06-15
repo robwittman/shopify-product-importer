@@ -58,9 +58,9 @@ function createMultiHats(Queue $queue, Shop $shop, Template $template, Setting $
     } else if ($queue->sub_template_id == 'beanie') {
         $product_type = 'Beanie';
     } else if ($queue->sub_template_id == 'snap_back') {
-        $product_type = 'Snap Back';
+        $product_type = 'Hat';
     } else if ($queue->sub_template_id == 'new_era_flex_fit') {
-        $product_type = 'New Era FLex Fit';
+        $product_type = 'Hat';
     }
     $product_data['product_type'] = $product_type;
     $product_data['options'] = array(
