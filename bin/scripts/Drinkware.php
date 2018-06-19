@@ -21,8 +21,8 @@ function createDrinkware(Queue $queue, Shop $shop, Template $template, Setting $
     switch($shop->myshopify_domain) {
         case 'piper-lou-collection.myshopify.com':
             $prices = array(
-                '30' => '32.99',
-                '20' => '29.99'
+                '30' => '34.99',
+                '20' => '32.99'
             );
             break;
         case 'plcwholesale.myshopify.com':
